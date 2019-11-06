@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<language>
+  <resources prefix="Redmine">
+    <resource name="upload_menu_item">Upload to Remine</resource>
+    <resource name="settings_title">Redmine settings</resource>
+    <resource name="label_url">Url</resource>
+    <resource name="ok">OK</resource>
+    <resource name="cancel">Cancel</resource>
+    <resource name="upload_success">Successfully uploaded image to Redmine</resource>
+    <resource name="upload_failure">An error occured while uploading to Redmine:</resource>
+    <resource name="communication_wait">Communicating with Redmine. Please wait...</resource>
+  </resources>
+</language>

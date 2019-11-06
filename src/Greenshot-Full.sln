@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Greenshot.Core", "Greenshot
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Greenshot.Addon.InternetExplorer", "Greenshot.Addon.InternetExplorer\Greenshot.Addon.InternetExplorer.csproj", "{4CCA2717-B8A4-44F7-965B-5687107E4921}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Greenshot.Addon.Redmine", "Greenshot.Addon.Redmine\Greenshot.Addon.Redmine.csproj", "{F4744F9A-B64F-46EA-9631-F2F17B74A044}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -321,6 +323,18 @@ Global
 		{4CCA2717-B8A4-44F7-965B-5687107E4921}.Release|x64.Build.0 = Release|Any CPU
 		{4CCA2717-B8A4-44F7-965B-5687107E4921}.Release|x86.ActiveCfg = Release|Any CPU
 		{4CCA2717-B8A4-44F7-965B-5687107E4921}.Release|x86.Build.0 = Release|Any CPU
+		{F4744F9A-B64F-46EA-9631-F2F17B74A044}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4744F9A-B64F-46EA-9631-F2F17B74A044}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4744F9A-B64F-46EA-9631-F2F17B74A044}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F4744F9A-B64F-46EA-9631-F2F17B74A044}.Debug|x64.Build.0 = Debug|Any CPU
+		{F4744F9A-B64F-46EA-9631-F2F17B74A044}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F4744F9A-B64F-46EA-9631-F2F17B74A044}.Debug|x86.Build.0 = Debug|Any CPU
+		{F4744F9A-B64F-46EA-9631-F2F17B74A044}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4744F9A-B64F-46EA-9631-F2F17B74A044}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4744F9A-B64F-46EA-9631-F2F17B74A044}.Release|x64.ActiveCfg = Release|Any CPU
+		{F4744F9A-B64F-46EA-9631-F2F17B74A044}.Release|x64.Build.0 = Release|Any CPU
+		{F4744F9A-B64F-46EA-9631-F2F17B74A044}.Release|x86.ActiveCfg = Release|Any CPU
+		{F4744F9A-B64F-46EA-9631-F2F17B74A044}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

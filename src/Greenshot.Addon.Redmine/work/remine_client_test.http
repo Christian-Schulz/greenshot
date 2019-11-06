@@ -1,0 +1,8 @@
+@host = https://192.168.178.159
+@apikey = aa0c98be0bbb6ed6d52a35cb704bae23b15b9990
+
+GET {{host}}/projects.json
+Authorization: {{apikey}}
+###
+GET {{host}}/projects/git-helloworld/issues.json
+Authorization: {{apikey}}
