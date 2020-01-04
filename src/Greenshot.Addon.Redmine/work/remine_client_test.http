@@ -1,19 +1,36 @@
-@host = https://192.168.178.159
-@adminApiKey= 7dacec6e34261293843380d4aaf2252f1c8ca520
-@userApiKey=aa0c98be0bbb6ed6d52a35cb704bae23b15b9990
+# Testfile for REST Client Extension   -  https://github.com/Huachao/vscode-restclient
+#
+###
+# 
+@host_redmine_v4 = https://192.168.178.159
+@host_redmine_v3 = https://192.168.178.158
+@host = {{host_redmine_v4}}
+###
+#
+@adminApiKey = 7dacec6e34261293843380d4aaf2252f1c8ca520
+@userApiKey = aa0c98be0bbb6ed6d52a35cb704bae23b15b9990
 @apikey = {{userApiKey}}
+###
+@testFileToken = 6.d64421f6202bc20daa927e069f2fe30912e5656ad78a1003733604db4c41d3d1
+@testIssue = 1
+@testProject = git-helloworld
 
-@StaticFileToken=6.d64421f6202bc20daa927e069f2fe30912e5656ad78a1003733604db4c41d3d1
-@issue=1
-
+###
+# list all projects
+#
 GET {{host}}/projects.json
 X-Redmine-API-Key: {{apikey}}
 
 ###
-GET {{host}}/projects/git-helloworld/issues.json
+# list all issues in project
+#
+GET {{host}}/projects/{{testProject}}/issues.json
 X-Redmine-API-Key: {{apikey}}
 
 ###
+# upload the file 
+# creates a file token
+#
 # @name PostFileUpload
 POST {{host}}/uploads.json?filename=Unbenannt.PNG
 X-Redmine-API-Key: {{apikey}}
@@ -23,8 +40,10 @@ Content-Type: application/octet-stream
  
 
 ###
+# use the file from post request 'PostFileUpload'
+# 
 @newTokenid = {{PostFileUpload.response.body.$.upload.token}}
-PUT {{host}}/issues/{{issue}}.json
+PUT {{host}}/issues/{{testIssue}}.json
 X-Redmine-API-Key: {{apikey}}
 Content-Type: application/json
 
