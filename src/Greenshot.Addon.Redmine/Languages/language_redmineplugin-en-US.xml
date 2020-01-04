@@ -4,7 +4,9 @@
   <resources prefix="Redmine">
     <resource name="upload_menu_item">Upload to Remine</resource>
     <resource name="settings_title">Redmine settings</resource>
+    <resource name="settings_connection_details_title">Connection details</resource>
     <resource name="label_url">Url</resource>
+    <resource name="label_api_token">APIToken</resource>
     <resource name="ok">OK</resource>
     <resource name="cancel">Cancel</resource>
     <resource name="upload_success">Successfully uploaded image to Redmine</resource>

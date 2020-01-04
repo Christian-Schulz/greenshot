@@ -17,6 +17,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.ComponentModel;
 using Dapplo.Config.Language;
 
 namespace Greenshot.Addon.Redmine.Configuration
@@ -28,6 +29,7 @@ namespace Greenshot.Addon.Redmine.Configuration
     [Language("Redmine")]
 	public interface IRedmineLanguage : ILanguage
 	{
+       
         string UploadMenuItem { get; }
 
         string UploadSuccess { get; }
@@ -38,11 +40,19 @@ namespace Greenshot.Addon.Redmine.Configuration
 
         string Cancel { get; }
 
+        [DefaultValue("Redmine settings")]
         string SettingsTitle { get; }
 
+        [DefaultValue("Connection details")]
+        string SettingsConnectionDetailsTitle { get; }
+
+        [DefaultValue("Url")]
         string LabelUrl { get; }
 
-		string CommunicationWait { get; }
+        [DefaultValue("APIToken")]
+        string LabelAPIToken { get; }
+
+        string CommunicationWait { get; }
 
     }
 }

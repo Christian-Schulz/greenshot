@@ -5,20 +5,42 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewModels="clr-namespace:Greenshot.Addon.Redmine.ViewModels"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance viewModels:RedmineConfigViewModel,IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance viewModels:RedmineConfigViewModel,IsDesignTimeCreatable=True}"
              >
+    <UserControl.Resources >
+        <Style x:Key="TextConfiguration" TargetType="{x:Type DockPanel}">
+            <Style.Resources>
+                <Style TargetType="{x:Type Label}">
+                    <Setter Property="Width" Value="100" />
+                </Style>
+            </Style.Resources>
+            <Setter Property="Margin" Value="0,2,0,2"></Setter>
+        </Style>
+    </UserControl.Resources>
     <StackPanel>
-        <GroupBox Header="{Binding RedmineLanguage.LabelRedmine}">
+        <GroupBox Header="{Binding RedmineLanguage.SettingsTitle}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" MinHeight="10"/>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <ContentControl x:Name="FileConfigPartViewModel" Grid.Row="0"/>
-                <DockPanel Grid.Row="1" LastChildFill="True">
-                    <Label Content="{Binding RedmineLanguage.LabelUrl}" Width="100" />
-                    <TextBox Text="{Binding RedmineConfiguration.Url}" />
-                </DockPanel>
+
+                <GroupBox Header="{Binding GreenshotLanguage.SettingsOutput}" Grid.Row="0">
+                    <ContentControl x:Name="FileConfigPartViewModel"  />
+                </GroupBox>
+
+                <GroupBox Header="{Binding RedmineLanguage.SettingsConnectionDetailsTitle}"  Grid.Row="1" Margin="0,2,0,0">
+                    <StackPanel >
+                        <DockPanel Style="{StaticResource TextConfiguration}">
+                            <Label Content="{Binding RedmineLanguage.LabelUrl}" />
+                            <TextBox Text="{Binding RedmineConfiguration.Url}" />
+                        </DockPanel>
+                        <DockPanel Style="{StaticResource TextConfiguration}">
+                            <Label Content="{Binding RedmineLanguage.LabelAPIToken}" />
+                            <TextBox Text="{Binding RedmineConfiguration.APIToken}" />
+                        </DockPanel>
+                    </StackPanel>
+                </GroupBox>
             </Grid>
         </GroupBox>
     </StackPanel>

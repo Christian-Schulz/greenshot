@@ -19,11 +19,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reactive.Disposables;
 using System.Text;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Extensions;
+using Dapplo.Config.Ini;
+using Dapplo.Config.Language;
+using Dapplo.Log;
 using Greenshot.Addon.Redmine.Configuration;
+using Greenshot.Addons;
+using Greenshot.Addons.Core;
 using Greenshot.Addons.Core.Enums;
 using Greenshot.Addons.ViewModels;
 
@@ -40,14 +46,19 @@ namespace Greenshot.Addon.Redmine.ViewModels
         private CompositeDisposable _disposables;
 
         /// <summary>
-        /// Provide IJiraConfiguration to the view
+        /// Provide IRedmineConfiguration to the view
         /// </summary>
         public IRedmineConfiguration RedmineConfiguration { get; }
 
         /// <summary>
-        /// Provide IJiraLanguage to the view
+        /// Provide IRedmineLanguage to the view
         /// </summary>
         public IRedmineLanguage RedmineLanguage { get; }
+
+        /// <summary>
+        /// Provide IGreenshotLanguage to the view
+        /// </summary>
+        public IGreenshotLanguage GreenshotLanguage { get; }
 
         /// <summary>
         /// Provide FileConfigPartViewModel to the view
@@ -62,12 +73,24 @@ namespace Greenshot.Addon.Redmine.ViewModels
         /// <param name="fileConfigPartViewModel">FileConfigPartViewModel</param>
         public RedmineConfigViewModel(IRedmineConfiguration redmineConfiguration,
             IRedmineLanguage redmineLanguage,
+            IGreenshotLanguage greenshotLanguage,
             FileConfigPartViewModel fileConfigPartViewModel
             )
         {
             RedmineConfiguration = redmineConfiguration;
             RedmineLanguage = redmineLanguage;
+            GreenshotLanguage = greenshotLanguage;
             FileConfigPartViewModel = fileConfigPartViewModel;
+        }
+
+        /// <summary>
+        /// default constructor for Design time
+        /// </summary>
+        public RedmineConfigViewModel()
+        {
+            RedmineConfiguration = IniSection<IRedmineConfiguration>.Create();
+            RedmineLanguage = Language<IRedmineLanguage>.Create();
+            GreenshotLanguage = Language<IGreenshotLanguage>.Create();
         }
 
         /// <inheritdoc />
@@ -85,11 +108,10 @@ namespace Greenshot.Addon.Redmine.ViewModels
             config.Register(RedmineConfiguration);
 
             // automatically update the DisplayName
-            var boxLanguageBinding = RedmineLanguage.CreateDisplayNameBinding(this, nameof(RedmineLanguage.SettingsTitle));
+            var RedmineLanguageBinding = RedmineLanguage.CreateDisplayNameBinding(this, nameof(RedmineLanguage.SettingsTitle));
 
             // Make sure the greenshotLanguageBinding is disposed when this is no longer active
-            _disposables.Add(boxLanguageBinding);
-
+            _disposables.Add(RedmineLanguageBinding);
 
             base.Initialize(config);
         }
