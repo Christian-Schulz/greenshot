@@ -25,6 +25,7 @@ using Dapplo.Config.Ini;
 using Dapplo.Config.Language;
 using Greenshot.Addons.Components;
 using Greenshot.Addon.Redmine.Configuration;
+using Greenshot.Addon.Redmine.ViewModels;
 
 namespace Greenshot.Addon.Redmine
 {
@@ -33,11 +34,11 @@ namespace Greenshot.Addon.Redmine
     {
         protected override void Load(ContainerBuilder builder)
         {
-            //builder
-            //    .Register(c => IniSection<IImgurConfiguration>.Create())
-            //    .As<IImgurConfiguration>()
-            //    .As<IIniSection>()
-            //    .SingleInstance();
+            builder
+                .Register(c => IniSection<IRedmineConfiguration>.Create())
+                .As<IRedmineConfiguration>()
+                .As<IIniSection>()
+                .SingleInstance();
 
             builder
                 .Register(c => Language<IRedmineLanguage>.Create())
@@ -48,6 +49,11 @@ namespace Greenshot.Addon.Redmine
             builder
                 .RegisterType<RedmineDestination>()
                 .As<IDestination>()
+                .SingleInstance();
+
+            builder
+                .RegisterType<RedmineConfigViewModel>()
+                .As<IConfigScreen>()
                 .SingleInstance();
 
             base.Load(builder);

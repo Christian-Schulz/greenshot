@@ -45,7 +45,7 @@ namespace Greenshot.Addon.Redmine
     {
         private static readonly LogSource Log = new LogSource();
         private readonly ExportNotification _exportNotification;
-        // private readonly IRedmineConfiguration _RedmineConfiguration;
+        private readonly IRedmineConfiguration _RedmineConfiguration;
         private readonly IRedmineLanguage _RedmineLanguage;
         private readonly Func<CancellationTokenSource, Owned<PleaseWaitForm>> _pleaseWaitFormFactory;
         private readonly IResourceProvider _resourceProvider;
@@ -54,13 +54,13 @@ namespace Greenshot.Addon.Redmine
             ICoreConfiguration coreConfiguration,
             IGreenshotLanguage greenshotLanguage,
             ExportNotification exportNotification,
-            //  IRedmineConfiguration RedmineConfiguration,
+            IRedmineConfiguration RedmineConfiguration,
             IRedmineLanguage RedmineLanguage,
             Func<CancellationTokenSource, Owned<PleaseWaitForm>> pleaseWaitFormFactory,
             IResourceProvider resourceProvider) : base(coreConfiguration, greenshotLanguage)
         {
             _exportNotification = exportNotification;
-            //_RedmineConfiguration = RedmineConfiguration;
+            _RedmineConfiguration = RedmineConfiguration;
             _RedmineLanguage = RedmineLanguage;
             _pleaseWaitFormFactory = pleaseWaitFormFactory;
             _resourceProvider = resourceProvider;
