@@ -218,7 +218,7 @@ namespace Greenshot.Addons.Core
                             {
                                 Tag = subDestination,
                             };
-                            bitmapScaleHandler.AddTarget(destinationMenuItem, subDestination, bitmap => bitmap.NativeBitmap);
+                            bitmapScaleHandler.AddTarget(destinationMenuItem, subDestination, bitmap => bitmap?.NativeBitmap);
 
                             destinationMenuItem.Click += destinationClickHandler;
                             AddTagEvents(destinationMenuItem, menu, subDestination.Description);
