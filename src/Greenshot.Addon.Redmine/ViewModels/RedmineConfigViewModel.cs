@@ -1,5 +1,5 @@
 ﻿// Greenshot - a free and open source screenshot tool
-// Copyright (C) 2007-2018 Thomas Braun, Jens Klingen, Robin Krom
+// Copyright (C) 2007-2020 Thomas Braun, Jens Klingen, Robin Krom
 // 
 // For more information see: http://getgreenshot.org/
 // The Greenshot project is hosted on GitHub https://github.com/greenshot/greenshot
@@ -17,19 +17,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Reactive.Disposables;
-using System.Text;
+using Caliburn.Micro;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Extensions;
 using Dapplo.Config.Ini;
 using Dapplo.Config.Language;
-using Dapplo.Log;
 using Greenshot.Addon.Redmine.Configuration;
 using Greenshot.Addons;
-using Greenshot.Addons.Core;
 using Greenshot.Addons.Core.Enums;
 using Greenshot.Addons.ViewModels;
 
@@ -88,9 +83,12 @@ namespace Greenshot.Addon.Redmine.ViewModels
         /// </summary>
         public RedmineConfigViewModel()
         {
-            RedmineConfiguration = IniSection<IRedmineConfiguration>.Create();
-            RedmineLanguage = Language<IRedmineLanguage>.Create();
-            GreenshotLanguage = Language<IGreenshotLanguage>.Create();
+            if (Execute.InDesignMode)
+            {
+                RedmineConfiguration = IniSection<IRedmineConfiguration>.Create();
+                RedmineLanguage = Language<IRedmineLanguage>.Create();
+                GreenshotLanguage = Language<IGreenshotLanguage>.Create();
+            }
         }
 
         /// <inheritdoc />

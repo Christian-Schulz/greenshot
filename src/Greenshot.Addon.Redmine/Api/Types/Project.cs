@@ -17,27 +17,34 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.ComponentModel;
-using System.Runtime.Serialization;
-using Dapplo.Config.Ini;
-using Greenshot.Addons.Core;
 
-namespace Greenshot.Addon.Redmine.Configuration
+namespace Greenshot.Addon.Redmine.Api.Types
 {
     /// <summary>
-    /// Configuration for Redmine Addon
+    /// Main fields of an project object (incomplete) 
+    /// <see href=http://www.redmine.org/projects/redmine/wiki/Rest_Projects">Redmine API - Project</see>
     /// </summary>
-    [IniSection("Redmine")]
-    [Description("Greenshot Redmine Addon configuration")]
-    public interface IRedmineConfiguration : IIniSection, IDestinationFileConfiguration
+    class Project
     {
-        [Description("Base URL to Remine Server")]
-        [DefaultValue("https://redmine")]
-        string Url { get; set; }
+        /// <summary>
+        /// Internal ID (number)
+        /// </summary>
+        public string Id;
 
-        [DefaultValue("@user_API_token@")]
-        [DataMember(EmitDefaultValue = false)]
-        string APIToken { get; set; }
+        /// <summary>
+        /// Project name
+        /// </summary>
+        public string Name;
+
+        /// <summary>
+        /// Internal identifier name
+        /// </summary>
+        public string Identifier;
+
+        /// <summary>
+        /// Description
+        /// </summary>
+        public string Description;
 
     }
 }
