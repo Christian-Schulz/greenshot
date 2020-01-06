@@ -32,10 +32,12 @@ namespace Greenshot.Addon.Redmine.Configuration
     public interface IRedmineConfiguration : IIniSection, IDestinationFileConfiguration
     {
         [Description("Base URL to Remine Server")]
-        [DefaultValue("https://redmine")]
+        //TODO: change after test [DefaultValue("https://redmine")]
+        [DefaultValue("https://192.168.178.159")]
         string Url { get; set; }
 
-        [DefaultValue("@user_API_token@")]
+        //TODO: change after test [DefaultValue("@user_API_token@")]
+        [DefaultValue("aa0c98be0bbb6ed6d52a35cb704bae23b15b9990")]
         [DataMember(EmitDefaultValue = false)]
         string APIToken { get; set; }
 
