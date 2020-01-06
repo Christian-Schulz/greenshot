@@ -18,11 +18,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Reactive.Disposables;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Extensions;
 using Dapplo.Config.Ini;
 using Dapplo.Config.Language;
+using Dapplo.Log;
+using Greenshot.Addon.Redmine.Api;
 using Greenshot.Addon.Redmine.Configuration;
 using Greenshot.Addons;
 using Greenshot.Addons.Core.Enums;
@@ -35,6 +38,8 @@ namespace Greenshot.Addon.Redmine.ViewModels
     /// </summary>
     public sealed class RedmineConfigViewModel : SimpleConfigScreen
     {
+
+        private static readonly LogSource Log = new LogSource();
         /// <summary>
         ///     Here all disposables are registered, so we can clean the up
         /// </summary>
@@ -59,6 +64,7 @@ namespace Greenshot.Addon.Redmine.ViewModels
         /// Provide FileConfigPartViewModel to the view
         /// </summary>
         public FileConfigPartViewModel FileConfigPartViewModel { get; }
+        public RedmineConnector RedmineApiConnector { get; }
 
         /// <summary>
         /// DI constructor
@@ -69,13 +75,15 @@ namespace Greenshot.Addon.Redmine.ViewModels
         public RedmineConfigViewModel(IRedmineConfiguration redmineConfiguration,
             IRedmineLanguage redmineLanguage,
             IGreenshotLanguage greenshotLanguage,
-            FileConfigPartViewModel fileConfigPartViewModel
+            FileConfigPartViewModel fileConfigPartViewModel,
+            RedmineConnector redmineConnector
             )
         {
             RedmineConfiguration = redmineConfiguration;
             RedmineLanguage = redmineLanguage;
             GreenshotLanguage = greenshotLanguage;
             FileConfigPartViewModel = fileConfigPartViewModel;
+            RedmineApiConnector = redmineConnector;
         }
 
         /// <summary>
@@ -120,6 +128,15 @@ namespace Greenshot.Addon.Redmine.ViewModels
         {
             _disposables.Dispose();
             base.OnDeactivate(close);
+        }
+
+        /// <summary>
+        /// Test if connection and Token are valide
+        /// </summary>
+        public async Task TestConnection()
+        {
+            var currentuser = await RedmineApiConnector.GetCurrentUser().ConfigureAwait(true); 
+            Log.Debug().WriteLine("currentuser {0} {1}", currentuser?.user?.FirstName, currentuser?.user?.LastName);
         }
     }
 }

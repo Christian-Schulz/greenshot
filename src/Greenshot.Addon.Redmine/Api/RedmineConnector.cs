@@ -31,10 +31,11 @@ using System;
 using System.Threading.Tasks;
 using System.Net;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace Greenshot.Addon.Redmine.Api
 {
-    class RedmineConnector
+    public class RedmineConnector
     {
         private static readonly LogSource Log = new LogSource();
         private readonly IRedmineConfiguration _redmineConfiguration;
@@ -49,27 +50,52 @@ namespace Greenshot.Addon.Redmine.Api
 
             Behaviour = new HttpBehaviour
             {
+                ThrowOnError = false, //TODO: überlege, ob wirklich notwendig
                 HttpSettings = httpConfiguration,
                 JsonSerializer = new JsonNetJsonSerializer(),
                 OnHttpClientCreated = httpClient =>
                 {
-                    httpClient.SetAuthorization("X-Redmine-API-Key", _redmineConfiguration.APIToken);
-                    httpClient.DefaultRequestHeaders.ExpectContinue = false;
+                    httpClient.AddDefaultRequestHeader("X-Redmine-API-Key", _redmineConfiguration.APIToken);
+                    httpClient.DefaultRequestHeaders.ExpectContinue = false;                    
                 }
+                
             };
         }
 
-        public async Task<User> GetCurrentUser(CancellationToken token = default)
+        public async Task<CurrentUser> GetCurrentUser(CancellationToken token = default)
         {
-            var imageCurrentUserUri = new Uri(_redmineConfiguration.Url + "/users/current.xml");
-            Log.Debug().WriteLine("Get current user whith url {1}", imageCurrentUserUri);
+            var currentUserUri = new Uri(_redmineConfiguration.Url)
+                                        .AppendSegments("users")
+                                        .AppendSegments("current.json");
+            Log.Debug().WriteLine($"Get current user whith url {currentUserUri.ToString()}");
 
             Behaviour.MakeCurrent();
-            using var client = HttpClientFactory.Create(imageCurrentUserUri);
+            using var client = HttpClientFactory.Create(currentUserUri);
+            try
+            {
+                var response = await client.GetAsync(currentUserUri, token);
+                await response.HandleErrorAsync().ConfigureAwait(false);
+                // var test = await response.GetAsAsync<dynamic>(token);
 
-            var response = await client.GetAsync(imageCurrentUserUri, token).ConfigureAwait(false);
-            await response.HandleErrorAsync().ConfigureAwait(false);
-            return await response.GetAsAsync<User>(token).ConfigureAwait(false);
+                //User ustest = new User(){ FirstName = "hallo", LastName = "momo" };
+
+                //string output = JsonConvert.SerializeObject(ustest);
+
+                //User ustest2 = JsonConvert.DeserializeObject<User>(output);
+
+                //var test2 = await response.GetAsAsync<string>(token);
+                //CurrentUser us = JsonConvert.DeserializeObject<CurrentUser>(test2);
+
+                //TODO: CurrentUser durch dynamic ersetzen und local User-Objekt daraus machen
+
+                return await response.GetAsAsync<CurrentUser>(token);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
 
         }
     }

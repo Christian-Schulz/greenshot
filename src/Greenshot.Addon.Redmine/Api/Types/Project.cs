@@ -24,7 +24,7 @@ namespace Greenshot.Addon.Redmine.Api.Types
     /// Main fields of an project object (incomplete) 
     /// <see href=http://www.redmine.org/projects/redmine/wiki/Rest_Projects">Redmine API - Project</see>
     /// </summary>
-    class Project
+    public class Project
     {
         /// <summary>
         /// Internal ID (number)

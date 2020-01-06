@@ -26,6 +26,7 @@ using Dapplo.Config.Language;
 using Greenshot.Addons.Components;
 using Greenshot.Addon.Redmine.Configuration;
 using Greenshot.Addon.Redmine.ViewModels;
+using Greenshot.Addon.Redmine.Api;
 
 namespace Greenshot.Addon.Redmine
 {
@@ -55,6 +56,11 @@ namespace Greenshot.Addon.Redmine
                 .RegisterType<RedmineConfigViewModel>()
                 .As<IConfigScreen>()
                 .SingleInstance();
+
+            builder
+             .RegisterType<RedmineConnector>()
+             .AsSelf()
+             .SingleInstance();
 
             base.Load(builder);
         }

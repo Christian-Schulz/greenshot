@@ -16,6 +16,14 @@
 @testProject = git-helloworld
 
 ###
+GET {{host}}/users/current.json
+X-Redmine-API-Key: {{apikey}}
+
+###
+GET {{host}}/users/1.json
+X-Redmine-API-Key: {{apikey}}
+
+###
 # list all projects
 #
 GET {{host}}/projects.json
@@ -48,6 +56,7 @@ X-Redmine-API-Key: {{apikey}}
 Content-Type: application/json
 
 {
+
   "issue": {
       "notes": "Der Kommentar mit Datei !Unbenannt.PNG!" ,
     "uploads": [

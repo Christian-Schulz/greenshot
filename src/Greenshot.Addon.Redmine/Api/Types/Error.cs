@@ -8,7 +8,7 @@ namespace Greenshot.Addon.Redmine.Api.Types
     /// HTTP status codes 422 (Unprocessable Entity) response with the error messages in its body
     /// <see href="http://www.redmine.org/projects/redmine/wiki/Rest_api#Validation-errors">Redmine API - Validation errors</see>
     /// </summary>
-    class Error
+    public class Error
     {
         /// <summary>
         /// List of error infos

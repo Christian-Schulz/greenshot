@@ -17,32 +17,54 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using Newtonsoft.Json;
+
 namespace Greenshot.Addon.Redmine.Api.Types
 {
     /// <summary>
     /// Main fields of an user object (incomplete)
     /// <see href=http://www.redmine.org/projects/redmine/wiki/Rest_Users">Redmine API - User</see>
     /// </summary>
-    class User
+    [JsonObject("user")]
+    public class User
     {
         /// <summary>
         /// User ID
         /// </summary>
+        [JsonProperty("id")]
         public int Id;
 
         /// <summary>
         ///  First name
-        /// </summary>
+        /// </summary>        
+        [JsonProperty("firstname")]
         public string FirstName;
 
         /// <summary>
         /// Last name
         /// </summary>
+        [JsonProperty("lastname")]
         public string LastName;
 
         /// <summary>
         /// EMail
         /// </summary>
+        [JsonProperty("mail")]
         public string Mail;
+
+        /// <summary>
+        /// API-Key (you only get your own key)
+        /// </summary>
+        [JsonProperty("api_key")]
+        public string ApiKey;
+
+    }
+
+    [JsonObject("currentuser")]
+    public class CurrentUser
+    {
+
+        [JsonProperty("user")]
+        public User user;
     }
 }

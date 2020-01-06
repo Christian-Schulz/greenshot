@@ -41,6 +41,7 @@
                             <Label Content="{Binding RedmineLanguage.LabelAPIToken}" />
                             <TextBox Text="{Binding RedmineConfiguration.APIToken}" />
                         </DockPanel>
+                        <Button x:Name="TestConnection" Content="{Binding RedmineLanguage.Url}"/>
                     </StackPanel>
                 </GroupBox>
             </Grid>
