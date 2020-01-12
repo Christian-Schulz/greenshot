@@ -2,15 +2,17 @@
 
 <language>
   <resources prefix="Redmine">
-    <resource name="upload_menu_item">Upload to Remine</resource>
-    <resource name="settings_title">Redmine settings</resource>
-    <resource name="settings_connection_details_title">Connection details</resource>
-    <resource name="label_url">Url</resource>
-    <resource name="label_api_token">APIToken</resource>
-    <resource name="ok">OK</resource>
     <resource name="cancel">Cancel</resource>
-    <resource name="upload_success">Successfully uploaded image to Redmine</resource>
-    <resource name="upload_failure">An error occured while uploading to Redmine:</resource>
     <resource name="communication_wait">Communicating with Redmine. Please wait...</resource>
+    <resource name="label_api_token">APIToken</resource>
+    <resource name="label_url">Url</resource>
+    <resource name="ok">OK</resource>
+    <resource name="settings_connected_as_user">Connected as {0}.</resource>
+    <resource name="settings_connection_details_title">Connection details</resource>
+    <resource name="settings_connection_valid">Connection parameter are valide.</resource>
+    <resource name="settings_title">Redmine settings</resource>
+    <resource name="upload_failure">An error occured while uploading to Redmine:</resource>
+    <resource name="upload_menu_item">Upload to Remine</resource>
+    <resource name="upload_success">Successfully uploaded image to Redmine</resource>
   </resources>
 </language>

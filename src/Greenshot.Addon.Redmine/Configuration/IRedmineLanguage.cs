@@ -24,7 +24,7 @@ namespace Greenshot.Addon.Redmine.Configuration
 {
     /// <summary>
     /// Translations for the Redmine add-on
-    /// Mapping to the language resource name via Dapplo.Config.AbcComparer (RemoveNonAlphaDigitsToLower)
+    /// Mapping to the language resource name via <see cref="Dapplo.Config.AbcComparer"/> (RemoveNonAlphaDigitsToLower)
     /// </summary>
     [Language("Redmine")]
 	public interface IRedmineLanguage : ILanguage
@@ -36,8 +36,11 @@ namespace Greenshot.Addon.Redmine.Configuration
 
         string UploadFailure { get; }
 
+
+        [DefaultValue("Ok")]
         string Ok { get; }
 
+        [DefaultValue("Cancel")]
         string Cancel { get; }
 
         [DefaultValue("Redmine settings")]
@@ -46,12 +49,17 @@ namespace Greenshot.Addon.Redmine.Configuration
         [DefaultValue("Connection details")]
         string SettingsConnectionDetailsTitle { get; }
 
+        [DefaultValue("Test connection")]
+        string SettingsTestConnection { get; }
+
         [DefaultValue("Url")]
         string LabelUrl { get; }
 
         [DefaultValue("APIToken")]
         string LabelAPIToken { get; }
 
+        string SettingsConnectedAsUser { get; }
+        string SettingsConnectionValid { get; }
         string CommunicationWait { get; }
 
     }

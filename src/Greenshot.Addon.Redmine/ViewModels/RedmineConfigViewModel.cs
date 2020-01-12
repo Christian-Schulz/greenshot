@@ -1,32 +1,33 @@
 ﻿// Greenshot - a free and open source screenshot tool
 // Copyright (C) 2007-2020 Thomas Braun, Jens Klingen, Robin Krom
-// 
+//
 // For more information see: http://getgreenshot.org/
 // The Greenshot project is hosted on GitHub https://github.com/greenshot/greenshot
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 1 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Caliburn.Micro;
 using Dapplo.CaliburnMicro.Configuration;
 using Dapplo.CaliburnMicro.Extensions;
-using Dapplo.Config.Ini;
-using Dapplo.Config.Language;
 using Dapplo.Log;
 using Greenshot.Addon.Redmine.Api;
 using Greenshot.Addon.Redmine.Configuration;
+using Greenshot.Addon.Redmine.DesignTime;
 using Greenshot.Addons;
 using Greenshot.Addons.Core.Enums;
 using Greenshot.Addons.ViewModels;
@@ -38,8 +39,8 @@ namespace Greenshot.Addon.Redmine.ViewModels
     /// </summary>
     public sealed class RedmineConfigViewModel : SimpleConfigScreen
     {
-
         private static readonly LogSource Log = new LogSource();
+
         /// <summary>
         ///     Here all disposables are registered, so we can clean the up
         /// </summary>
@@ -64,6 +65,7 @@ namespace Greenshot.Addon.Redmine.ViewModels
         /// Provide FileConfigPartViewModel to the view
         /// </summary>
         public FileConfigPartViewModel FileConfigPartViewModel { get; }
+
         public RedmineConnector RedmineApiConnector { get; }
 
         /// <summary>
@@ -93,9 +95,13 @@ namespace Greenshot.Addon.Redmine.ViewModels
         {
             if (Execute.InDesignMode)
             {
-                RedmineConfiguration = IniSection<IRedmineConfiguration>.Create();
-                RedmineLanguage = Language<IRedmineLanguage>.Create();
-                GreenshotLanguage = Language<IGreenshotLanguage>.Create();
+                RedmineConfiguration = DesignTimeObjectFactory.GetRedmineConfiguration();
+                RedmineLanguage = DesignTimeObjectFactory.GetRedmineLanguage();
+                GreenshotLanguage = DesignTimeObjectFactory.GetGreenshotLanguage();
+            }
+            else
+            {
+                throw new NotImplementedException("Use default constructor only at design time!");
             }
         }
 
@@ -122,7 +128,6 @@ namespace Greenshot.Addon.Redmine.ViewModels
             base.Initialize(config);
         }
 
-
         /// <inheritdoc />
         protected override void OnDeactivate(bool close)
         {
@@ -135,7 +140,11 @@ namespace Greenshot.Addon.Redmine.ViewModels
         /// </summary>
         public async Task TestConnection()
         {
-            var currentuser = await RedmineApiConnector.GetCurrentUser().ConfigureAwait(true); 
+            var currentuser = await RedmineApiConnector.GetCurrentUser().ConfigureAwait(true);
+
+            MessageBox.Show(RedmineLanguage.SettingsConnectionValid + Environment.NewLine +
+                            RedmineLanguage.SettingsConnectedAsUser,
+                            RedmineLanguage.SettingsTestConnection, MessageBoxButtons.OK);
             Log.Debug().WriteLine("currentuser {0} {1}", currentuser?.user?.FirstName, currentuser?.user?.LastName);
         }
     }

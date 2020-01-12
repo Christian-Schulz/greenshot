@@ -2,15 +2,17 @@
 
 <language>
   <resources prefix="Redmine">
-    <resource name="upload_menu_item">Zu Remine hochladen</resource>
-    <resource name="settings_title">Redmine Einstellungen</resource>
-    <resource name="settings_connection_details_title">Verbindungsinformationen</resource>
-    <resource name="label_url">Url</resource>
-    <resource name="label_api_token">APIToken</resource>
-    <resource name="ok">OK</resource>
     <resource name="cancel">Abbrechen</resource>
-    <resource name="upload_success">Das Hochladen zu Redmine war erfolgreich.</resource>
-    <resource name="upload_failure">Es gab einen Fehler beim Hochladen zu Redmine:</resource>
     <resource name="communication_wait">Übermittle Daten zu Redmine. Bitte warten...</resource>
+    <resource name="label_api_token">APIToken</resource>
+    <resource name="label_url">Url</resource>
+    <resource name="ok">OK</resource>
+    <resource name="settings_connected_as_user">Verbunden als {0}.</resource>
+    <resource name="settings_connection_details_title">Verbindungseinstellungen</resource>
+    <resource name="settings_connection_valid">Verbindungsparemater sind gültig.</resource>
+    <resource name="settings_title">Redmine Einstellungen</resource>
+    <resource name="upload_failure">Es gab einen Fehler beim Hochladen zu Redmine:</resource>
+    <resource name="upload_menu_item">Zu Remine hochladen</resource>
+    <resource name="upload_success">Das Hochladen zu Redmine war erfolgreich.</resource>
   </resources>
 </language>
