@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dictionary>
+  <item>
+    <key>
+      <string>RevisionLinkDefs</string>
+    </key>
+    <value>
+      <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfGitExtLinkDef&gt;
+  &lt;GitExtLinkDef&gt;
+    &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;LinkFormats&gt;
+      &lt;GitExtLinkFormat&gt;
+        &lt;Caption&gt;BUG-{0}&lt;/Caption&gt;
+        &lt;Format&gt;https://greenshot.atlassian.net/projects/BUG/issues/BUG-{0}&lt;/Format&gt;
+      &lt;/GitExtLinkFormat&gt;
+    &lt;/LinkFormats&gt;
+    &lt;Name&gt;Atlassian BUG&lt;/Name&gt;
+    &lt;NestedSearchPattern&gt;\d+&lt;/NestedSearchPattern&gt;
+    &lt;RemoteSearchInParts /&gt;
+    &lt;SearchInParts&gt;
+      &lt;RevisionPart&gt;Message&lt;/RevisionPart&gt;
+    &lt;/SearchInParts&gt;
+    &lt;SearchPattern&gt;(?i)(BUG-)\d+&lt;/SearchPattern&gt;
+    &lt;UseRemotesPattern /&gt;
+    &lt;UseOnlyFirstRemote&gt;false&lt;/UseOnlyFirstRemote&gt;
+  &lt;/GitExtLinkDef&gt;
+  &lt;GitExtLinkDef&gt;
+    &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;LinkFormats&gt;
+      &lt;GitExtLinkFormat&gt;
+        &lt;Caption&gt;FEATURE-{0}&lt;/Caption&gt;
+        &lt;Format&gt;https://greenshot.atlassian.net/projects/FEATURE/issues/FEATURE-{0}&lt;/Format&gt;
+      &lt;/GitExtLinkFormat&gt;
+    &lt;/LinkFormats&gt;
+    &lt;Name&gt;Atlassian FEATURE&lt;/Name&gt;
+    &lt;NestedSearchPattern&gt;\d+&lt;/NestedSearchPattern&gt;
+    &lt;RemoteSearchInParts /&gt;
+    &lt;SearchInParts&gt;
+      &lt;RevisionPart&gt;Message&lt;/RevisionPart&gt;
+    &lt;/SearchInParts&gt;
+    &lt;SearchPattern&gt;(?i)(FEATURE-)\d+&lt;/SearchPattern&gt;
+    &lt;UseRemotesPattern /&gt;
+    &lt;UseOnlyFirstRemote&gt;false&lt;/UseOnlyFirstRemote&gt;
+  &lt;/GitExtLinkDef&gt;
+  &lt;GitExtLinkDef&gt;
+    &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;LinkFormats&gt;
+      &lt;GitExtLinkFormat&gt;
+        &lt;Caption&gt;SUPPORT-{0}&lt;/Caption&gt;
+        &lt;Format&gt;https://greenshot.atlassian.net/browse/SUPPORT-{0}&lt;/Format&gt;
+      &lt;/GitExtLinkFormat&gt;
+    &lt;/LinkFormats&gt;
+    &lt;Name&gt;Atlassian SUPPORT&lt;/Name&gt;
+    &lt;NestedSearchPattern&gt;\d+&lt;/NestedSearchPattern&gt;
+    &lt;RemoteSearchInParts /&gt;
+    &lt;SearchInParts&gt;
+      &lt;RevisionPart&gt;Message&lt;/RevisionPart&gt;
+    &lt;/SearchInParts&gt;
+    &lt;SearchPattern&gt;(?i)(SUPPORT-)\d+&lt;/SearchPattern&gt;
+    &lt;UseRemotesPattern /&gt;
+    &lt;UseOnlyFirstRemote&gt;false&lt;/UseOnlyFirstRemote&gt;
+  &lt;/GitExtLinkDef&gt;
+  &lt;GitExtLinkDef&gt;
+    &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;LinkFormats&gt;
+      &lt;GitExtLinkFormat&gt;
+        &lt;Caption&gt;#{0}&lt;/Caption&gt;
+        &lt;Format&gt;https://github.com/greenshot/greenshot/issues/{0}&lt;/Format&gt;
+      &lt;/GitExtLinkFormat&gt;
+    &lt;/LinkFormats&gt;
+    &lt;Name&gt;GitHub - Issues&lt;/Name&gt;
+    &lt;NestedSearchPattern&gt;\d+&lt;/NestedSearchPattern&gt;
+    &lt;RemoteSearchInParts /&gt;
+    &lt;SearchInParts&gt;
+      &lt;RevisionPart&gt;Message&lt;/RevisionPart&gt;
+      &lt;RevisionPart&gt;LocalBranches&lt;/RevisionPart&gt;
+    &lt;/SearchInParts&gt;
+    &lt;SearchPattern&gt;(?i)(?&amp;lt;!pull request |pr[ _]?)#\d+&lt;/SearchPattern&gt;
+    &lt;UseOnlyFirstRemote&gt;false&lt;/UseOnlyFirstRemote&gt;
+  &lt;/GitExtLinkDef&gt;
+  &lt;GitExtLinkDef&gt;
+    &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;LinkFormats&gt;
+      &lt;GitExtLinkFormat&gt;
+        &lt;Caption&gt;PR #{0}&lt;/Caption&gt;
+        &lt;Format&gt;https://github.com/greenshot/greenshot/pull/{0}&lt;/Format&gt;
+      &lt;/GitExtLinkFormat&gt;
+    &lt;/LinkFormats&gt;
+    &lt;Name&gt;GitHub - Pull Requests&lt;/Name&gt;
+    &lt;NestedSearchPattern&gt;\d+&lt;/NestedSearchPattern&gt;
+    &lt;RemoteSearchInParts /&gt;
+    &lt;SearchInParts&gt;
+      &lt;RevisionPart&gt;Message&lt;/RevisionPart&gt;
+      &lt;RevisionPart&gt;LocalBranches&lt;/RevisionPart&gt;
+      &lt;RevisionPart&gt;RemoteBranches&lt;/RevisionPart&gt;
+    &lt;/SearchInParts&gt;
+    &lt;SearchPattern&gt;(?i)(pull request |pr[ _]?)#?\d+&lt;/SearchPattern&gt;
+    &lt;UseOnlyFirstRemote&gt;false&lt;/UseOnlyFirstRemote&gt;
+  &lt;/GitExtLinkDef&gt;
+&lt;/ArrayOfGitExtLinkDef&gt;</string>
+    </value>
+  </item>
+</dictionary>

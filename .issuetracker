@@ -1,0 +1,19 @@
+# Integration with Issue Tracker
+#
+# (note that '\' need to be escaped).
+
+[issuetracker "GitHub Rule"]
+  regex = "#(\\d+)"
+  url = "https://github.com/greenshot/greenshot/issues/$1"
+
+[issuetracker "Atlassian Feature Rule"]
+  regex = "FEATURE-(\\d+)"
+  url = "https://greenshot.atlassian.net/projects/FEATURE/issues/FEATURE-$1"
+
+[issuetracker "Atlassian Bug Rule"]
+  regex = "BUG-(\\d+)"
+  url = "https://greenshot.atlassian.net/projects/BUG/issues/BUG-$1"
+
+[issuetracker "Atlassian Support Rule"]
+  regex = "SUPPORT-(\\d+)"
+  url = "https://greenshot.atlassian.net/browse/SUPPORT-$1"
