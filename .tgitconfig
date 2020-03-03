@@ -1,0 +1,6 @@
+[bugtraq]
+	url = https://greenshot.atlassian.net/browse/%BUGID%
+	message = ""
+	label = ""
+	number = false
+	logregex = ((FEATURE|BUG|SUPPORT)-\\d+)
