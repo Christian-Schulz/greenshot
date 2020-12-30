@@ -64,3 +64,30 @@ Content-Type: application/json
     ]
   }
 }
+
+###
+
+POST http://192.168.178.163:12201/gelf
+
+{"message_typ":"Testrequest", "short_message":"Hello there", "host":"example.org", "facility":"test", "_foo":"bar"}
+
+###
+@jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkhhcnJ5IEhhdGhvcm4iLCJlbWFpbCI6ImhhcnJ5QGRvbWFpbi5jb20iLCJiaXJ0aGRhdGUiOiIxOTIzLTEyLTEyIiwibmFtZWlkIjoiYjAwNmE3YjgtMDRlMy00M2E3LThkZjUtMjc2ZjVmZTFlNzQyIiwicm9sZSI6WyJHcmFuZHBhIl0sIm5iZiI6MTU3MzAzNTAxNCwiZXhwIjoxNTk1Njk3MDE0LCJpYXQiOjE1NzMwMzUwMTR9.49RDLXRfUZ1utXRioHFS6WkpqdlhZspLmhrIHH7Mjlk
+GET https://localhost:5001/datenobjekt/2
+Authorization: Bearer {{jwt}}
+
+###
+GET https://localhost:5001/datenobjekt/2
+
+###
+http://rappelkiste.dyndns.ddnss.de:5000
+
+###
+POST http://zentrale.schulz-home.com:5000/alfred
+
+{
+    "token": "Jhj5dZrVaK7ZwHHjRyZWjbDl",
+    "challenge": "3eZbrw1aBm2rZgRNFdxV2595E9CY3gmdALWMmHkvFXO7tYXAYM8Pdd",
+    "type": "url_verification"
+}
+}
