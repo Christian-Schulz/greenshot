@@ -21,6 +21,8 @@
 
 using System;
 using System.Runtime.InteropServices;
+// TODO: dotnet8 test
+/*
 using System.Runtime.InteropServices.CustomMarshalers;
 
 namespace Greenshot.Base.Interop
@@ -45,3 +47,4 @@ namespace Greenshot.Base.Interop
             out object pVarResult, ref System.Runtime.InteropServices.ComTypes.EXCEPINFO pExcepInfo, IntPtr[] pArgErr);
     }
 }
+*/

@@ -23,6 +23,7 @@ using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.DataTransfer;
 using Dapplo.Windows.Common.Extensions;
+using WinRT.Interop;
 
 namespace Greenshot.Plugin.Win10.Native
 {
@@ -49,10 +50,11 @@ namespace Greenshot.Plugin.Win10.Native
         public DataTransferManagerHelper(IntPtr handle)
         {
             //TODO: Add a check for failure here. This will fail for versions of Windows below Windows 10
-            IActivationFactory activationFactory = WindowsRuntimeMarshal.GetActivationFactory(typeof(DataTransferManager));
+            // TODO: dotnet8 test
+            //IActivationFactory activationFactory = WindowsRuntimeMarshal.GetActivationFactory(typeof(DataTransferManager));
 
             // ReSharper disable once SuspiciousTypeConversion.Global
-            _dataTransferManagerInterOp = (IDataTransferManagerInterOp) activationFactory;
+           // _dataTransferManagerInterOp = (IDataTransferManagerInterOp) activationFactory;
 
             _windowHandle = handle;
             var riid = new Guid(DataTransferManagerId);

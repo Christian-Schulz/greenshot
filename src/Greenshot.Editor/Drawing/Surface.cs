@@ -28,7 +28,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.ServiceModel.Security;
+// TODO: dotnet8 test 
+//using System.ServiceModel.Security;
 using System.Windows.Forms;
 using Dapplo.Windows.Common.Extensions;
 using Dapplo.Windows.Common.Structs;
@@ -703,7 +704,10 @@ namespace Greenshot.Editor.Drawing
             try
             {
                 long lengtBefore = streamWrite.Length;
+                // TODO: dotnet8 test 
+#pragma warning disable SYSLIB0011 // Typ oder Element ist veraltet
                 BinaryFormatter binaryWrite = new BinaryFormatter();
+#pragma warning restore SYSLIB0011 // Typ oder Element ist veraltet
                 binaryWrite.Serialize(streamWrite, _elements);
                 bytesWritten = streamWrite.Length - lengtBefore;
             }
@@ -723,7 +727,10 @@ namespace Greenshot.Editor.Drawing
         {
             try
             {
+                // TODO: dotnet8 test
+#pragma warning disable SYSLIB0011 // Typ oder Element ist veraltet
                 BinaryFormatter binaryRead = new BinaryFormatter();
+#pragma warning restore SYSLIB0011 // Typ oder Element ist veraltet
                 binaryRead.Binder = new BinaryFormatterHelper();
                 IDrawableContainerList loadedElements = (IDrawableContainerList) binaryRead.Deserialize(streamRead);
                 loadedElements.Parent = this;
@@ -734,7 +741,8 @@ namespace Greenshot.Editor.Drawing
                 SelectElements(loadedElements);
                 FieldAggregator.BindElements(loadedElements);
             }
-            catch (SecurityAccessDeniedException)
+            // TODO: dotnet8 test (replaceed with other than SecurityAccessDeniedException)
+            catch (ApplicationException)
             {
                 throw;
             }

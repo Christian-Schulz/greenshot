@@ -22,7 +22,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.ServiceModel.Security;
+// TODO: dotnet8 test
+//using System.ServiceModel.Security;
 using Greenshot.Base.Interfaces.Drawing;
 using Greenshot.Editor.Drawing;
 using Greenshot.Editor.Drawing.Fields;
@@ -117,7 +118,9 @@ namespace Greenshot.Editor.Helpers
                 return returnType;
             }
             LOG.Warn($"Unexpected Greenshot type in .greenshot file detected, maybe vulnerability attack created with ysoserial? Suspicious type: {assemblyName} - {typeName}");
-            throw new SecurityAccessDeniedException($"Suspicious type in .greenshot file: {assemblyName} - {typeName}");
+            // TODO: dotnet8 test
+            //throw new SecurityAccessDeniedException($"Suspicious type in .greenshot file: {assemblyName} - {typeName}");
+            throw new Exception($"Suspicious type in .greenshot file: {assemblyName} - {typeName}");
         }
     }
 }

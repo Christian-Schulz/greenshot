@@ -23,12 +23,15 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
-using System.Runtime.Remoting.Messaging;
-using System.Runtime.Remoting.Proxies;
+//using System.Runtime.Remoting.Messaging;
+//using System.Runtime.Remoting.Proxies;
 using System.Windows.Forms;
 using Greenshot.Base.Core;
 using log4net;
 
+// TODO: dotnet8 test
+
+/*
 namespace Greenshot.Base.Interop
 {
     /// <summary>
@@ -617,3 +620,4 @@ namespace Greenshot.Base.Interop
         }
     }
 }
+*/

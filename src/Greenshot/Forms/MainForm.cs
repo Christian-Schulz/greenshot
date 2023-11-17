@@ -55,6 +55,8 @@ using Greenshot.Editor.Forms;
 using Greenshot.Helpers;
 using Greenshot.Processors;
 using log4net;
+// TODO: dotnet8 test 
+using MethodInvoker = System.Windows.Forms.MethodInvoker;
 using Timer = System.Timers.Timer;
 
 namespace Greenshot.Forms

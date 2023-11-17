@@ -121,7 +121,10 @@ namespace Greenshot.Helpers
                     byte[] data = new byte[cds.cbData];
                     Marshal.Copy(cds.lpData, data, 0, cds.cbData);
                     MemoryStream stream = new MemoryStream(data);
+                    // TODO: dotnet8 test 
+#pragma warning disable SYSLIB0011 // Typ oder Element ist veraltet
                     BinaryFormatter b = new BinaryFormatter();
+#pragma warning restore SYSLIB0011 // Typ oder Element ist veraltet
                     CopyDataObjectData cdo = (CopyDataObjectData) b.Deserialize(stream);
 
                     if (_channels != null && _channels.Contains(cdo.Channel))
@@ -437,7 +440,10 @@ namespace Greenshot.Helpers
             // Try to do a binary serialization on obj.
             // This will throw and exception if the object to
             // be passed isn't serializable.
+            // TODO: dotnet8 test 
+#pragma warning disable SYSLIB0011 // Typ oder Element ist veraltet
             BinaryFormatter b = new BinaryFormatter();
+#pragma warning restore SYSLIB0011 // Typ oder Element ist veraltet
             MemoryStream stream = new MemoryStream();
             b.Serialize(stream, cdo);
             stream.Flush();
