@@ -152,8 +152,9 @@ namespace Greenshot.Forms
 
             _bitmap = ImageHelper.CreateEmpty(90, 90, PixelFormat.Format24bppRgb, BackColor, 96, 96);
             pictureBox1.Image = _bitmap;
-
-            lblTitle.Text = $@"Greenshot {EnvironmentInfo.GetGreenshotVersion()} {(IniConfig.IsPortable ? " Portable" : "")} ({OsInfo.Bits}) bit)";
+            lblTitle.Location =  new Point(lblTitle.Location.X, lblTitle.Location.Y - 10);
+            lblTitle.Text = $@"Greenshot {EnvironmentInfo.GetGreenshotVersion()} {(IniConfig.IsPortable ? " Portable" : "")} ({OsInfo.Bits}) bit)" 
+                + $"{Environment.NewLine}.net runtime { Environment.Version}";
 
             // Number of frames the pixel animation takes
             int frames = FramesForMillis(2000);
