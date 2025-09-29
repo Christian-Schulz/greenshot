@@ -58,17 +58,9 @@ internal static class IpcSender
                 using var writer = new BinaryWriter(client);
                 writer.Write(datatoSend);
             }
-            catch (TimeoutException)
-            {
-                // Instanz läuft zwar, aber pipe hört (noch) nicht zu
-            }
-            catch (IOException)
-            {
-                // Pipe gerade nicht erreichbar
-            }
             catch (Exception ex)
             {
-                Log.Error("Broadcast-Fehler: " + ex.Message);
+                Log.ErrorFormat("Broadcast-Fehler: {0}", ex.Message);
             }
         }
     }
