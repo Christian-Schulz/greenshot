@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Dapplo.Windows.Dpi;
@@ -176,6 +177,7 @@ namespace Greenshot.Forms
     /// </summary>
     public class ToolStripMenuSelectListItem : ToolStripMenuItem
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public object Data { get; set; }
     }
 }

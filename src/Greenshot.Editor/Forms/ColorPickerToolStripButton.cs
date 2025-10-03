@@ -20,6 +20,7 @@
  */
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
@@ -44,6 +45,7 @@ namespace Greenshot.Editor.Forms
             Click += ToolStripButton1Click;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color Color
         {
             set

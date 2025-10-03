@@ -56,6 +56,7 @@ using Greenshot.Helpers;
 using Greenshot.Ipc;
 using Greenshot.Processors;
 using log4net;
+using MethodInvoker = System.Windows.Forms.MethodInvoker;
 using Timer = System.Timers.Timer;
 
 namespace Greenshot.Forms
@@ -586,7 +587,7 @@ namespace Greenshot.Forms
                         try
                         {
                             IniConfig.Reload();
-                            Invoke((MethodInvoker) delegate
+                            Invoke((System.Windows.Forms.MethodInvoker) delegate
                             {
                                 // Even update language when needed
                                 UpdateUi();

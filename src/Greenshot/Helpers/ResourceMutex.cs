@@ -80,15 +80,29 @@ namespace Greenshot.Helpers
             // check whether there's an local instance running already, but use local so this works in a multi-user environment
             try
             {
-                // Added Mutex Security, hopefully this prevents the UnauthorizedAccessException more gracefully
+                // Note: MutexSecurity is not supported in .NET Core/.NET 5+ 
+                // The security rules below are kept for reference but cannot be applied during construction
                 var sid = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
                 var mutexSecurity = new MutexSecurity();
                 mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.FullControl, AccessControlType.Allow));
                 mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.ChangePermissions, AccessControlType.Deny));
                 mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.Delete, AccessControlType.Deny));
 
-                // 1) Create Mutex
-                _applicationMutex = new Mutex(true, _mutexId, out var createdNew, mutexSecurity);
+                // 1) Create Mutex (without security parameter for .NET 9 compatibility)
+                bool createdNew;
+                _applicationMutex = new Mutex(true, _mutexId, out createdNew);
+                
+                // Apply security if supported (this may throw on some platforms)
+                try
+                {
+                    _applicationMutex.SetAccessControl(mutexSecurity);
+                }
+                catch (PlatformNotSupportedException)
+                {
+                    // Security control not supported on this platform, continue without it
+                    Log.DebugFormat("Mutex security control not supported on this platform for {0}", _resourceName);
+                }
+                
                 // 2) if the mutex wasn't created new get the right to it, this returns false if it's already locked
                 if (!createdNew && !_applicationMutex.WaitOne(100, false))
                 {
