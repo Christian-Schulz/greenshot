@@ -21,7 +21,7 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.ServiceModel.Security;
+using System.Security;
 using Greenshot.Editor.FileFormat.V1.Legacy;
 using Xunit;
 
@@ -35,26 +35,28 @@ namespace Greenshot.Test.Editor.FileFormat.V1.Legacy;
 public class LegacySerializationBinderTests
 {
     /// <summary>
-    /// Test that verifies that a SecurityAccessDeniedException is thrown when 
+    /// Test that verifies that a SecurityException is thrown when 
     /// attempting to deserialize an object with a type that is not mapped in the binder.
     /// </summary>
     /// <remarks>This covers the vulnerability attack created with ysoserial. #579 </remarks>
     [Fact]
-    public void Deserialize_UnmappedType_ThrowsSecurityAccessDeniedException()
+    public void Deserialize_UnmappedType_ThrowsSecurityException()
     {
         // Arrange
         var unmappedObject = new UnmappedTestClass { Value = "Test Value" };
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
         var binaryFormatter = new BinaryFormatter();
         
         // Serialize the object without a custom binder
         using var memoryStream = new MemoryStream();
         binaryFormatter.Serialize(memoryStream, unmappedObject);
         memoryStream.Position = 0;
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
             
         // Act & Assert
-        // This should throw a SecurityAccessDeniedException when LegacyFileHelper tries to deserialize
+        // This should throw a SecurityException when LegacyFileHelper tries to deserialize
         // our unmapped type through the LegacySerializationBinder
-        var exception = Assert.Throws<SecurityAccessDeniedException>(() => 
+        var exception = Assert.Throws<SecurityException>(() => 
             LegacyFileHelper.GetContainerListFromLegacyContainerListStream(memoryStream));
             
         // Verify the exception message contains information about the suspicious type
