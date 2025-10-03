@@ -102,14 +102,6 @@
       <EmbedInteropTypes>true</EmbedInteropTypes>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="MicrosoftOfficeCore" Version="15.0.0">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-    <PackageReference Include="Unofficial.Microsoft.mshtml" Version="7.0.3300">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
