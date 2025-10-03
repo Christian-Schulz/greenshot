@@ -53,11 +53,13 @@ namespace Greenshot.Base.Core
                 return default;
             }
 
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
             IFormatter formatter = new BinaryFormatter();
             using var stream = new MemoryStream();
             formatter.Serialize(stream, source);
             stream.Seek(0, SeekOrigin.Begin);
             return (T) formatter.Deserialize(stream);
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
         }
 
         /// <summary>

@@ -32,7 +32,7 @@ public static class LegacyFileHelper
     /// <summary>
     /// Deserializes a legacy Greenshot file stream and converts it into a <see cref="DrawableContainerList"/> object.
     /// </summary>
-    /// <remarks>This method processes a legacy Greenshot file by deserializing its contents to <see cref="LegacyDrawableContainerList"/>,
+    /// <remarks>This method processes a legacy Greenshot file by deserializing its contents to <see cref="LegacyDrawableContainerList"/>
     /// convert this to <see cref="DrawableContainerListDto"/> and then to <see cref="DrawableContainerList"/>. The input stream must contain data in the expected legacy format.</remarks>
     /// <param name="stream">The input stream containing the serialized legacy Greenshot file data. Must not be <see langword="null"/>.</param>
     /// <returns>A <see cref="DrawableContainerList"/> representing the deserialized and converted data from the legacy file.</returns>
@@ -40,11 +40,13 @@ public static class LegacyFileHelper
     public static DrawableContainerList GetContainerListFromLegacyContainerListStream(Stream stream)
     {
         // load file in legacy container classes
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
         BinaryFormatter binaryRead = new BinaryFormatter
         {
             Binder = new LegacySerializationBinder()
         };
         var loadedElements = binaryRead.Deserialize(stream);
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
 
         if (loadedElements is not LegacyDrawableContainerList legacyDrawableContainerList)
         {

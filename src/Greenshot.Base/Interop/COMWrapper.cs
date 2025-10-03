@@ -19,6 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#if NET48_OR_GREATER || NETFRAMEWORK
+
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -617,3 +619,5 @@ namespace Greenshot.Base.Interop
         }
     }
 }
+
+#endif

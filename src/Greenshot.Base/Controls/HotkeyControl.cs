@@ -282,6 +282,7 @@ namespace Greenshot.Base.Controls
         /// <summary>
         /// Used to get/set the hotkey (e.g. Keys.A)
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public Keys Hotkey
         {
             get { return _hotkey; }
@@ -305,6 +306,7 @@ namespace Greenshot.Base.Controls
         /// <summary>
         /// Used to get/set the modifier keys (e.g. Keys.Alt | Keys.Control)
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public Keys HotkeyModifiers
         {
             get { return _modifiers; }

@@ -61,13 +61,34 @@ namespace Greenshot.Base.Core
                 // Only try to instantiate when Windows 8 or later.
                 if (WindowsVersion.IsWindows8OrLater)
                 {
-                    AppVisibility = COMWrapper.CreateInstance<IAppVisibility>();
+                    AppVisibility = CreateAppVisibilityInstance();
                 }
             }
             catch (Exception ex)
             {
                 Log.WarnFormat("Couldn't create instance of IAppVisibility: {0}", ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Creates an IAppVisibility instance using direct COM interop instead of COMWrapper
+        /// </summary>
+        private static IAppVisibility CreateAppVisibilityInstance()
+        {
+            try
+            {
+                var type = Type.GetTypeFromCLSID(new Guid("7E5FE3D9-985F-4908-91F9-EE19F9FD1514"));
+                if (type != null)
+                {
+                    var comObject = Activator.CreateInstance(type);
+                    return comObject as IAppVisibility;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.WarnFormat("Error creating IAppVisibility instance: {0}", ex.Message);
+            }
+            return null;
         }
 
         public static void AddProcessToExcludeFromFreeze(string processName)

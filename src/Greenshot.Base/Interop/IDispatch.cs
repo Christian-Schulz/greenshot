@@ -21,7 +21,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.CustomMarshalers;
 
 namespace Greenshot.Base.Interop
 {
@@ -33,8 +32,8 @@ namespace Greenshot.Base.Interop
 
         [PreserveSig]
         int GetTypeInfo([MarshalAs(UnmanagedType.U4)] int iTInfo, [MarshalAs(UnmanagedType.U4)] int lcid,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(TypeToTypeInfoMarshaler))]
-            out Type typeInfo);
+            [MarshalAs(UnmanagedType.IUnknown)]
+            out object typeInfo);
 
         [PreserveSig]
         int GetIDsOfNames(ref Guid riid, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)]

@@ -33,6 +33,8 @@ namespace Greenshot.Base.Controls
     public partial class QualityDialog : GreenshotForm
     {
         private static readonly CoreConfiguration conf = IniConfig.GetIniSection<CoreConfiguration>();
+        
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public SurfaceOutputSettings Settings { get; set; }
 
         public QualityDialog(SurfaceOutputSettings outputSettings)
