@@ -20,7 +20,7 @@
  */
 using System;
 using System.IO;
-using System.ServiceModel.Security;
+using System.Security;
 using Greenshot.Editor.FileFormat.V1.Legacy;
 using log4net;
 
@@ -79,7 +79,7 @@ internal static class GreenshotTemplateV1
         {
             greenshotTemplate.ContainerList = LegacyFileHelper.GetContainerListFromLegacyContainerListStream(greenshotTemplateFileStream);
         }
-        catch (SecurityAccessDeniedException)
+        catch (SecurityException)
         {
             throw;
         }
