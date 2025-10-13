@@ -21,6 +21,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Security;
 using System.ServiceModel.Security;
 using System.Text;
 using Greenshot.Base.Core;
@@ -88,7 +89,7 @@ internal static class GreenshotFileV1
     /// <param name="greenshotFileStream">A <see cref="Stream"/> containing the Greenshot file data.</param>
     /// <returns>The loaded Greenshot file.</returns>
     /// <exception cref="ArgumentException">If schema version is not found in the stream.</exception>
-    /// <exception cref="SecurityAccessDeniedException">If legacy container list cannot be read due to security restrictions.</exception>
+    /// <exception cref="SecurityException">If legacy container list cannot be read due to security restrictions.</exception>
     internal static GreenshotFile LoadFromStream(Stream greenshotFileStream)
     {
         GreenshotFile returnGreenshotFile = new GreenshotFile
@@ -131,7 +132,7 @@ internal static class GreenshotFileV1
         {
             returnGreenshotFile.ContainerList = LegacyFileHelper.GetContainerListFromLegacyContainerListStream(greenshotFileStream);
         }
-        catch (SecurityAccessDeniedException)
+        catch (SecurityException)
         {
             throw;
         }

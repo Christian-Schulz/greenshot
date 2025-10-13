@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Security;
 using System.ServiceModel.Security;
 using Greenshot.Base.Interfaces.Drawing;
 using Greenshot.Editor.Drawing;
@@ -95,7 +96,7 @@ internal sealed class LegacySerializationBinder : SerializationBinder
     /// <param name="assemblyName">Assembly for the type that was serialized</param>
     /// <param name="typeName">Type that was serialized</param>
     /// <returns>Type which was mapped</returns>
-    /// <exception cref="SecurityAccessDeniedException">If something smells fishy</exception>
+    /// <exception cref="SecurityException">If something smells fishy</exception>
     public override Type BindToType(string assemblyName, string typeName)
     {
         if (string.IsNullOrEmpty(typeName))
@@ -118,6 +119,6 @@ internal sealed class LegacySerializationBinder : SerializationBinder
             return returnType;
         }
         Log.Warn($"Unexpected Greenshot type in .greenshot file detected, maybe vulnerability attack created with ysoserial? Suspicious type: {assemblyName} - {typeName}");
-        throw new SecurityAccessDeniedException($"Suspicious type in .greenshot file: {assemblyName} - {typeName}");
+        throw new SecurityException($"Suspicious type in .greenshot file: {assemblyName} - {typeName}");
     }
 }
