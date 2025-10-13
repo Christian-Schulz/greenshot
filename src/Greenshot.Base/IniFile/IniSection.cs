@@ -31,13 +31,12 @@ namespace Greenshot.Base.IniFile
     /// <summary>
     /// Base class for all IniSections
     /// </summary>
-    [Serializable]
     public abstract class IniSection
     {
         protected static ILog LOG = LogManager.GetLogger(typeof(IniSection));
 
-        [NonSerialized] private readonly IDictionary<string, IniValue> values = new Dictionary<string, IniValue>();
-        [NonSerialized] private IniSectionAttribute iniSectionAttribute;
+        private readonly IDictionary<string, IniValue> values = new Dictionary<string, IniValue>();
+        private IniSectionAttribute iniSectionAttribute;
 
         public IniSectionAttribute IniSectionAttribute
         {

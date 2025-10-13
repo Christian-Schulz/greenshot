@@ -151,14 +151,16 @@ namespace Greenshot.Plugin.Confluence
         /// </summary>
         public void Configure()
         {
-            ConfluenceConfiguration clonedConfig = _config.Clone();
+            ConfluenceConfiguration clonedConfig = new ConfluenceConfiguration();
+            clonedConfig.CopyAllFrom(_config);
+
             ConfluenceConfigurationForm configForm = new ConfluenceConfigurationForm(clonedConfig);
             string url = _config.Url;
             bool? dialogResult = configForm.ShowDialog();
             if (dialogResult.HasValue && dialogResult.Value)
             {
-                // copy the new object to the old...
-                clonedConfig.CloneTo(_config);
+                // copy new values to the original config...
+                _config.CopyAllFrom(clonedConfig);
                 IniConfig.Save();
                 if (_confluenceConnector != null)
                 {

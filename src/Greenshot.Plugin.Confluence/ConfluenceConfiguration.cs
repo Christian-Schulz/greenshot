@@ -28,7 +28,6 @@ namespace Greenshot.Plugin.Confluence
     /// <summary>
     /// Description of ConfluenceConfiguration.
     /// </summary>
-    [Serializable]
     [IniSection("Confluence", Description = "Greenshot Confluence Plugin configuration")]
     public class ConfluenceConfiguration : IniSection
     {
@@ -63,5 +62,22 @@ namespace Greenshot.Plugin.Confluence
 
         [IniProperty("IncludePersonSpaces", Description = "Include personal spaces in the search & browse spaces list", DefaultValue = "False")]
         public bool IncludePersonSpaces { get; set; }
+
+        /// <summary>
+        /// Copies all configuration values from the specified <see cref="ConfluenceConfiguration"/> instance to this
+        /// instance.
+        /// </summary>
+        public void CopyAllFrom(ConfluenceConfiguration other)
+        {
+            Url = other.Url;
+            Timeout = other.Timeout;
+            UploadFormat = other.UploadFormat;
+            UploadJpegQuality = other.UploadJpegQuality;
+            UploadReduceColors = other.UploadReduceColors;
+            OpenPageAfterUpload = other.OpenPageAfterUpload;
+            CopyWikiMarkupForImageToClipboard = other.CopyWikiMarkupForImageToClipboard;
+            SearchSpaceKey = other.SearchSpaceKey;
+            IncludePersonSpaces = other.IncludePersonSpaces;
+        }
     }
 }
