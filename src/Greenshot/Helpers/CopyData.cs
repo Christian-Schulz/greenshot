@@ -26,7 +26,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.ServiceModel.Security;
+using System.Security;
 using System.Windows.Forms;
 using Greenshot.Base.Core;
 using Greenshot.Helpers;
@@ -625,6 +625,6 @@ internal class SafeSerializationBinder : SerializationBinder
         }
 
         LOG.Warn($"Unexpected type received via WM_COPYDATA, a malicious process might be trying to attack. Cancelling deserialization. Suspicious type: {assemblyName} - {typeName}");
-        throw new SecurityAccessDeniedException($"Suspicious type received via WM_COPYDATA: {assemblyName} - {typeName}");
+        throw new SecurityException($"Suspicious type received via WM_COPYDATA: {assemblyName} - {typeName}");
     }
 }
