@@ -25,6 +25,9 @@ using MessagePack;
 
 namespace Greenshot.Ipc;
 
+/// <summary>
+/// Provides helper methods and constants for inter-process communication (IPC) between Greenshot processes.
+/// </summary>
 internal static class IpcHelper
 {
     private static readonly ILog Log = LogManager.GetLogger(typeof(IpcHelper));
@@ -32,10 +35,18 @@ internal static class IpcHelper
     public const string PipePrefix = "Greenshot_Pipe_ID";
     public const string TargetProcessName = "Greenshot";
 
+    /// <summary>
+    /// Specifies the maximum number of bytes that is allowed to be received in a single IPC message.
+    /// </summary>
     public const int MaxAllowedReceivedBytes = 1 * 1024 * 1024; // 1MB
 
     public static string GetPipeName(int processId) => PipePrefix + processId;
 
+    /// <summary>
+    /// Deserializes the specified byte array into an instance of the AppCommands class.
+    /// </summary>
+    /// <remarks>Using MessagePack for deserialization <see cref="IpcMessage"/>.</remarks>
+    /// <param name="rawData">The raw binary data representing a serialized IpcMessage.</param>
     public static AppCommands Deserialize(byte[] rawData)
     {
         AppCommands appCommands;
@@ -52,6 +63,12 @@ internal static class IpcHelper
         return appCommands;
     }
 
+    /// <summary>
+    /// Serializes the specified set of application commands into a binary format.
+    /// </summary>
+    /// <remarks>Using MessagePack for serialization <see cref="IpcMessage"/>.</remarks>
+    /// <param name="appCommands">The collection of application commands to serialize. Cannot be null.</param>
+    /// <returns>A byte array containing the serialized IpcMessage</returns>
     public static byte[] Serialize(AppCommands appCommands)
     {
         byte[] bytes;

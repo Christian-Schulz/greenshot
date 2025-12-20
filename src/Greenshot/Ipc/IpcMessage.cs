@@ -26,15 +26,27 @@ using MessagePack;
 
 namespace Greenshot.Ipc;
 
+/// <summary>
+/// Represents a Data Transfer Object (DTO) for inter-process communication (IPC) messages.
+/// </summary>
 [MessagePackObject]
 public class IpcMessage
 {
+    /// <summary>
+    /// Unique identifier for the message.
+    /// </summary>
     [Key(0)]
     public Guid MessageId { get; set; } = Guid.NewGuid();
 
+    /// <summary>
+    /// Process identifier (PID) of the sender.
+    /// </summary>
     [Key(1)]
     public int SenderPid { get; set; } = Process.GetCurrentProcess().Id;
 
+    /// <summary>
+    /// The list of application commands included in the message.
+    /// </summary>
     [Key(2)]
     public List<KeyValuePair<CommandEnum, string>> Commands { get; set; }
 }

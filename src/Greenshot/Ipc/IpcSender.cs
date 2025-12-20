@@ -31,11 +31,16 @@ internal static class IpcSender
 {
     private static readonly ILog Log = LogManager.GetLogger(typeof(IpcListener));
 
+    /// <inheritdoc cref="Broadcast(AppCommands)"/>
     public static void Send(AppCommands appCommands)
     {
         Broadcast(appCommands);
     }
 
+    /// <summary>
+    /// Sends the application commands to all running Greenshot processes (Broadcast) excluding the current process.
+    /// </summary>
+    /// <param name="commands"></param>
     private static void Broadcast(AppCommands commands)
     {
         var datatoSend = IpcHelper.Serialize(commands);

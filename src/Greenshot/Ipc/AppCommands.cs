@@ -24,6 +24,9 @@ using System.Linq;
 
 namespace Greenshot.Ipc;
 
+/// <summary>
+/// Lst of all possible commands
+/// </summary>
 public enum CommandEnum
 {
     OpenFile,
@@ -32,6 +35,9 @@ public enum CommandEnum
     ReloadConfig
 };
 
+/// <summary>
+/// Represents a collection of application commands with optional string data.
+/// </summary>
 public class AppCommands
 {
     private readonly List<KeyValuePair<CommandEnum, string>> _commands;

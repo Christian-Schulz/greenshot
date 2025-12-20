@@ -29,6 +29,10 @@ using log4net;
 
 namespace Greenshot.Ipc;
 
+/// <summary>
+/// Provides functionality to listen for incoming inter-process communication (IPC) commands over a named pipe and
+/// invoke a callback when commands are received.
+/// </summary>
 internal class IpcListener
 {
     private static readonly ILog Log = LogManager.GetLogger(typeof(IpcListener));
@@ -36,6 +40,15 @@ internal class IpcListener
     private readonly string _pipeName = IpcHelper.GetPipeName(Process.GetCurrentProcess().Id);
     private CancellationTokenSource _cancellationTokenSource;
 
+    /// <summary>
+    /// Starts listening for incoming IPC commands on the configured named pipe and invokes the specified callback when
+    /// a command is received.
+    /// </summary>
+    /// <remarks>
+    /// Only reads data up to a maximum size defined by <see cref="IpcHelper.MaxAllowedReceivedBytes"/> to prevent excessive memory usage.
+    /// </remarks>
+    /// <param name="onCommandReceived">A callback action to invoke with the received AppCommands object.</param>
+    /// <returns>The current IpcListener instance</returns>
     public IpcListener Start(Action<AppCommands> onCommandReceived)
     {
         _cancellationTokenSource = new CancellationTokenSource();
@@ -98,6 +111,9 @@ internal class IpcListener
         return this;
     }
 
+    /// <summary>
+    /// Requests cancellation of the current listening operation.
+    /// </summary>
     public void Stop()
     {
         _cancellationTokenSource?.Cancel();
