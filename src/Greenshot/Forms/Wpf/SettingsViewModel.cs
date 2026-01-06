@@ -21,26 +21,33 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using Greenshot.Base;
 using Greenshot.Base.Core;
 using Greenshot.Base.Core.Enums;
 using Greenshot.Base.IniFile;
 using Greenshot.Base.Interfaces;
 using Greenshot.Configuration;
 using Greenshot.Destinations;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Greenshot.Forms.Wpf
 {
     /// <summary>
     /// ViewModel for the WPF Settings Window
     /// </summary>
-    public class SettingsViewModel : INotifyPropertyChanged
+    public partial class SettingsViewModel : ObservableObject
     {
+        [ObservableProperty]
         private bool _expertModeEnabled;
+
+        [ObservableProperty]
         private bool _autoStartEnabled;
+
+        [ObservableProperty]
         private bool _pickerSelected;
+
+        [ObservableProperty]
         private string _selectedLanguage;
 
         public SettingsViewModel()
@@ -49,110 +56,64 @@ namespace Greenshot.Forms.Wpf
             _expertModeEnabled = !CoreConfiguration.HideExpertSettings;
             // AutoStart is handled separately from INI config
             _autoStartEnabled = false;
-            
+
             // Initialize language
             _selectedLanguage = Language.CurrentLanguage;
-            
+
             // Initialize image formats
             InitializeImageFormats();
-            
+
             // Initialize destinations
             InitializeDestinations();
         }
 
         public CoreConfiguration CoreConfiguration { get; }
 
-        public bool ExpertModeEnabled
-        {
-            get => _expertModeEnabled;
-            set
-            {
-                if (_expertModeEnabled != value)
-                {
-                    _expertModeEnabled = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public bool AutoStartEnabled
-        {
-            get => _autoStartEnabled;
-            set
-            {
-                if (_autoStartEnabled != value)
-                {
-                    _autoStartEnabled = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
         public IList<LanguageFile> SupportedLanguages => Language.SupportedLanguages;
 
-        public string SelectedLanguage
+        partial void OnSelectedLanguageChanged(string value)
         {
-            get => _selectedLanguage;
-            set
-            {
-                if (_selectedLanguage != value)
-                {
-                    _selectedLanguage = value;
-                    Language.CurrentLanguage = value;
-                    CoreConfiguration.Language = value;
-                    OnPropertyChanged();
-                }
-            }
+            Language.CurrentLanguage = value;
+            CoreConfiguration.Language = value;
         }
 
         public List<ImageFormatItem> ImageFormats { get; private set; }
 
         public ObservableCollection<DestinationItem> Destinations { get; private set; }
 
-        public bool PickerSelected
+        partial void OnPickerSelectedChanged(bool value)
         {
-            get => _pickerSelected;
-            set
+            // When picker is selected, deselect all destinations
+            if (value && Destinations != null)
             {
-                if (_pickerSelected != value)
+                foreach (var dest in Destinations)
                 {
-                    _pickerSelected = value;
-                    OnPropertyChanged();
-                    // When picker is selected, deselect all destinations
-                    if (value)
-                    {
-                        foreach (var dest in Destinations)
-                        {
-                            dest.IsSelected = false;
-                        }
-                    }
+                    dest.IsSelected = false;
                 }
             }
         }
 
         private void InitializeImageFormats()
         {
-            ImageFormats = new List<ImageFormatItem>();
-            foreach (OutputFormat format in System.Enum.GetValues(typeof(OutputFormat)))
-            {
-                ImageFormats.Add(new ImageFormatItem
+            ImageFormats = ((IEnumerable<OutputFormat>)System.Enum.GetValues(typeof(OutputFormat)))
+                .Select(format => new ImageFormatItem
                 {
                     Value = format,
                     Description = Language.Translate(format)
-                });
-            }
+                })
+                .ToList();
         }
 
         private void InitializeDestinations()
         {
             Destinations = new ObservableCollection<DestinationItem>();
-            
+
             foreach (IDestination destination in DestinationHelper.GetAllDestinations())
             {
                 // Skip picker - it's handled separately
                 if (nameof(WellKnownDestinations.Picker).Equals(destination.Designation))
                 {
-                    _pickerSelected = CoreConfiguration.OutputDestinations.Contains(destination.Designation);
+                    PickerSelected = CoreConfiguration.OutputDestinations.Contains(destination.Designation);
                     continue;
                 }
 
@@ -162,16 +123,32 @@ namespace Greenshot.Forms.Wpf
                     Description = destination.Description,
                     IsSelected = CoreConfiguration.OutputDestinations.Contains(destination.Designation)
                 };
-                
+
                 Destinations.Add(destItem);
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        // New: move SaveSettings logic into the ViewModel so the View becomes thinner
+        public void SaveSettings()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            var destinations = new List<string>();
+
+            if (PickerSelected)
+            {
+                destinations.Add(nameof(WellKnownDestinations.Picker));
+            }
+            else if (Destinations != null)
+            {
+                foreach (var destItem in Destinations.Where(d => d.IsSelected))
+                {
+                    destinations.Add(destItem.Destination.Designation);
+                }
+            }
+
+            CoreConfiguration.OutputDestinations = destinations;
+
+            // Force save of all configuration sections
+            IniConfig.Save();
         }
     }
 
@@ -181,26 +158,12 @@ namespace Greenshot.Forms.Wpf
         public string Description { get; set; }
     }
 
-    public class DestinationItem : INotifyPropertyChanged
+    public partial class DestinationItem : ObservableObject
     {
-        private bool _isSelected;
-
         public IDestination Destination { get; set; }
         public string Description { get; set; }
 
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set
-            {
-                if (_isSelected != value)
-                {
-                    _isSelected = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        [ObservableProperty]
+        private bool _isSelected;
     }
 }

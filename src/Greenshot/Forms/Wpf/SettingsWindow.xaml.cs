@@ -24,9 +24,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Forms;
+using Greenshot.Base;
 using Greenshot.Base.Core;
 using Greenshot.Base.IniFile;
 using Greenshot.Base.Wpf;
+using Greenshot.Configuration;
 using Greenshot.Destinations;
 using MessageBox = System.Windows.MessageBox;
 
@@ -60,8 +62,8 @@ namespace Greenshot.Forms.Wpf
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            // Save settings
-            SaveSettings();
+            // Save settings via ViewModel
+            _viewModel.SaveSettings();
             DialogResult = true;
             Close();
         }
@@ -87,33 +89,10 @@ namespace Greenshot.Forms.Wpf
 
         private void ShowPatternHelp_Click(object sender, RoutedEventArgs e)
         {
-            string filenamepatternText = Language.GetString(LangKey.settings_message_filenamepattern);
+            string filenamepatternText = Greenshot.Base.Core.Language.GetString(LangKey.settings_message_filenamepattern);
             // Convert %NUM% to ${NUM} for old language files!
             filenamepatternText = Regex.Replace(filenamepatternText, "%([a-zA-Z_0-9]+)%", @"${$1}");
-            MessageBox.Show(filenamepatternText, Language.GetString(LangKey.settings_filenamepattern));
-        }
-
-        private void SaveSettings()
-        {
-            // Save destinations
-            var destinations = new List<string>();
-            
-            if (_viewModel.PickerSelected)
-            {
-                destinations.Add(nameof(WellKnownDestinations.Picker));
-            }
-            else
-            {
-                foreach (var destItem in _viewModel.Destinations.Where(d => d.IsSelected))
-                {
-                    destinations.Add(destItem.Destination.Designation);
-                }
-            }
-            
-            _viewModel.CoreConfiguration.OutputDestinations = destinations;
-            
-            // Force save of all configuration sections
-            IniConfig.Save();
+            MessageBox.Show(filenamepatternText, Greenshot.Base.Core.Language.GetString(LangKey.settings_filenamepattern));
         }
     }
 }
