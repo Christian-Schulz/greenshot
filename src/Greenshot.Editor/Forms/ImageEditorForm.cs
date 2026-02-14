@@ -752,7 +752,9 @@ namespace Greenshot.Editor.Forms
 
         private void BtnLineClick(object sender, EventArgs e)
         {
-            _surface.DrawingMode = DrawingModes.Line;
+            //TODO: only for testing
+            //_surface.DrawingMode = DrawingModes.Line;
+            _surface.DrawingMode = DrawingModes.CuttingMark;
             RefreshFieldControls();
         }
 

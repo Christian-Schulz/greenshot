@@ -325,8 +325,11 @@ namespace Greenshot.Editor.Drawing
                 // Take a base safety margin
                 int lineThickness = 5;
 
-                // add adorner size
-                lineThickness += Adorners.Max(adorner => Math.Max(adorner.Bounds.Width, adorner.Bounds.Height));
+                if (Adorners?.Any() ?? false )
+                {
+                    // add adorner size
+                    lineThickness += Adorners.Max(adorner => Math.Max(adorner.Bounds.Width, adorner.Bounds.Height));
+                }
 
                 if (HasField(FieldType.LINE_THICKNESS))
                 {
@@ -500,7 +503,7 @@ namespace Greenshot.Editor.Drawing
             _parent?.MakeUndoable(new DrawableContainerBoundsChangeMemento(this), allowMerge);
         }
 
-        public void MoveBy(int dx, int dy)
+        public virtual void MoveBy(int dx, int dy)
         {
             Left += dx;
             Top += dy;

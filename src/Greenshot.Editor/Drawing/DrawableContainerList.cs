@@ -191,8 +191,7 @@ namespace Greenshot.Editor.Drawing
             Invalidate();
             foreach (var dc in this)
             {
-                dc.Left += dx;
-                dc.Top += dy;
+                dc.MoveBy(dx, dy);
                 modified = true;
             }
 

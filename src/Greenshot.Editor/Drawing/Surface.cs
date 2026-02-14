@@ -820,6 +820,9 @@ namespace Greenshot.Editor.Drawing
                 case DrawingModes.Path:
                     _undrawnElement = new FreehandContainer(this);
                     break;
+                case DrawingModes.CuttingMark:
+                    _undrawnElement = new CuttingMarkContainer(this);
+                    break;
                 case DrawingModes.None:
                     _undrawnElement = null;
                     break;
