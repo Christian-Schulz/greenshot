@@ -41,7 +41,44 @@ namespace Greenshot.Editor.Drawing
     {
         private static readonly ILog LOG = LogManager.GetLogger(typeof(CursorContainer));
 
+        [NonSerialized]
         protected CapturedCursor cursor;
+
+        /// <summary>
+        /// This is used to serialize the <see cref="cursor"/>
+        /// </summary>
+        private CaptureCursorSerializationWrapper savedCursor;
+        [Serializable]
+        public class CaptureCursorSerializationWrapper
+        {
+            public Bitmap ColorLayer { get; set; }
+            public Bitmap MaskLayer { get; set; }
+            public int SizeWidth { get; set; }
+            public int SizeHeight { get; set; }
+            public int HotspotX { get; set; }
+            public int HotspotY { get; set; }
+
+            public CaptureCursorSerializationWrapper(CapturedCursor cursor)
+            {
+                ColorLayer = cursor.ColorLayer;
+                MaskLayer = cursor.MaskLayer;
+                SizeWidth = cursor.Size.Width;
+                SizeHeight = cursor.Size.Height;
+                HotspotX = cursor.HotSpot.X;
+                HotspotY = cursor.HotSpot.Y;
+            }
+
+            public CapturedCursor ToCapturedCursor()
+            {
+                return new CapturedCursor
+                {
+                    ColorLayer = ColorLayer,
+                    MaskLayer = MaskLayer,
+                    Size = new NativeSize(SizeWidth, SizeHeight),
+                    HotSpot = new NativePoint(HotspotX, HotspotY)
+                };
+            }
+        }
 
         public CursorContainer(ISurface parent) : base(parent)
         {
@@ -51,6 +88,12 @@ namespace Greenshot.Editor.Drawing
         protected override void OnDeserialized(StreamingContext streamingContext)
         {
             base.OnDeserialized(streamingContext);
+            
+            if (savedCursor != null)
+            {
+                cursor = savedCursor.ToCapturedCursor();
+            }
+
             Init();
         }
 
@@ -77,6 +120,7 @@ namespace Greenshot.Editor.Drawing
                 Width = value.Size.Width;
                 Height = value.Size.Height;
                 cursor = value;
+                savedCursor = new CaptureCursorSerializationWrapper(value);
             }
             get { return cursor; }
         }
