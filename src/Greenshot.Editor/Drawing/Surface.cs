@@ -41,6 +41,7 @@ using Greenshot.Editor.Drawing.Emoji;
 using Greenshot.Editor.Drawing.Fields;
 using Greenshot.Editor.FileFormat.Dto;
 using Greenshot.Editor.FileFormat.Dto.Container;
+using Greenshot.Editor.FileFormat.V2;
 using Greenshot.Editor.Memento;
 using log4net;
 
@@ -2058,7 +2059,7 @@ namespace Greenshot.Editor.Drawing
         {
             if (!HasSelectedElements) return;
 
-            var serializedData = DtoHelper.SerializeDrawableContainerList((DrawableContainerList)selectedElements);
+            var serializedData = V2Helper.SerializeDrawableContainerList((DrawableContainerList)selectedElements);
             ClipboardHelper.SetClipboardData(typeof(DrawableContainerListDto), serializedData);
 
             RemoveSelectedElements();
@@ -2071,7 +2072,7 @@ namespace Greenshot.Editor.Drawing
         {
             if (!HasSelectedElements) return;
 
-            var serializedData = DtoHelper.SerializeDrawableContainerList((DrawableContainerList)selectedElements);
+            var serializedData = V2Helper.SerializeDrawableContainerList((DrawableContainerList)selectedElements);
             ClipboardHelper.SetClipboardData(typeof(DrawableContainerListDto), serializedData);
         }
 
@@ -2181,9 +2182,9 @@ namespace Greenshot.Editor.Drawing
 
             if (formats.Contains(typeof(DrawableContainerListDto).FullName))
             {
-                var serializedData = ClipboardHelper.GetFromDataObject(clipboard, typeof(DrawableContainerListDto)) as byte[];
+                var serializedData = ClipboardHelper.GetFromDataObject(clipboard, typeof(DrawableContainerListDto)) as string;
 
-                IDrawableContainerList dcs = DtoHelper.DeserializeDrawableContainerList(serializedData);
+                IDrawableContainerList dcs = V2Helper.DeserializeDrawableContainerList(serializedData);
 
                 if (dcs != null)
                 {

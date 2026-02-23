@@ -21,9 +21,7 @@
 using System.Drawing;
 using System.Linq;
 using Greenshot.Base.Interfaces.Drawing;
-using Greenshot.Editor.Drawing;
 using Greenshot.Editor.FileFormat.Dto.Container;
-using Greenshot.Editor.Forms;
 
 namespace Greenshot.Editor.FileFormat.Dto;
 
@@ -64,34 +62,4 @@ public static class DtoHelper
     /// <param name="color"></param>
     /// <returns></returns>
     public static string ArgbString(Color color) => $"ARGB({color.A}, {color.R}, {color.G}, {color.B})";
-
-    /// <summary>
-    /// Serializes a <see cref="DrawableContainerList"/> into a byte array using MessagePack serialization.
-    /// </summary>
-    /// <remarks>This method converts the DrawableContainerList into a DTO before serializing it.
-    /// <br/> It is mainly used for copying the DrawableContainerList to Clipboard with "<c>Greenshot.Editor.FileFormat.Dto.Container.DrawableContainerListDto</c>" as identifier.
-    /// See also: <seealso cref="ImageEditorForm.SupportedClipboardFormats"/> </remarks>
-    /// <param name="drawableContainerList">The <see cref="DrawableContainerList"/> instance to serialize. Must not be <see langword="null"/>.</param>
-    /// <returns>A byte array containing the serialized representation of the <see cref="DrawableContainerListDto"/>.</returns>
-    public static byte[] SerializeDrawableContainerList(DrawableContainerList drawableContainerList)
-    {
-        var dto = ConvertDomainToDto.ToDto(drawableContainerList);
-        throw new System.Exception("DTO serialization is disabled temporarily - to be fixed later ");
-        return null;  //MessagePackSerializer.Serialize(dto);
-    }
-
-    /// <summary>
-    /// Deserializes a byte array into a <see cref="DrawableContainerList"/> using MessagePack serialization.
-    /// </summary>
-    /// <remarks>It deserializes the byte array into a <see cref="DrawableContainerListDto"/> and then converts it to a <see cref="DrawableContainerList"/>.
-    /// <br/> It is mainly used for reading the DrawableContainerList from Clipboard with "<c>Greenshot.Editor.FileFormat.Dto.Container.DrawableContainerListDto</c>" as identifier.
-    /// See also: <seealso cref="ImageEditorForm.SupportedClipboardFormats"/>
-    /// </remarks>
-    /// <param name="data">A byte array containing the serialized representation of the <see cref="DrawableContainerListDto"/>.</param>
-    public static DrawableContainerList DeserializeDrawableContainerList(byte[] data)
-    {
-        var dto = new DrawableContainerListDto();// MessagePackSerializer.Deserialize<DrawableContainerListDto>(data);
-        throw new System.Exception("DTO serialization is disabled temporarily - to be fixed later ");
-        return ConvertDtoToDomain.ToDomain(dto);
-    }
 }

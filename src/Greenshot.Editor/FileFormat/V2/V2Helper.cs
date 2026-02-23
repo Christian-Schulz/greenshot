@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Greenshot.Editor.Drawing;
 using Greenshot.Editor.FileFormat.Dto;
 using Greenshot.Editor.FileFormat.Dto.Container;
 using log4net;
@@ -341,6 +342,21 @@ public static class V2Helper
     }
 
     /// <summary>
+    /// Serializes a <see cref="DrawableContainerList"/> into a JSON string.
+    /// </summary>
+    /// <remarks>This method converts the DrawableContainerList into a DTO before serializing it.
+    /// <br/> It is mainly used for copying the DrawableContainerList to Clipboard with "<c>Greenshot.Editor.FileFormat.Dto.Container.DrawableContainerListDto</c>" as identifier.
+    /// See also: <seealso cref="ImageEditorForm.SupportedClipboardFormats"/> </remarks>
+    /// <param name="drawableContainerList">The <see cref="DrawableContainerList"/> instance to serialize. Must not be <see langword="null"/>.</param>
+    /// <returns>A JSON string containing the serialized representation of the <see cref="DrawableContainerListDto"/>.</returns>
+    public static string SerializeDrawableContainerList(DrawableContainerList drawableContainerList)
+    {
+        var dto = ConvertDomainToDto.ToDto(drawableContainerList);
+        var json = SerializeDto(dto);
+        return json;
+    }
+
+    /// <summary>
     /// Deserializes the specified JSON string to a Data Transfer Object (DTO) of the specified type.
     /// </summary>
     /// <remarks>
@@ -361,6 +377,21 @@ public static class V2Helper
         var options = DefaultJsonSerializerOptions;
         var dto = JsonSerializer.Deserialize<TDto>(json, options);
         return dto;
+    }
+
+    /// <summary>
+    /// Deserializes a JSON string into a <see cref="DrawableContainerList"/> using JSON serialization.
+    /// </summary>
+    /// <remarks>It deserializes the JSON string into a <see cref="DrawableContainerListDto"/> and then converts it to a <see cref="DrawableContainerList"/>.
+    /// <br/> It is mainly used for reading the DrawableContainerList from Clipboard with "<c>Greenshot.Editor.FileFormat.Dto.Container.DrawableContainerListDto</c>" as identifier.
+    /// See also: <seealso cref="ImageEditorForm.SupportedClipboardFormats"/>
+    /// </remarks>
+    /// <param name="data">A JSON string containing the serialized representation of the <see cref="DrawableContainerListDto"/>.</param>
+    public static DrawableContainerList DeserializeDrawableContainerList(string jsonData)
+    {
+        var dto = DeserializeDto<DrawableContainerListDto>(jsonData);
+        var containerList = ConvertDtoToDomain.ToDomain(dto);
+        return containerList;
     }
 }
 
