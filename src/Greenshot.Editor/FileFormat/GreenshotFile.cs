@@ -25,7 +25,7 @@ using Greenshot.Editor.Drawing;
 namespace Greenshot.Editor.FileFormat;
 
 /// <summary>
-/// Represents a .greenshot file as domain object.
+/// Represents a .greenshot/.gsa file as domain object.
 /// </summary>
 public sealed class GreenshotFile
 {

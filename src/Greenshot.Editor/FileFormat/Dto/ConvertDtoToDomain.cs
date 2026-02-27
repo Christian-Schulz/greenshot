@@ -152,13 +152,11 @@ public static class ConvertDtoToDomain
         var domain = new ImageContainer(parentSurface);
         if (dto.Image !=null)
         {
-            // The image setter recalculates the position and dimensions 
-            // this is no problem, because we correct them later in InitDrawableContainer()
             domain.Image = ByteArrayToImage(dto.Image);
         }else
         {
             Log.Warn("ImageContainerDto contains no image. Creating an empty image with tranparent background as a replacement.");
-            // If no image is provided, we create an empty image with the specified dimensions
+            // If no image is provided, we create an empty image with the default dimensions
             domain.Image = ImageHelper.CreateEmpty(Math.Max(dto.Width,50), Math.Max(dto.Height,50), PixelFormat.Format32bppArgb, Color.Transparent);
         }
 

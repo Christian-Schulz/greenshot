@@ -28,18 +28,22 @@ namespace Greenshot.Editor.FileFormat.Dto.Container;
 /// </summary>
 public sealed class ImageContainerDto : DrawableContainerDto
 {
+    /// <summary>
+    /// Main image data for this container.<br/>
+    /// <inheritdoc cref="ImageContainer.Image"/>
+    /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [GreenshotImageData(nameof(ImagePath), extensionPropertyName: nameof(ImageExtension))]
     public byte[] Image { get; set; } // Store image as byte array
 
     /// <summary>
-    /// Extension of the main image payload (e.g., png, jpg).
+    /// Extension of the main image payload (e.g., png, jpg). Is used to determine the file extension for the image file in the zip archive during serialization.
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string ImageExtension { get; set; }
 
     /// <summary>
-    /// Relative path to the image file within the archive.
+    /// Relative path to the image file within the archive. Is defined during serialization and used while deserialization.
     /// </summary>
     [GreenshotImagePath(nameof(Image))]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

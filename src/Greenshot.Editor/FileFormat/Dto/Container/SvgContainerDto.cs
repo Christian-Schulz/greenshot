@@ -29,10 +29,18 @@ namespace Greenshot.Editor.FileFormat.Dto.Container;
 /// </summary>
 public sealed class SvgContainerDto : DrawableContainerDto
 {
+    /// <summary>
+    /// Main SVG data for this container.<br/>
+    /// The extension is always .svg for serialization to a zip file.
+    /// <inheritdoc cref="SvgContainer.SvgContent"/>
+    /// </summary>
     [GreenshotImageData(pathPropertyName: nameof(SvgPath), staticExtension: "svg")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public byte[] SvgData { get; set; } // Store SVG as byte array
 
+    /// <summary>
+    /// Relative path to the SVG file within the archive. Is defined during serialization and used while deserialization.
+    /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [GreenshotImagePath(nameof(SvgData))]
     public string SvgPath { get; set; }

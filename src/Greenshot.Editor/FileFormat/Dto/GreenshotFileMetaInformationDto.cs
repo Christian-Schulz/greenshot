@@ -30,7 +30,7 @@ namespace Greenshot.Editor.FileFormat.Dto;
 public sealed class GreenshotFileMetaInformationDto
 {
     /// <summary>
-    /// Static file type for .greenshot files. Only for serialization, so users who opens the JSON file directly can see the file type in the JSON content.
+    /// Static file type for .gsa files. Only for serialization, so users who opens the JSON file directly can see the file type in the JSON content.
     /// </summary>
     public GreenshotFileVersionHandler.GreenshotFileType FileType { get; } = GreenshotFileVersionHandler.GreenshotFileType.GreenshotFile;
 
@@ -48,6 +48,5 @@ public sealed class GreenshotFileMetaInformationDto
     public DateTime CaptureDate { get; set; }
 
     /// <inheritdoc cref="GreenshotFileMetaInformation.CaptureSize"/>
-    //TODO: ignore for deserialization, because this should be calculated on load
     public string CaptureSize { get; set; }
 }

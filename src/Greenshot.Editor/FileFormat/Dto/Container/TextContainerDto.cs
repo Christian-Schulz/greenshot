@@ -19,8 +19,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+using Greenshot.Editor.Drawing;
+
 namespace Greenshot.Editor.FileFormat.Dto.Container;
 
+/// <summary>
+/// Data transfer object to serialize <see cref="TextContainer"/> objects.
+/// </summary>
 public sealed class TextContainerDto : DrawableContainerDto
 {
     public string Text { get; set; } = string.Empty;

@@ -30,10 +30,10 @@ public sealed class GreenshotTemplate
     /// <summary>
     /// List of drawable containers that are positioned on the surface. These are graphical elements like text, shapes, and images that can be drawn on the surface.
     /// </summary>
-    public DrawableContainerList ContainerList { get; set; }
+    public DrawableContainerList ContainerList { get; set; } = new();
 
     /// <summary>
-    /// Metadata information about the file, including format version, schema version, and capture details.
+    /// Metadata information about the template file, including format version, schema version, and capture details.
     /// </summary>
     public GreenshotTemplateMetaInformation MetaInformation { get; set; } = new();
 }

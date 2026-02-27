@@ -22,20 +22,17 @@
 namespace Greenshot.Editor.FileFormat;
 
 /// <summary>
-/// Contains metadata information about a .gst file.
+/// Contains metadata information for a <see cref="GreenshotTemplate"/>.
 /// </summary>
 public sealed class GreenshotTemplateMetaInformation
 {
     /// <summary>
-    /// Indicates the version of the file format, which is used to determine the serializer and deserializer for the file.
-    /// For now this is not really needed within the domain object, because you need to know the serializer before deserializing the file.
-    /// The format version is part of the complete file version, so we include it here for completeness.
-    /// May be in the future used to handle backward compatibility issues.
+    /// Version of the template file format.
     /// </summary>
     public GreenshotFileVersionHandler.GreenshotFileFormatVersion FormatVersion { get; set; } = GreenshotFileVersionHandler.GreenshotFileFormatVersion.Unknown;
 
     /// <summary>
-    /// Version of the file schema
+    /// Version of the file schema.
     /// </summary>
     public int SchemaVersion { get; set; }
 

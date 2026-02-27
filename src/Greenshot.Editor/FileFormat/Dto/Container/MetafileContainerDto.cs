@@ -29,16 +29,22 @@ namespace Greenshot.Editor.FileFormat.Dto.Container;
 /// </summary>
 public sealed class MetafileContainerDto : DrawableContainerDto
 {
+    /// <summary>
+    /// Main Metafile data for this container.<br/>
+    /// <inheritdoc cref="MetafileContainer.Metafile"/>
+    /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [GreenshotImageData(nameof(MetafilePath), extensionPropertyName: nameof(MetafileDataExtension))]
     public byte[] MetafileData { get; set; } // Store metafile as byte array
 
-
+    /// <summary>
+    /// Extension of the main Metafile data, without dot, e.g. "emf" or "wmf". Is used to determine the file extension for the image file in the zip archive during serialization.
+    /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string MetafileDataExtension { get; set; }
 
     /// <summary>
-    /// Relative path to the image file within the archive.
+    /// Relative path to the Metafile within the archive. Is defined during serialization and used while deserialization.
     /// </summary>
     [GreenshotImagePath(nameof(MetafileData))]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

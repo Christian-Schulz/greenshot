@@ -52,19 +52,21 @@ public sealed class GreenshotFileVersionHandler
     /// Represents the file format version for greenshot files. This includes greenshot templates as well.
     /// </summary>
     /// <remarks> The file versions are now independent of the app version.<br/>
-    /// The version numbers of greenshot 1.2 matched old greenshot file version 01.02 and greenshot 1.3 matched old file version 01.03.
+    /// The version numbers of greenshot 1.2 matched old greenshot file version 01.02 <br/>
+    /// and greenshot 1.3 matched old file version 01.03. <br/>
+    /// and greenshot 1.4 matched old file version 01.04. <br/>
     /// Now the definition changed a bit and it is composed of two parts.
     /// <code> {serializer version}.{schema version} </code>
     /// The first part is <see cref="GreenshotFileFormatVersion"/>. This decides wich serializer/ binary data structure is used.<br/>
-    /// The second part is <see cref="GreenshotFileDto.SchemaVersion"/>. This schema version only needs to be changed if certain actions are necessary for backward compatibility.<br/>
-    /// 
-    /// The old versions still fit this pattern.
+    /// The second part is schema version <see cref="GreenshotFileVersionHandler.CurrentSchemaVersion"/>. This defines the data tansfer object DTO structure.<br/>
+    /// <br/>
+    /// See ../FileFormat/readme.md for more information about the file format and versioning.
     /// </remarks>
     public enum GreenshotFileFormatVersion
     {
         Unknown = 0,
         /// <summary>
-        /// This format uses BinaryFormat serialization, supporting Greenshot file versions 01.02 and 01.03
+        /// This format uses BinaryFormat serialization, supporting Greenshot file versions 01.02, 01.03 and 01.04
         /// </summary>
         V1 = 1,
         /// <summary>
@@ -79,8 +81,9 @@ public sealed class GreenshotFileVersionHandler
     /// <remarks>
     /// Increase this version if you change the Dto structure in a way that breaks backward compatibility.
     /// After incrementing this version, you need to extend <see cref="GreenshotFileV2.MigrateToCurrentVersion"/>.
+    /// 
     /// <para>
-    /// ./FileFormat/readme.md for more information about the file format and versioning.
+    /// see ../FileFormat/readme.md for more information about the file format and versioning.
     /// </para></remarks>
     public const int CurrentSchemaVersion = 1;
 
@@ -105,13 +108,14 @@ public sealed class GreenshotFileVersionHandler
     }
 
     /// <summary>
-    /// <inheritdoc cref="CreateGreenshotFile"/>
+    /// <inheritdoc cref="CreateGreenshotFile"/><br/>
     /// <inheritdoc cref="SaveToStream"/>
     /// </summary>
     public static bool SaveToStreamInCurrentVersion( ISurface surface, Stream stream) =>
         SaveToStream(CreateGreenshotFile(surface), stream);
 
     /// <summary>
+    /// Saves the <see cref="GreenshotFile"/> as the current file format version.<br/>
     /// <inheritdoc cref="GreenshotFileV2.SaveToStream"/>
     /// </summary>
     private static bool SaveToStream(GreenshotFile greenshotFile, Stream stream) => GreenshotFileV2.SaveToStream(greenshotFile, stream);
@@ -161,10 +165,11 @@ public sealed class GreenshotFileVersionHandler
             throw new ArgumentNullException(nameof(surface.Image), "Surface image cannot be null");
         }
 
-        return CreateGreenshotFileInCurrentVersion(
-            (Bitmap)surface.Image,
-            (Bitmap)surface.GetImageForExport(),
-            new DrawableContainerList(surface.Elements));
+        var greenshotFileInCurrentVersion = CreateGreenshotFileInCurrentVersion(
+                                                (Bitmap)surface.Image,
+                                                (Bitmap)surface.GetImageForExport(),
+                                                new DrawableContainerList(surface.Elements));
+        return greenshotFileInCurrentVersion;
     }
 
     /// <summary>
@@ -177,7 +182,7 @@ public sealed class GreenshotFileVersionHandler
     /// <returns></returns>
     private static GreenshotFile CreateGreenshotFileInCurrentVersion(Bitmap image, Bitmap renderedImage, DrawableContainerList elements)
     {
-        return new GreenshotFile
+        var greenshotFile = new GreenshotFile
         {
             Image = image,
             RenderedImage = renderedImage,
@@ -188,6 +193,7 @@ public sealed class GreenshotFileVersionHandler
                 SchemaVersion = CurrentSchemaVersion,
             },
         };
+        return greenshotFile;
     }
 
     /// <summary>
@@ -226,6 +232,7 @@ public sealed class GreenshotFileVersionHandler
 
     /// <summary>
     /// <inheritdoc cref="LoadFromStream"/>
+    /// <br/>
     /// <inheritdoc cref="CreateSurface"/>
     /// </summary>
     public static ISurface CreateSurfaceFromStream(Stream stream) =>

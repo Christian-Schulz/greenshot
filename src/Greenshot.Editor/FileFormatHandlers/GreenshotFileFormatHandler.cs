@@ -31,6 +31,9 @@ using log4net;
 
 namespace Greenshot.Editor.FileFormatHandlers;
 
+/// <summary>
+/// Handles the .gsa (Greenshot Archive) and .greenshot file format,
+/// </summary>
 public sealed class GreenshotFileFormatHandler : AbstractFileFormatHandler, IFileFormatHandler
 {
     private static readonly ILog Log = LogManager.GetLogger(typeof(GreenshotFileFormatHandler));
@@ -44,9 +47,10 @@ public sealed class GreenshotFileFormatHandler : AbstractFileFormatHandler, IFil
     }
 
     /// <summary>
-    /// Save the surface to the specified stream in the current .greenshot file format.
+    /// Save the surface to the specified stream in the current greenshot file format.<br/>
+    /// <inheritdoc cref="GreenshotFileVersionHandler.SaveToStreamInCurrentVersion(ISurface, Stream)"/>
     /// </summary>
-    /// <remarks>Ignores the given bitmap, as the .greenshot file always uses the original surface image.</remarks>
+    /// <remarks>Ignores the given bitmap, as the greenshot file always uses the original surface image.</remarks>
     /// <returns><see langword="true"/> if the surface was successfully saved to the stream; otherwise, <see langword="false"/>.</returns>
     public override bool TrySaveToStream(Bitmap bitmap, Stream stream, string extension, ISurface surface = null, SurfaceOutputSettings surfaceOutputSettings = null)
     {
@@ -62,7 +66,7 @@ public sealed class GreenshotFileFormatHandler : AbstractFileFormatHandler, IFil
         }
         catch (Exception ex)
         {
-            Log.Error("Couldn't save surface as .greenshot: ", ex);
+            Log.Error($"Couldn't save surface as greenshot file (extension=\"{extension}\"", ex);
         }
 
         return false;
@@ -85,7 +89,7 @@ public sealed class GreenshotFileFormatHandler : AbstractFileFormatHandler, IFil
         }
         catch (Exception ex)
         {
-            Log.Error("Couldn't load .greenshot: ", ex);
+            Log.Error($"Couldn't load greenshot file (extension=\"{extension}\"", ex);
         }
         bitmap = null;
         return false;

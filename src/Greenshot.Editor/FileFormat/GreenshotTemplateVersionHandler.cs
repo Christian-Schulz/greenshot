@@ -29,9 +29,12 @@ using static Greenshot.Editor.FileFormat.GreenshotFileVersionHandler;
 namespace Greenshot.Editor.FileFormat;
 
 /// <summary>
-/// Provides functionality for handling different Greenshot template file format versions.
+/// Provides functionality for handling all supported Greenshot template file format versions.
 /// </summary>
-public class GreenshotTemplateVersionHandler
+/// <remarks>
+/// It also provides methods for loading and saving Greenshot templates, which automatically detect the file format version and use the appropriate serializer and deserializer.
+/// </remarks>
+public sealed class GreenshotTemplateVersionHandler
 {
     private static readonly ILog Log = LogManager.GetLogger(typeof(GreenshotFileVersionHandler));
 
@@ -55,18 +58,25 @@ public class GreenshotTemplateVersionHandler
     }
 
     /// <summary>
-    /// <inheritdoc cref="CreateGreenshotFileInCurrentVersion"/>
+    /// <inheritdoc cref="CreateGreenshotTemplateInCurrentVersion"/>
+    /// <br/>
     /// <inheritdoc cref="SaveToStream"/>
     /// </summary>
     public static bool SaveToStreamInCurrentVersion(DrawableContainerList elements, Stream stream) =>
         SaveToStream(CreateGreenshotTemplateInCurrentVersion(elements), stream);
 
     /// <summary>
+    /// Saves the <see cref="GreenshotTemplate"/> as the current file format version.<br/>
     /// <inheritdoc cref="GreenshotTemplateV2.SaveToStream"/>
     /// </summary>
     private static bool SaveToStream(GreenshotTemplate greenshotTemplate, Stream stream) => GreenshotTemplateV2.SaveToStream(greenshotTemplate, stream);
 
-
+    /// <summary>
+    /// Detects the Greenshot file version from the provided stream.
+    /// </summary>
+    /// <param name="greenshotFileStream">A <see cref="Stream"/> containing the Greenshot file data.</param>
+    /// <returns><see cref="GreenshotFileFormatVersion"/></returns>
+    /// <exception cref="ArgumentException">Thrown if the file format version cannot be determined.</exception>
     private static GreenshotFileFormatVersion DetectFileFormatVersion(Stream drawableContainerListFileStream)
     {
         // check for newest version first
@@ -93,7 +103,7 @@ public class GreenshotTemplateVersionHandler
     /// <returns></returns>
     private static GreenshotTemplate CreateGreenshotTemplateInCurrentVersion(DrawableContainerList elements)
     {
-        return new GreenshotTemplate
+        var greenshotTemplate = new GreenshotTemplate
         {
             ContainerList = elements,
             MetaInformation = new GreenshotTemplateMetaInformation
@@ -102,6 +112,7 @@ public class GreenshotTemplateVersionHandler
                 SchemaVersion = CurrentSchemaVersion,
             }
         };
+        return greenshotTemplate;
     }
 
 }

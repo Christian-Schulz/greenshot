@@ -24,25 +24,22 @@ using System;
 namespace Greenshot.Editor.FileFormat;
 
 /// <summary>
-/// Contains metadata information about a .greenshot file.
+/// Contains metadata information for a <see cref="GreenshotFile"/>.
 /// </summary>
 public sealed class GreenshotFileMetaInformation
 {
     /// <summary>
-    /// Indicates the version of the file format, which is used to determine the serializer and deserializer for the file.
-    /// For now this is not really needed within the domain object, because you need to know the serializer before deserializing the file.
-    /// The format version is part of the complete file version, so we include it here for completeness.
-    /// May be in the future used to handle backward compatibility issues.
+    /// Version of the file format.
     /// </summary>
     public GreenshotFileVersionHandler.GreenshotFileFormatVersion FormatVersion { get; set; } = GreenshotFileVersionHandler.GreenshotFileFormatVersion.Unknown;
 
     /// <summary>
-    /// Version of the file schema
+    /// Version of the file schema.
     /// </summary>
     public int SchemaVersion { get; set; }
 
     /// <summary>
-    /// The version of Greenshot that was used to save this file.
+    /// The version of the Greenshot app that was used to save this file.
     /// </summary>
     public string SavedByGreenshotVersion { get; set; }
 
@@ -52,7 +49,7 @@ public sealed class GreenshotFileMetaInformation
     public DateTime CaptureDate { get; set; }
 
     /// <summary>
-    /// The dimensions of the captured image in the format "widthxheight px" (e.g., "1920x1080 px").
+    /// The dimensions of the captured image, formatted as "widthxheight px" (e.g., "1920x1080 px").
     /// </summary>
     public string CaptureSize { get; set; }
 }

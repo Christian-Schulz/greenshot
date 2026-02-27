@@ -25,6 +25,7 @@ namespace Greenshot.Editor.FileFormat.Dto.Container;
 /// <summary>
 /// Data transfer object to serialize <see cref="CursorContainer"/> objects.
 /// The <see cref="CursorContainer"/>  is not really in use. For a capture with mouse cursor the IconContainer is used. See: cctor Surface(ICapture capture) in <see cref="Surface"/>. 
+/// TODO: this is not longer true, the CursorContainer will be used in the future 
 /// </summary>
 public sealed class CursorContainerDto : DrawableContainerDto
 {

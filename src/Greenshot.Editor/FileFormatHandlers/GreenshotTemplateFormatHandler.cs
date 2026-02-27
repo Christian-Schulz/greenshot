@@ -44,8 +44,11 @@ public sealed class GreenshotTemplateFormatHandler : AbstractFileFormatHandler, 
         SupportedExtensions[FileFormatHandlerActions.LoadFromStream] = [];
         SupportedExtensions[FileFormatHandlerActions.SaveToStream] = _ourExtensions;
     }
-
-    /// <inheritdoc />
+    /// <summary>
+    /// Save the surface to the specified stream in the current greenshot file format.<br/>
+    /// <inheritdoc cref="GreenshotTemplateVersionHandler.SaveToStreamInCurrentVersion(DrawableContainerList, Stream)"/>
+    /// </summary>
+    /// <returns><see langword="true"/> if the surface was successfully saved to the stream; otherwise, <see langword="false"/>.</returns>
     public override bool TrySaveToStream(Bitmap bitmap, Stream stream, string extension, ISurface surface = null, SurfaceOutputSettings surfaceOutputSettings = null)
     {
         if (surface == null)
@@ -59,7 +62,7 @@ public sealed class GreenshotTemplateFormatHandler : AbstractFileFormatHandler, 
         }
         catch (Exception ex)
         {
-            Log.Error("Couldn't save surface as .gst: ", ex);
+            Log.Error($"Couldn't save surface as greenshot template file (extension=\"{extension}\"", ex);
         }
 
         return false;
@@ -93,14 +96,14 @@ public sealed class GreenshotTemplateFormatHandler : AbstractFileFormatHandler, 
     }
 
     /// <inheritdoc />
-    /// <remarks>Currently not supported</remarks>
+    /// <remarks>!! Currently not supported !!</remarks>
     public override bool TryLoadFromStream(Stream stream, string extension, out Bitmap bitmap)
     {
         throw new NotImplementedException("Greenshot template (.gst) does not support save as image.");
     }
 
     /// <summary>
-    /// Loads a Greenshot template from the specified file and applies its elements to the surface.
+    /// Loads a Greenshot template from the specified file and applies its elements to the provided surface.<br/>
     /// </summary>
     /// <param name="fullPath">The full path to the file containing the Greenshot template. Cannot be null or empty.</param>
     /// <param name="surface">The surface to which the template elements will be applied. Cannot be null.</param>
