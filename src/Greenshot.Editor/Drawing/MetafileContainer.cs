@@ -31,7 +31,7 @@ using Greenshot.Base.Interfaces;
 namespace Greenshot.Editor.Drawing
 {
     /// <summary>
-    /// This provides a resizable SVG container, redrawing the SVG in the size the container takes.
+    /// This provides a resizable Metafile container, redrawing the Metafile in the size the container takes.
     /// </summary>
     public class MetafileContainer : VectorGraphicsContainer
     {
@@ -42,23 +42,29 @@ namespace Greenshot.Editor.Drawing
         }
 
         /// <summary>
-        /// Original file content. Is used for serialization.
+        /// Original file content is used for serialization.
         /// More Information: GDI+ does not support saving .wmf or .emf files, because there is no encoder.
         /// So we need to save the original file content for deserialization.
         /// </summary>
         public MemoryStream MetafileContent = new MemoryStream();
 
+        /// <summary>
+        /// We need to store the extension of the original file content to determine the file extension for the image file in the zip archive during serialization.
+        /// </summary>
+        public string MetafileContentExtension;
+
         public MetafileContainer(Stream stream, ISurface parent) : base(parent)
         {
-
             stream.CopyTo(MetafileContent);
             stream.Seek(0, SeekOrigin.Begin);
+            MetafileContentExtension = DetermineMetafileExtension(stream);
             var image = Image.FromStream(stream, true, true);
             if (image is Metafile metaFile)
             {
                 _metafile = metaFile;
                 Size = new NativeSize(_metafile.Width / 4, _metafile.Height / 4);
-            } else  if (image is Bitmap imageFile)
+            }
+            else if (image is Bitmap imageFile)
             {
                 // Fallback to support old files version 1.03
                 // if the stream is not a Metafile, we create a Metafile from the Bitmap.
@@ -69,6 +75,50 @@ namespace Greenshot.Editor.Drawing
             {
                 throw new ArgumentException("Stream is not a valid Metafile");
             }
+        }
+
+        /// <summary>
+        /// Determines the appropriate file extension for a metafile based on its header magic number.
+        /// </summary>
+        /// <remarks>The method checks the first four bytes of the stream to identify the metafile format.
+        /// It recognizes EMF and WMF formats based on their respective magic numbers. If the format cannot be
+        /// determined, it defaults to the EMF extension.</remarks>
+        /// <param name="stream">The stream containing the metafile data. This stream must be seekable and contain at least four bytes of
+        /// data to determine the metafile type.</param>
+        private string DetermineMetafileExtension(Stream stream)
+        {
+            var assumedExtension = String.Empty;
+            long originalPosition = stream.Position;
+            try
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                byte[] header = new byte[4];
+                if (stream.Read(header, 0, 4) == 4)
+                {
+                    uint magic = BitConverter.ToUInt32(header, 0);
+
+                    // Check for EMF magic number (0x464D4520 = "EMF ")
+                    if (magic == 0x464D4520)
+                    {
+                        assumedExtension = ".emf";
+                    }
+                    // Check for WMF magic numbers (0xD7CDC69A or 0x01000900)
+                    else if (magic == 0xD7CDC69A || magic == 0x01000900)
+                    {
+                        assumedExtension = ".wmf";
+                    }
+                    else
+                    {
+                        // Default to emf if unable to determine
+                        assumedExtension = ".emf";
+                    }
+                }
+            }
+            finally
+            {
+                stream.Seek(originalPosition, SeekOrigin.Begin);
+            }
+            return assumedExtension;
         }
 
         protected override Image ComputeBitmap()

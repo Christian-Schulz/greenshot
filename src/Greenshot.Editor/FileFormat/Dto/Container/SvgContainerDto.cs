@@ -36,7 +36,7 @@ public sealed class SvgContainerDto : DrawableContainerDto
     /// </summary>
     [GreenshotImageData(pathPropertyName: nameof(SvgPath), staticExtension: "svg")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public byte[] SvgData { get; set; } // Store SVG as byte array
+    public byte[] SvgData { get; set; }
 
     /// <summary>
     /// Relative path to the SVG file within the archive. Is defined during serialization and used while deserialization.

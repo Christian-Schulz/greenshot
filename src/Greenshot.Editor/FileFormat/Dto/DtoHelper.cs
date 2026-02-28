@@ -62,4 +62,50 @@ public static class DtoHelper
     /// <param name="color"></param>
     /// <returns></returns>
     public static string ArgbString(Color color) => $"ARGB({color.A}, {color.R}, {color.G}, {color.B})";
+
+    /// <summary>
+    /// Parses a color string in HTML format (e.g., "#AARRGGBB", "#RRGGBB", "#RGB", or named colors) to a <see cref="Color"/> object.
+    /// </summary>
+    /// <param name="colorString">The color string to parse.</param>
+    /// <returns>The parsed Color, or Transparent if parsing fails.</returns>
+    public static Color ParseColorString(string colorString)
+    {
+        var fallbackColor = Color.Transparent;
+
+        if (string.IsNullOrEmpty(colorString)) return fallbackColor;
+        
+        // Support #AARRGGBB format
+        if (colorString.StartsWith("#") && colorString.Length == 9)
+        {
+            try
+            {
+                uint argb = uint.Parse(colorString.Substring(1), System.Globalization.NumberStyles.HexNumber);
+                return Color.FromArgb(unchecked((int)argb));
+            }
+            catch
+            {
+                return fallbackColor;
+            }
+        }
+        
+        // Fallback to ColorTranslator for other formats like #RGB or named colors
+        try
+        {
+            return ColorTranslator.FromHtml(colorString);
+        }
+        catch
+        {
+            return fallbackColor;
+        }
+    }
+
+    /// <summary>
+    /// Formats a <see cref="Color"/> object to a string in #AARRGGBB format.
+    /// </summary>
+    /// <param name="color">The color to format.</param>
+    /// <returns>The formatted color string.</returns>
+    public static string FormatColorToString(Color color)
+    {
+        return $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
+    }
 }

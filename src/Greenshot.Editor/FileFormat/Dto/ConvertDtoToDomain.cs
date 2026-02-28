@@ -57,8 +57,8 @@ public static class ConvertDtoToDomain
         return new GreenshotFile
         {
             ContainerList = ToDomain(dto.ContainerList),
-            Image = ByteArrayToImage(dto.Image),
-            RenderedImage = ByteArrayToImage(dto.RenderedImage),
+            Image = ImageIO.ByteArrayToImage(dto.Image),
+            RenderedImage = ImageIO.ByteArrayToImage(dto.RenderedImage),
             MetaInformation = ToDomain(dto.MetaInformation)
         };
     }
@@ -150,14 +150,17 @@ public static class ConvertDtoToDomain
         parentSurface = CheckOrCreateParentSurface(parentSurface);
 
         var domain = new ImageContainer(parentSurface);
-        if (dto.Image !=null)
+        var image = ImageIO.ByteArrayToImage(dto.Image);
+        if (image != null)
         {
-            domain.Image = ByteArrayToImage(dto.Image);
-        }else
+            domain.Image = image;
+        }
+        else
         {
-            Log.Warn("ImageContainerDto contains no image. Creating an empty image with tranparent background as a replacement.");
-            // If no image is provided, we create an empty image with the default dimensions
-            domain.Image = ImageHelper.CreateEmpty(Math.Max(dto.Width,50), Math.Max(dto.Height,50), PixelFormat.Format32bppArgb, Color.Transparent);
+            Log.Warn("ImageContainerDto contains no image. Creating an empty image with light gray background as a replacement.");
+            // If no image is provided, we create an empty image with the default dimensions 
+            // this is to ensure that the container can still be displayed and interacted with, even if the original image data is missing or corrupted.
+            domain.Image = ImageHelper.CreateEmpty(Math.Max(dto.Width,domain.DefaultSize.Width), Math.Max(dto.Height,domain.DefaultSize.Height), PixelFormat.Format32bppArgb, Color.LightGray);
         }
 
         return InitDrawableContainer(domain, dto);
@@ -263,9 +266,10 @@ public static class ConvertDtoToDomain
         parentSurface = CheckOrCreateParentSurface(parentSurface);
         
         var domain = new IconContainer(parentSurface);
-        if (dto.Icon !=null)
+        var icon = ImageIO.ByteArrayToIcon(dto.Icon);
+        if (icon != null)
         {
-            domain.Icon = ByteArrayToIcon(dto.Icon);
+            domain.Icon = icon;
         }
         else
         {
@@ -409,26 +413,6 @@ public static class ConvertDtoToDomain
         {
             domain.SetFieldValue(field.FieldType, field.Value);
         }
-    }
-
-    /// <summary>
-    /// Converts a byte array into an <see cref="Image"/> object.
-    /// </summary>
-    private static Image ByteArrayToImage(byte[] byteArrayIn)
-    {
-        if (byteArrayIn == null) return null;
-        using var ms = new MemoryStream(byteArrayIn);
-        return Image.FromStream(ms);
-    }
-
-    /// <summary>
-    /// Converts a byte array into an <see cref="Icon"/> object.
-    /// </summary>
-    private static Icon ByteArrayToIcon(byte[] byteArrayIn)
-    {
-        if (byteArrayIn == null) return null;
-        using var ms = new MemoryStream(byteArrayIn);
-        return new Icon(ms);
-    }
+    }    
 }
 

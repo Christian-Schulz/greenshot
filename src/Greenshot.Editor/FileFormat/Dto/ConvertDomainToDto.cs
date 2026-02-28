@@ -23,11 +23,13 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using Greenshot.Base.Core;
 using Greenshot.Base.Interfaces.Drawing;
 using Greenshot.Editor.Drawing;
 using Greenshot.Editor.Drawing.Emoji;
 using Greenshot.Editor.FileFormat.Dto.Container;
 using Greenshot.Editor.FileFormat.Dto.Fields;
+using log4net;
 using static Greenshot.Editor.Drawing.ArrowContainer;
 using static Greenshot.Editor.Drawing.FilterContainer;
 
@@ -39,7 +41,7 @@ namespace Greenshot.Editor.FileFormat.Dto;
 /// <remarks>This class contains a collection of static ToDto() methods that handle the transformation</remarks>
 public static class ConvertDomainToDto
 {
-
+    private static readonly ILog Log = LogManager.GetLogger(typeof(ConvertDomainToDto));
     public static GreenshotFileDto ToDto(GreenshotFile domain)
     {
         if (domain == null) return null;
@@ -129,6 +131,17 @@ public static class ConvertDomainToDto
     {
         if (domain == null) return null;
 
+        (byte[] Data, string Extension) imageDataAndExtension = (Array.Empty<byte>(), string.Empty);
+
+        if (domain.Image is null)
+        {
+            Log.Warn("The ImageContainer contains no Image Data");
+        }
+        else
+        {
+            imageDataAndExtension = ImageIO.GetImageDataAndExtension(domain.Image);
+        }
+
         var dto = new ImageContainerDto
         {
             Left = domain.Left,
@@ -136,8 +149,8 @@ public static class ConvertDomainToDto
             Width = domain.Width,
             Height = domain.Height,
             Fields = domain.GetFields() == null ? [] : domain.GetFields().Select(ToDto).ToList(),
-            Image = ImageToByteArray(domain.Image),
-            ImageExtension ="png", // because ImageToByteArray() convert it to PNG
+            Image = imageDataAndExtension.Data,
+            ImageExtension = imageDataAndExtension.Extension
         };
         return dto;
     }
@@ -154,7 +167,7 @@ public static class ConvertDomainToDto
             Height = domain.Height,
             Fields = domain.GetFields() == null ? [] : domain.GetFields().Select(ToDto).ToList(),
             MetafileData = domain.MetafileContent.ToArray(),
-            MetafileDataExtension = null, //TODO CHR: How to ensure the correct extension here?
+            MetafileDataExtension = domain.MetafileContentExtension,
             RotationAngle = domain.RotationAngle
         };
         return dto;
@@ -275,6 +288,17 @@ public static class ConvertDomainToDto
     {
         if (domain == null) return null;
 
+        (byte[] Data, string Extension) iconDataAndExtension = (Array.Empty<byte>(), string.Empty)  ;
+
+        if (domain.Icon is null)
+        {
+            Log.Warn("The IconContainer contains no Icon Data");
+        }
+        else
+        {
+            iconDataAndExtension = ImageIO.GetIconDataAndExtension(domain.Icon);
+        }
+
         var dto = new IconContainerDto
         {
             Left = domain.Left,
@@ -282,7 +306,7 @@ public static class ConvertDomainToDto
             Width = domain.Width,
             Height = domain.Height,
             Fields = domain.GetFields() == null ? [] : domain.GetFields().Select(ToDto).ToList(),
-            Icon = IconToByteArray(domain.Icon)
+            Icon = iconDataAndExtension.Data
         };
         return dto;
     }

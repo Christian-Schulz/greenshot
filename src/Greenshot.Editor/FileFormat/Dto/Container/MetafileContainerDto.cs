@@ -35,7 +35,7 @@ public sealed class MetafileContainerDto : DrawableContainerDto
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [GreenshotImageData(nameof(MetafilePath), extensionPropertyName: nameof(MetafileDataExtension))]
-    public byte[] MetafileData { get; set; } // Store metafile as byte array
+    public byte[] MetafileData { get; set; }
 
     /// <summary>
     /// Extension of the main Metafile data, without dot, e.g. "emf" or "wmf". Is used to determine the file extension for the image file in the zip archive during serialization.

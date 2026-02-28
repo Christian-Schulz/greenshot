@@ -37,38 +37,8 @@ public sealed class ColorFieldValueDto : FieldValueDto
     [JsonIgnore]
     public Color Value
     {
-        get
-        {
-            var fallbackColor = System.Drawing.Color.Transparent;
-
-            if (string.IsNullOrEmpty(Color)) return fallbackColor;
-            // Support #AARRGGBB format
-            if (Color.StartsWith("#") && Color.Length == 9)
-            {
-                try
-                {
-                    uint argb = uint.Parse(Color.Substring(1), System.Globalization.NumberStyles.HexNumber);
-                    return System.Drawing.Color.FromArgb(unchecked((int)argb));
-                }
-                catch
-                {
-                    return fallbackColor;
-                }
-            }
-            // Fallback to ColorTranslator for other formats like #RGB or named colors
-            try
-            {
-                return ColorTranslator.FromHtml(Color);
-            }
-            catch
-            {
-                return fallbackColor;
-            }
-        }
-        set
-        {
-            Color = $"#{value.A:X2}{value.R:X2}{value.G:X2}{value.B:X2}";
-        }
+        get => DtoHelper.ParseColorString(Color);
+        set => Color = DtoHelper.FormatColorToString(value);
     }
 
     public override object GetValue()

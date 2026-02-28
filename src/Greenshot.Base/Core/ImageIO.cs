@@ -66,7 +66,7 @@ namespace Greenshot.Base.Core
                 ConstructorInfo ci = typeof(PropertyItem).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public, null, new Type[]
                 {
                 }, null);
-                propertyItem = (PropertyItem) ci.Invoke(null);
+                propertyItem = (PropertyItem)ci.Invoke(null);
                 // Make sure it's of type string
                 propertyItem.Type = 2;
                 // Set the ID
@@ -211,7 +211,7 @@ namespace Greenshot.Base.Core
             bool isAlpha = Image.IsAlphaPixelFormat(imageToSave.PixelFormat);
             if (outputSettings.ReduceColors || (!isAlpha && CoreConfig.OutputFileAutoReduceColors))
             {
-                using var quantizer = new WuQuantizer((Bitmap) imageToSave);
+                using var quantizer = new WuQuantizer((Bitmap)imageToSave);
                 int colorCount = quantizer.GetColorCount();
                 Log.InfoFormat("Image with format {0} has {1} colors", imageToSave.PixelFormat, colorCount);
                 if (!outputSettings.ReduceColors && colorCount >= 256)
@@ -314,7 +314,7 @@ namespace Greenshot.Base.Core
             OutputFormat format = OutputFormat.png;
             try
             {
-                format = (OutputFormat) Enum.Parse(typeof(OutputFormat), extension.ToLower());
+                format = (OutputFormat)Enum.Parse(typeof(OutputFormat), extension.ToLower());
             }
             catch (ArgumentException ae)
             {
@@ -571,6 +571,74 @@ namespace Greenshot.Base.Core
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Convert an image to a byte array and get the extension for the image format.
+        /// An unknown format will be converted as PNG.
+        /// </summary>
+        /// <param name="myImage">The image to convert.</param>
+        /// <returns>A tuple containing the byte array of the image and its file extension.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the image is null.</exception>
+        public static (byte[] Data, string Extension) GetImageDataAndExtension(Image myImage)
+        {
+            if (myImage == null)
+            {
+                throw new ArgumentNullException(nameof(myImage));
+            }
+
+            // maps known formats to their extension, if the format is not known we default to png
+            var (format, extension) = myImage.RawFormat switch
+            {
+                var f when f.Equals(ImageFormat.Jpeg) => (ImageFormat.Jpeg, "jpg"),
+                var f when f.Equals(ImageFormat.Gif) => (ImageFormat.Gif, "gif"),
+                var f when f.Equals(ImageFormat.Bmp) => (ImageFormat.Bmp, "bmp"),
+                var f when f.Equals(ImageFormat.Tiff) => (ImageFormat.Tiff, "tiff"),
+                var f when f.Equals(ImageFormat.Png) => (ImageFormat.Png, "png"),
+                _ => (ImageFormat.Png, "png")
+            };
+
+            using var ms = new MemoryStream();
+            myImage.Save(ms, format);
+            return (ms.ToArray(), extension);
+        }
+
+        /// <summary>
+        /// Convert an icon to a byte array and get the extension for the icon format.
+        /// </summary>
+        /// <param name="icon">The icon to convert.</param>
+        /// <returns>A tuple containing the byte array of the icon and its file extension.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the icon is null.</exception>
+        public static (byte[] Data, string Extension) GetIconDataAndExtension(Icon icon)
+        {
+            if (icon == null)
+            {
+                throw new ArgumentNullException(nameof(icon));
+            }
+
+            using var ms = new MemoryStream();
+            icon.Save(ms);
+            return (ms.ToArray(), "ico");
+        }
+
+        /// <summary>
+        /// Converts a byte array into an <see cref="Image"/> object.
+        /// </summary>
+        public static Image ByteArrayToImage(byte[] byteArrayIn)
+        {
+            if (byteArrayIn == null || byteArrayIn.Length == 0) return null;
+            using var ms = new MemoryStream(byteArrayIn);
+            return Image.FromStream(ms);
+        }
+
+        /// <summary>
+        /// Converts a byte array into an <see cref="Icon"/> object.
+        /// </summary>
+        public static Icon ByteArrayToIcon(byte[] byteArrayIn)
+        {
+            if (byteArrayIn == null || byteArrayIn.Length == 0) return null;
+            using var ms = new MemoryStream(byteArrayIn);
+            return new Icon(ms);
         }
 
     }

@@ -34,13 +34,25 @@ public sealed class ImageContainerDto : DrawableContainerDto
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [GreenshotImageData(nameof(ImagePath), extensionPropertyName: nameof(ImageExtension))]
-    public byte[] Image { get; set; } // Store image as byte array
+    public byte[] Image { get; set; }
+
+    /// <summary>
+    /// backing field for <see cref="ImageExtension"/> to ensure that the value is stored in lowercase.
+    /// </summary>
+    private string _imageExtension;
 
     /// <summary>
     /// Extension of the main image payload (e.g., png, jpg). Is used to determine the file extension for the image file in the zip archive during serialization.
     /// </summary>
+    /// <remarks>
+    /// The value is automatically converted to lowercase to ensure consistency.
+    /// </remarks>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string ImageExtension { get; set; }
+    public string ImageExtension 
+    { 
+        get => _imageExtension; 
+        set => _imageExtension = value?.ToLowerInvariant(); 
+    }
 
     /// <summary>
     /// Relative path to the image file within the archive. Is defined during serialization and used while deserialization.
