@@ -21,6 +21,9 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Web.UI.WebControls;
+using Dapplo.Windows.Common.Structs;
+using Dapplo.Windows.Icons;
 using Greenshot.Base.Core;
 using Greenshot.Base.Interfaces;
 using Greenshot.Editor.Drawing;
@@ -100,6 +103,14 @@ public class DrawableContainerListSerializationTests
         var svgFilePath = Path.Combine("TestData", "Images", "Logo_G_with_Border.svg");
         using var svgStream = File.OpenRead(svgFilePath);
 
+        var capturedCursor = new CapturedCursor
+            {
+                ColorLayer = new Bitmap(32, 32),
+                MaskLayer = new Bitmap(32, 32),
+                Size = new NativeSize(64, 64),
+                HotSpot = new NativePoint(1, 1)
+            };
+
 
         var domainList = new DrawableContainerList
         {
@@ -110,7 +121,7 @@ public class DrawableContainerListSerializationTests
             new TextContainer(surface),
             new SpeechbubbleContainer(surface),
             new ArrowContainer(surface),
-            new CursorContainer(surface),
+            new CursorContainer(surface) { Cursor = capturedCursor},
             new EllipseContainer(surface),
             new FreehandContainer(surface),
             new HighlightContainer(surface),

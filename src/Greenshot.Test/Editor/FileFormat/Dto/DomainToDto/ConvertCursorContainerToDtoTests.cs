@@ -19,12 +19,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
+using System.Drawing;
+using Dapplo.Windows.Common.Structs;
+using Dapplo.Windows.Icons;
 using Greenshot.Base.Core;
 using Greenshot.Base.Interfaces;
 using Greenshot.Editor.Drawing;
 using Greenshot.Editor.FileFormat.Dto;
 using Xunit;
-using static Greenshot.Editor.Drawing.ArrowContainer;
 
 namespace Greenshot.Test.Editor.FileFormat.Dto.DomainToDto;
 
@@ -36,13 +38,32 @@ public class ConvertCursorContainerToDtoTests
     {
         // Arrange
         var surface = SimpleServiceProvider.Current.GetInstance<Func<ISurface>>().Invoke();
+        var colorBitmap = new Bitmap(32, 32);
+        var maskBitmap = new Bitmap(32, 32);
+        
+        using (var g = Graphics.FromImage(colorBitmap))
+        {
+            g.Clear(Color.Red);
+        }
+        using (var g = Graphics.FromImage(maskBitmap))
+        {
+            g.Clear(Color.Black);
+        }
+
         var cursorContainer = new CursorContainer(surface)
         {
             Left = 10,
             Top = 20,
             Width = 100,
             Height = 50
-
+        };
+        
+        cursorContainer.Cursor = new CapturedCursor
+        {
+            HotSpot = new NativePoint(5, 10),
+            Size = new NativeSize(32, 32),
+            ColorLayer = colorBitmap,
+            MaskLayer = maskBitmap
         };
 
         // Act
@@ -54,5 +75,11 @@ public class ConvertCursorContainerToDtoTests
         Assert.Equal(cursorContainer.Top, result.Top);
         Assert.Equal(cursorContainer.Width, result.Width);
         Assert.Equal(cursorContainer.Height, result.Height);
+        Assert.Equal(cursorContainer.Cursor.HotSpot.X, result.HotspotX);
+        Assert.Equal(cursorContainer.Cursor.HotSpot.Y, result.HotspotY);
+        Assert.Equal(cursorContainer.Cursor.Size.Width, result.CursorWidth);
+        Assert.Equal(cursorContainer.Cursor.Size.Height, result.CursorHeight);
+        Assert.NotNull(result.ColorLayer);
+        Assert.NotNull(result.MaskLayer);
     }
 }

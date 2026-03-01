@@ -19,6 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
+using System.Drawing;
+using Dapplo.Windows.Common.Structs;
+using Dapplo.Windows.Icons;
 using Greenshot.Base.Core;
 using Greenshot.Base.Interfaces;
 using Greenshot.Editor.Drawing;
@@ -33,16 +36,36 @@ namespace Greenshot.Test.Editor.FileFormat.Dto.GreenshotFileV2;
 public class CursorContainerSerializationTests
 {
     [Fact]
-    public void SerializeDeserialize_IconContainer()
+    public void SerializeDeserialize_CursorContainer()
     {
         // Arrange
         var surface = SimpleServiceProvider.Current.GetInstance<Func<ISurface>>().Invoke();
+        var colorBitmap = new Bitmap(32, 32);
+        var maskBitmap = new Bitmap(32, 32);
+        
+        using (var g = Graphics.FromImage(colorBitmap))
+        {
+            g.Clear(Color.Red);
+        }
+        using (var g = Graphics.FromImage(maskBitmap))
+        {
+            g.Clear(Color.Black);
+        }
+
         var cursorContainer = new CursorContainer(surface)
         {
             Left = 10,
             Top = 20,
             Width = 100,
             Height = 50
+        };
+        
+        cursorContainer.Cursor = new CapturedCursor
+        {
+            HotSpot = new NativePoint(5, 10),
+            Size = new NativeSize(32, 32),
+            ColorLayer = colorBitmap,
+            MaskLayer = maskBitmap
         };
 
         // Act
@@ -57,5 +80,19 @@ public class CursorContainerSerializationTests
         Assert.Equal(cursorContainer.Top, result.Top);
         Assert.Equal(cursorContainer.Width, result.Width);
         Assert.Equal(cursorContainer.Height, result.Height);
+        
+        Assert.NotNull(result.Cursor);
+        Assert.Equal(cursorContainer.Cursor.HotSpot.X, result.Cursor.HotSpot.X);
+        Assert.Equal(cursorContainer.Cursor.HotSpot.Y, result.Cursor.HotSpot.Y);
+        Assert.Equal(cursorContainer.Cursor.Size.Width, result.Cursor.Size.Width);
+        Assert.Equal(cursorContainer.Cursor.Size.Height, result.Cursor.Size.Height);
+        
+        Assert.NotNull(result.Cursor.ColorLayer);
+        Assert.Equal(cursorContainer.Cursor.ColorLayer.Width, result.Cursor.ColorLayer.Width);
+        Assert.Equal(cursorContainer.Cursor.ColorLayer.Height, result.Cursor.ColorLayer.Height);
+        
+        Assert.NotNull(result.Cursor.MaskLayer);
+        Assert.Equal(cursorContainer.Cursor.MaskLayer.Width, result.Cursor.MaskLayer.Width);
+        Assert.Equal(cursorContainer.Cursor.MaskLayer.Height, result.Cursor.MaskLayer.Height);
     }
 }

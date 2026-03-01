@@ -115,7 +115,7 @@ namespace Greenshot.Base.Core
         {
             bool useMemoryStream = false;
             MemoryStream memoryStream = null;
-            if (outputSettings.Format == OutputFormat.greenshot && surface == null)
+            if ((outputSettings.Format == OutputFormat.greenshot || outputSettings.Format == OutputFormat.gsa) && surface == null)
             {
                 throw new ArgumentException("Surface needs to be set when using OutputFormat.Greenshot");
             }
@@ -162,7 +162,7 @@ namespace Greenshot.Base.Core
         {
             bool disposeImage = false;
 
-            if (outputSettings.Format == OutputFormat.greenshot || outputSettings.SaveBackgroundOnly)
+            if (outputSettings.Format == OutputFormat.greenshot || outputSettings.Format == OutputFormat.gsa || outputSettings.SaveBackgroundOnly)
             {
                 // We save the image of the surface, this should not be disposed
                 imageToSave = surface.Image;
@@ -175,7 +175,7 @@ namespace Greenshot.Base.Core
             }
 
             // The following block of modifications should be skipped when saving the greenshot format, no effects or otherwise!
-            if (outputSettings.Format == OutputFormat.greenshot)
+            if (outputSettings.Format == OutputFormat.greenshot || outputSettings.Format == OutputFormat.gsa)
             {
                 return disposeImage;
             }
@@ -600,6 +600,18 @@ namespace Greenshot.Base.Core
             using var ms = new MemoryStream();
             myImage.Save(ms, format);
             return (ms.ToArray(), extension);
+        }
+
+        /// <summary>
+        /// Converts the specified <see cref="Image"/> to a byte array in PNG format.
+        /// </summary>
+        public static byte[] ImageToPngByteArray(Image image)
+        {
+            if (image == null) return null;
+
+            using var memoryStream = new MemoryStream();
+            image.Save(memoryStream, ImageFormat.Png);
+            return memoryStream.ToArray();
         }
 
         /// <summary>

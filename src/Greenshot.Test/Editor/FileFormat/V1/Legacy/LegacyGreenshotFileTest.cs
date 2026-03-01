@@ -67,6 +67,9 @@ public class LegacyGreenshotFileTest
         yield return [Path.Combine("TestData", "Greenshotfile", "File_Version_1.03", "Surface_with_14_different_DrawableContainer.greenshot")];
 
         yield return [Path.Combine("TestData", "Greenshotfile", "File_Version_1.04", "Surface_with_11_different_DrawableContainer.greenshot")];
+        yield return [Path.Combine("TestData", "Greenshotfile", "File_Version_1.04", "CursorContainer_lt_600_100_wh_64_64.greenshot")];
+        yield return [Path.Combine("TestData", "Greenshotfile", "File_Version_1.04", "EmojiContainer_lt_100_200_wh_64_64.greenshot")];
+        yield return [Path.Combine("TestData", "Greenshotfile", "File_Version_1.04", "StepLabelContainer_lt_200_200_lt_500_300.greenshot")];
     }
 
     /// <summary>

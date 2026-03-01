@@ -24,6 +24,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using Dapplo.Windows.Common.Structs;
+using Dapplo.Windows.Icons;
 using Greenshot.Base.Core;
 using Greenshot.Base.Interfaces;
 using Greenshot.Base.Interfaces.Drawing;
@@ -329,6 +331,13 @@ public static class ConvertDtoToDomain
         parentSurface = CheckOrCreateParentSurface(parentSurface);
         
         var domain = new CursorContainer(parentSurface);
+        domain.Cursor = new CapturedCursor
+        {
+            Size = new NativeSize(dto.Width, dto.Height),
+            HotSpot = new NativePoint(dto.HotspotX, dto.HotspotY),
+            ColorLayer = (Bitmap) ImageIO.ByteArrayToImage(dto.ColorLayer),
+            MaskLayer = (Bitmap) ImageIO.ByteArrayToImage(dto.MaskLayer)
+        };
         return InitDrawableContainer(domain, dto);
     }
 

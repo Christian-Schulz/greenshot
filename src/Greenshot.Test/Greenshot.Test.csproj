@@ -113,6 +113,9 @@
     <None Update="TestData\Greenshotfile\File_Version_1.03\TextContainer_lt_300_200_wh_300_100.greenshot">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\Greenshotfile\File_Version_1.04\CursorContainer_lt_600_100_wh_64_64.greenshot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\Greenshotfile\File_Version_1.04\EmojiContainer_lt_100_200_wh_64_64.greenshot">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -126,6 +129,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestData\Greenshotfile\File_Version_2.01\ArrowContainer_lt_100_200_wh_400_100.gsa">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Greenshotfile\File_Version_2.01\CursorContainer_lt_600_100_wh_64_64.gsa">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestData\Greenshotfile\File_Version_2.01\EllipseContainer_lt_200_200_wh_400_100.gsa">
@@ -260,7 +266,13 @@
     <None Update="TestData\GreenshotTemplate\File_Version_1.03\TextContainer_lt_300_200_wh_300_100.gst">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\GreenshotTemplate\File_Version_1.04\CursorContainer_lt_600_100_wh_64_64.gst">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\GreenshotTemplate\File_Version_2.01\ArrowContainer_lt_100_200_wh_400_100.gst">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\GreenshotTemplate\File_Version_2.01\CursorContainer_lt_600_100_wh_64_64.gst">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestData\GreenshotTemplate\File_Version_2.01\EllipseContainer_lt_200_200_wh_400_100.gst">

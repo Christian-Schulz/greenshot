@@ -45,7 +45,24 @@ Greenshot editor files supports two file formats:
 - **Archive structure:**
   - `meta.json` — file metadata (format version, schema version, saved-by version, capture size, etc.) (see `GreenshotFileMetaInformationDto`).
   - `content.json` — serialized `GreenshotFileDto` containing the content (containers and other domain properties). Image binary payloads are not embedded in the JSON but are referenced by paths.
-  - `images/...` or configured subfolders — extracted image files referenced from the DTO (each image is saved as a separate entry in the ZIP archive).
+  - `screenshot/..` — folder containing the screenshot image.
+  - `preview/..`  — folder containing the rendered preview image.
+  - `images/..` — folder containing extracted image files from diferent container elements.
+- **Archive example:**
+  ```
+  my_file.gsa (Greenshot Archive / ZIP)
+  ├─ meta.json              # File metadata (format version, schema version, saved-by version, capture size, etc.)
+  ├─ content.json           # Serialized GreenshotFileDto containing the content (containers and properties)
+  ├─ screenshot/            # Folder containing the screenshot image
+  │  └─ capture.png         # The screenshot image from the Surface.Image
+  ├─ preview/               # Folder containing the rendered preview image
+  │  └─ preview.png         # The rendered preview image
+  └─ images/                # Folder containing extracted image files from different container elements
+     ├─ image_1.png         # Image from an ImageContainer
+     ├─ image_2.jpg         # Another image (possibly different format)
+     ├─ image_3.svg         # Content from an SVGContainer
+     └─ ...
+  ```
 - **Implementation:** See `Greenshot.Editor.FileFormat.V2.GreenshotFileV2`.
 - **Notes:**
   - V2 intentionally separates metadata, content and image payloads. Image bytes found in DTOs are extracted into individual files inside the ZIP and the DTO is updated to reference the entry paths.

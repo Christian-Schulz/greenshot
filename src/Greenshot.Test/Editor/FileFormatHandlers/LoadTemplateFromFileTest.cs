@@ -23,13 +23,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using Dapplo.Windows.Common.Structs;
 using Greenshot.Base.Core;
 using Greenshot.Base.Interfaces;
 using Greenshot.Editor.Drawing;
 using Greenshot.Editor.Drawing.Fields;
+using Greenshot.Editor.Drawing.Filters;
 using Greenshot.Editor.FileFormat.Dto;
 using Greenshot.Editor.FileFormatHandlers;
-using Greenshot.Editor.Drawing.Filters;
 using Xunit;
 
 namespace Greenshot.Test.Editor.FileFormatHandlers;
@@ -781,6 +782,52 @@ public class LoadTemplateFromFileTest
 
         Assert.NotNull(iconContainer.Icon);
         Assert.Equal(iconRectInTestfile.Size, iconContainer.Icon.Size);
+    }
+
+    public static IEnumerable<object[]> CursorContainerTestData()
+    {
+        yield return [Path.Combine("TestData", "GreenshotTemplate", "File_Version_1.04", "CursorContainer_lt_600_100_wh_64_64.gst")];
+        yield return [Path.Combine("TestData", "GreenshotTemplate", "File_Version_2.01", "CursorContainer_lt_600_100_wh_64_64.gst")];
+    }
+
+    [Theory]
+    [MemberData(nameof(CursorContainerTestData))]
+    public void LoadCursorContainerFromGreenshotTemplate(string filePath)
+    {
+        // Arrange
+        var image = new Bitmap(800, 400);
+        var cursorRectInTestfile = new Rectangle(600, 100, 64, 64);
+        var cursorSize = new NativeSize(64, 64);
+
+        var resultSurface = SimpleServiceProvider.Current.GetInstance<Func<ISurface>>().Invoke();
+        resultSurface.Image = image;
+
+        // Act
+        _greenshotTemplateFormatHandler.LoadTemplateFromFile(filePath, resultSurface);
+
+        // Assert
+        var resultElementList = resultSurface.Elements;
+        var resultFirstElement = resultSurface.Elements.FirstOrDefault();
+
+        Assert.NotNull(resultElementList);
+        Assert.Equal(1, resultElementList.Count);
+
+        Assert.NotNull(resultFirstElement);
+        Assert.IsType<CursorContainer>(resultFirstElement);
+        var cursorContainer = (CursorContainer)resultFirstElement;
+
+        Assert.Equal(cursorRectInTestfile.Top, cursorContainer.Top);
+        Assert.Equal(cursorRectInTestfile.Left, cursorContainer.Left);
+        Assert.Equal(cursorRectInTestfile.Width, cursorContainer.Width);
+        Assert.Equal(cursorRectInTestfile.Height, cursorContainer.Height);
+
+        var resultAdorerList = cursorContainer.Adorners;
+        Assert.NotNull(resultAdorerList);
+        // 4 Adorners for corners + 4 Adorners for the sides
+        Assert.Equal(8, resultAdorerList.Count);
+
+        Assert.NotNull(cursorContainer.Cursor);
+        Assert.Equal(cursorSize, cursorContainer.Cursor.Size);
     }
 
     public static IEnumerable<object[]> StepLabelContainerTestData()

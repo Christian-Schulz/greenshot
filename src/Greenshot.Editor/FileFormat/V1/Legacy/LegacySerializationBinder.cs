@@ -68,6 +68,8 @@ internal sealed class LegacySerializationBinder : SerializationBinder
             {"Greenshot.Editor.Drawing.Emoji.EmojiContainer", typeof(LegacyEmojiContainer) },
             {"Greenshot.Editor.Drawing.MetafileContainer", typeof(LegacyMetafileContainer) },
             {"Greenshot.Editor.Drawing.ImageContainer", typeof(LegacyImageContainer) },
+            {"Greenshot.Editor.Drawing.CursorContainer", typeof(LegacyCursorContainer) },
+            {"Greenshot.Editor.Drawing.CursorContainer+CaptureCursorSerializationWrapper", typeof(LegacyCaptureCursorSerializationWrapper) },
             {"Greenshot.Editor.Drawing.DrawableContainer", typeof(LegacyDrawableContainer) },
             {"Greenshot.Editor.Drawing.DrawableContainerList", typeof(LegacyDrawableContainerList) },
             {"Greenshot.Editor.Drawing.Filters.HighlightFilter", typeof(LegacyHighlightFilter) },

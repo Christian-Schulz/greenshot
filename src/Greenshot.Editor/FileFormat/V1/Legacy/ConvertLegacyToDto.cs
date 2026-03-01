@@ -50,6 +50,7 @@ internal static class ConvertLegacyToDto
             LegacyTextContainer text => ToDto(text),
             LegacyImageContainer image => ToDto(image),
             LegacyIconContainer icon => ToDto(icon),
+            LegacyCursorContainer cursor => ToDto(cursor),
             LegacySpeechbubbleContainer speech => ToDto(speech),
             LegacyFreehandContainer freehand => ToDto(freehand),
             LegacyMetafileContainer meta => ToDto(meta),
@@ -188,6 +189,24 @@ internal static class ConvertLegacyToDto
             Icon = container.Icon != null ? IconToByteArray(container.Icon) : null
         };
     }
+
+    public static CursorContainerDto ToDto(LegacyCursorContainer container)
+    {
+        return new CursorContainerDto
+        {
+            Left = container.Left,
+            Top = container.Top,
+            Width = container.Width,
+            Height = container.Height,
+            Fields = ToFieldDtos(container.Fields),
+            ColorLayer  = container.savedCursor?.ColorLayer != null ? ImageToByteArray(container.savedCursor.ColorLayer) : null,
+            MaskLayer  = container.savedCursor?.MaskLayer != null ? ImageToByteArray(container.savedCursor.MaskLayer) : null,
+            CursorWidth = container.savedCursor?.SizeWidth ?? 0,
+            CursorHeight = container.savedCursor?.SizeHeight ?? 0,
+            HotspotX = container.savedCursor?.HotspotX ?? 0,
+            HotspotY = container.savedCursor?.HotspotY ?? 0 
+        };
+    }       
 
     public static SpeechbubbleContainerDto ToDto(LegacySpeechbubbleContainer container)
     {

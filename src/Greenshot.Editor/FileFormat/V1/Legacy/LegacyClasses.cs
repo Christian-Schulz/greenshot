@@ -26,8 +26,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks.Sources;
-using Greenshot.Editor.Drawing.Fields;
 
 namespace Greenshot.Editor.FileFormat.V1.Legacy;
 
@@ -189,6 +187,43 @@ internal class LegacyImageContainer : LegacyDrawableContainer
 }
 
 [Serializable]
+public class LegacyCaptureCursorSerializationWrapper : ISerializable
+{
+    public Bitmap ColorLayer;
+    public Bitmap MaskLayer;
+    public int SizeWidth;
+    public int SizeHeight;
+    public int HotspotX;
+    public int HotspotY;
+
+    public LegacyCaptureCursorSerializationWrapper(SerializationInfo info, StreamingContext context)
+    {
+        ColorLayer = (Bitmap)info.GetValue("<ColorLayer>k__BackingField", typeof(Bitmap));
+        MaskLayer = (Bitmap)info.GetValue("<MaskLayer>k__BackingField", typeof(Bitmap));
+        SizeWidth = info.GetInt32("<SizeWidth>k__BackingField");
+        SizeHeight = info.GetInt32("<SizeHeight>k__BackingField");
+        HotspotX = info.GetInt32("<HotspotX>k__BackingField");
+        HotspotY = info.GetInt32("<HotspotY>k__BackingField");
+    }
+
+    void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+[Serializable]
+internal class LegacyCursorContainer : LegacyDrawableContainer
+{
+    public LegacyCaptureCursorSerializationWrapper savedCursor;
+
+    protected LegacyCursorContainer(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+        savedCursor = (LegacyCaptureCursorSerializationWrapper)info.GetValue("savedCursor", typeof(LegacyCaptureCursorSerializationWrapper));   
+    }
+}
+
+[Serializable]
 internal class LegacyIconContainer : LegacyDrawableContainer
 {
     public Icon Icon;
@@ -337,7 +372,7 @@ internal class LegacyStepLabelContainer : LegacyDrawableContainer
         CounterStart = info.GetInt32("_counterStart");
 
         // Backward compatibility: Ensure SHADOW and LINE_THICKNESS fields exist
-        if (!Fields.Any(x => x.Scope == "StepLabelContainer" && x.FieldType.Name == "LINE_THICKNESS" ))
+        if (!Fields.Any(x => x.Scope == "StepLabelContainer" && x.FieldType.Name == "LINE_THICKNESS"))
         {
             var lineThicknessField = new LegacyField
             {

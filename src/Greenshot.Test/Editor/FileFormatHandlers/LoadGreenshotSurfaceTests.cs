@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Web;
 using Greenshot.Editor.Drawing;
 using Greenshot.Editor.Drawing.Emoji;
 using Greenshot.Editor.Drawing.Fields;
@@ -1049,6 +1048,55 @@ public class LoadGreenshotSurfaceTests
         Assert.Equal(EmojiSize.Width, ((EmojiContainer)resultFirstElement).Width);
         Assert.Equal(EmojiSize.Height, ((EmojiContainer)resultFirstElement).Height);
 
+    }
+
+    public static IEnumerable<object[]> CursorContainerTestData()
+    {
+        yield return [Path.Combine("TestData", "Greenshotfile", "File_Version_1.04", "CursorContainer_lt_600_100_wh_64_64.greenshot")];
+        yield return [Path.Combine("TestData", "Greenshotfile", "File_Version_2.01", "CursorContainer_lt_600_100_wh_64_64.gsa")];
+    }
+
+    [Theory]
+    [MemberData(nameof(CursorContainerTestData))]
+    public void LoadCursorContainerFromGreenshotFile(string filePath)
+    {
+        // Arrange
+        var imageSizeInTestfile = new Size(800, 400);
+        var cursorRectInTestfile = new Rectangle(600, 100, 64, 64);
+
+        // Act
+        var resultSurface = _greenshotFileFormatHandler.LoadGreenshotSurface(filePath);
+
+        // Assert
+        Assert.NotNull(resultSurface);
+        var resultElementList = resultSurface.Elements;
+        var resultFirstElement = resultSurface.Elements.FirstOrDefault();
+
+        Assert.Equal(imageSizeInTestfile, resultSurface.Image.Size);
+
+        Assert.NotNull(resultElementList);
+        Assert.Equal(1, resultElementList.Count);
+
+        Assert.NotNull(resultFirstElement);
+        Assert.IsType<CursorContainer>(resultFirstElement);
+        var cursorContainer = (CursorContainer)resultFirstElement;
+
+        Assert.Equal(cursorRectInTestfile.Top, cursorContainer.Top);
+        Assert.Equal(cursorRectInTestfile.Left, cursorContainer.Left);
+        Assert.Equal(cursorRectInTestfile.Width, cursorContainer.Width);
+        Assert.Equal(cursorRectInTestfile.Height, cursorContainer.Height);
+
+        var resultAdorerList = cursorContainer.Adorners;
+        Assert.NotNull(resultAdorerList);
+        // 4 Adorners for corners + 4 Adorners for the sides
+        Assert.Equal(8, resultAdorerList.Count);
+
+        Assert.NotNull(cursorContainer.Cursor);
+        Assert.Equal(cursorRectInTestfile.Width, cursorContainer.Cursor.Size.Width);
+        Assert.Equal(cursorRectInTestfile.Height, cursorContainer.Cursor.Size.Height);
+        
+        Assert.NotNull(cursorContainer.Cursor.ColorLayer);
+        Assert.NotNull(cursorContainer.Cursor.MaskLayer);
     }
 
     public static IEnumerable<object[]> MetafileContainerTestData()

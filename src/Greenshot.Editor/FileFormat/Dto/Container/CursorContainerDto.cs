@@ -18,18 +18,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+using System.Text.Json.Serialization;
 using Greenshot.Editor.Drawing;
 
 namespace Greenshot.Editor.FileFormat.Dto.Container;
 
 /// <summary>
 /// Data transfer object to serialize <see cref="CursorContainer"/> objects.
-/// The <see cref="CursorContainer"/>  is not really in use. For a capture with mouse cursor the IconContainer is used. See: cctor Surface(ICapture capture) in <see cref="Surface"/>. 
-/// TODO: this is not longer true, the CursorContainer will be used in the future 
 /// </summary>
 public sealed class CursorContainerDto : DrawableContainerDto
 {
-    // Because the CursorContainer is not used, the effort to serialize deserialize the System.Drawing.Cursor object is not justified - YAGNI
-    //[Key(101)]
-    //public byte[] Cursor { get; set; }
+    public int HotspotX { get; set; }
+    public int HotspotY { get; set; }
+    public int CursorWidth { get; set; }
+    public int CursorHeight { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [GreenshotImageData(pathPropertyName: nameof(ColorLayerPath), staticExtension: "png")]
+    public byte[] ColorLayer { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [GreenshotImagePath(nameof(ColorLayer))]
+    public string ColorLayerPath { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [GreenshotImageData(pathPropertyName: nameof(MaskLayerPath), staticExtension: "png")]
+    public byte[] MaskLayer { get; set; }
+        
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [GreenshotImagePath(nameof(MaskLayer))]
+    public string MaskLayerPath { get; set; }
 }

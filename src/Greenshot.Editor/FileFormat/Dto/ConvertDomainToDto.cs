@@ -20,8 +20,6 @@
  */
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using Greenshot.Base.Core;
 using Greenshot.Base.Interfaces.Drawing;
@@ -49,8 +47,8 @@ public static class ConvertDomainToDto
         return new GreenshotFileDto
         {
             ContainerList = ToDto(domain.ContainerList),
-            Image = ImageToByteArray(domain.Image),
-            RenderedImage = ImageToByteArray(domain.RenderedImage),
+            Image = ImageIO.ImageToPngByteArray(domain.Image),
+            RenderedImage = ImageIO.ImageToPngByteArray(domain.RenderedImage),
             MetaInformation = ToDto(domain.MetaInformation)
         };
     }
@@ -390,7 +388,13 @@ public static class ConvertDomainToDto
             Top = domain.Top,
             Width = domain.Width,
             Height = domain.Height,
-            Fields = domain.GetFields() == null ? [] : domain.GetFields().Select(ToDto).ToList()
+            Fields = domain.GetFields() == null ? [] : domain.GetFields().Select(ToDto).ToList(),
+            HotspotX = domain.Cursor.HotSpot.X,
+            HotspotY = domain.Cursor.HotSpot.Y,
+            CursorWidth = domain.Cursor.Size.Width,
+            CursorHeight = domain.Cursor.Size.Height,
+            ColorLayer = ImageIO.ImageToPngByteArray(domain.Cursor.ColorLayer),
+            MaskLayer = ImageIO.ImageToPngByteArray(domain.Cursor.MaskLayer)
         };
         return dto;
     }
@@ -448,27 +452,4 @@ public static class ConvertDomainToDto
             _ => throw new ArgumentException($"Unsupported type: {value.GetType()}"),
         };
 
-    /// <summary>
-    /// Converts the specified <see cref="Image"/> to a byte array in PNG format.
-    /// </summary>
-    private static byte[] ImageToByteArray(Image image)
-    {
-        if (image == null) return null;
-
-        using var memoryStream = new MemoryStream();
-        image.Save(memoryStream, ImageFormat.Png);
-        return memoryStream.ToArray();
-    }
-
-    /// <summary>
-    /// Converts the specified <see cref="Icon"/> to a byte array representation.
-    /// </summary>
-    private static byte[] IconToByteArray(Icon icon)
-    {
-        if (icon == null) return null;
-
-        using var memoryStream = new MemoryStream();
-        icon.Save(memoryStream);
-        return memoryStream.ToArray();
-    }
 }
