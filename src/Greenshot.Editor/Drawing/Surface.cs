@@ -29,6 +29,9 @@ using System.Linq;
 using System.Windows.Forms;
 using Dapplo.Windows.Common.Extensions;
 using Dapplo.Windows.Common.Structs;
+using Dapplo.Windows.Gdi32;
+using Dapplo.Windows.Icons;
+using Dapplo.Windows.User32;
 using Greenshot.Base.Controls;
 using Greenshot.Base.Core;
 using Greenshot.Base.Effects;
@@ -349,6 +352,11 @@ namespace Greenshot.Editor.Drawing
             {
                 _zoomFactor = value;
                 var inverse = _zoomFactor.Inverse();
+
+                // Dispose old matrices before creating new ones to prevent GDI handle leaks
+                _zoomMatrix?.Dispose();
+                _inverseZoomMatrix?.Dispose();
+
                 _zoomMatrix = new Matrix(_zoomFactor, 0, 0, _zoomFactor, 0, 0);
                 _inverseZoomMatrix = new Matrix(inverse, 0, 0, inverse, 0, 0);
                 UpdateSize();
@@ -549,7 +557,7 @@ namespace Greenshot.Editor.Drawing
                 // check if cursor is on the capture, otherwise we leave it out.
                 if (cursorRect.IntersectsWith(captureRect))
                 {
-                    _cursorContainer = AddIconContainer(capture.Cursor, capture.CursorLocation.X, capture.CursorLocation.Y);
+                    _cursorContainer = AddCursorContainer(capture.Cursor.Clone(), capture.CursorLocation.X, capture.CursorLocation.Y);
                     SelectElement(_cursorContainer);
                 }
             }
@@ -565,6 +573,12 @@ namespace Greenshot.Editor.Drawing
             if (disposing)
             {
                 LOG.Debug("Disposing surface!");
+                if (_image != null)
+                {
+                    _image.Dispose();
+                    _image = null;
+                }
+
                 if (_buffer != null)
                 {
                     _buffer.Dispose();
@@ -575,6 +589,19 @@ namespace Greenshot.Editor.Drawing
                 {
                     _transparencyBackgroundBrush.Dispose();
                     _transparencyBackgroundBrush = null;
+                }
+
+                // Dispose zoom matrices to release GDI handles
+                if (_zoomMatrix != null)
+                {
+                    _zoomMatrix.Dispose();
+                    _zoomMatrix = null;
+                }
+
+                if (_inverseZoomMatrix != null)
+                {
+                    _inverseZoomMatrix.Dispose();
+                    _inverseZoomMatrix = null;
                 }
 
                 // Cleanup undo/redo stacks
@@ -823,7 +850,7 @@ namespace Greenshot.Editor.Drawing
             return iconContainer;
         }
 
-        public ICursorContainer AddCursorContainer(Cursor cursor, int x, int y)
+        public ICursorContainer AddCursorContainer(CapturedCursor cursor, int x, int y)
         {
             CursorContainer cursorContainer = new CursorContainer(this)
             {
@@ -1742,14 +1769,14 @@ namespace Greenshot.Editor.Drawing
                 {
                     targetClipRectangle = targetClipRectangle
                         .ChangeX(targetClipRectangle.X - horizontalCorrection)
-                        .ChangeWidth(targetClipRectangle.X + horizontalCorrection);
+                        .ChangeWidth(targetClipRectangle.Width + horizontalCorrection);
                 }
 
                 if (verticalCorrection != 0)
                 {
                     targetClipRectangle = targetClipRectangle
                         .ChangeY(targetClipRectangle.Y - verticalCorrection)
-                        .ChangeHeight(targetClipRectangle.Y + verticalCorrection);
+                        .ChangeHeight(targetClipRectangle.Height + verticalCorrection);
                 }
             }
 

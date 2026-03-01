@@ -38,7 +38,7 @@ namespace Greenshot.Editor.Drawing.Fields
     {
         private static readonly ILog LOG = LogManager.GetLogger(typeof(AbstractFieldHolder));
         private static readonly EditorConfiguration EditorConfig = IniConfig.GetIniSection<EditorConfiguration>();
-        private readonly IDictionary<IField, PropertyChangedEventHandler> _handlers = new Dictionary<IField, PropertyChangedEventHandler>();
+        private IDictionary<IField, PropertyChangedEventHandler> _handlers = new Dictionary<IField, PropertyChangedEventHandler>();
 
         /// <summary>
         /// called when a field's value has changed

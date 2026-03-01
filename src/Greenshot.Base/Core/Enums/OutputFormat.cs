@@ -19,8 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Greenshot.Base.Core.Enums
-{
+namespace Greenshot.Base.Core.Enums;
+
     /// <summary>
     /// These are the supported output formats
     /// </summary>
@@ -35,5 +35,5 @@ namespace Greenshot.Base.Core.Enums
         greenshot,
         gsa,
         ico
-    }
+    // , webp, tga, pbm - Awaiting approval to make ImageSharp implementation final
 }
