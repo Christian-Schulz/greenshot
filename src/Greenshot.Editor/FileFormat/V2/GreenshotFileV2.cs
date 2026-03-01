@@ -88,7 +88,7 @@ public static class GreenshotFileV2
     /// ../../FileFormat/readme.md for more information<br/>
     /// The corresponding loading method is <see cref="LoadFromStream"/>
     /// </remarks>
-    internal static bool SaveToStream(GreenshotFile greenshotFile, Stream stream)
+    public static bool SaveToStream(GreenshotFile greenshotFile, Stream stream)
     {
         if (greenshotFile == null)
         {

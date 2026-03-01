@@ -26,6 +26,7 @@ using Greenshot.Base.Core;
 using Greenshot.Base.Interfaces;
 using Greenshot.Editor.Drawing;
 using Greenshot.Editor.FileFormat;
+using Greenshot.Editor.FileFormat.V2;
 using Xunit;
 
 namespace Greenshot.Test.Editor.FileFormat.V2;
@@ -48,11 +49,11 @@ public class GreenshotFileV2SaveToStreamTests
         };
 
         surface.Elements.Add(rectangleContainer);
+        var greenshotFile = GreenshotFileVersionHandler.CreateGreenshotFile(surface);
         using var stream = new MemoryStream();
 
         // Act
-        // TODO : Call V2 - version directly
-        GreenshotFileVersionHandler.SaveToStreamInCurrentVersion(surface, stream);
+        GreenshotFileV2.SaveToStream(greenshotFile, stream);
 
         // Assert
         var savedBytes = stream.ToArray();
