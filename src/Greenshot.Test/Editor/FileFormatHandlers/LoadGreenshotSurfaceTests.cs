@@ -1061,8 +1061,6 @@ public class LoadGreenshotSurfaceTests
     [MemberData(nameof(MetafileContainerTestData))]
     public void LoadMetafileContainerFromGreenshotFile(string filePath)
     {
-        // TODO Fix Load/Save of MetafileContainer, because it handles file extension now different
-        Assert.Fail("The .gsa test file contains a PNG instead of a real Metafile. This have to be fixed");
         // Arrange
         var imageSizeInTestfile = new Size(800, 400);
         var metafileRectInTestfile = new Rectangle(300, 200, 120, 100);

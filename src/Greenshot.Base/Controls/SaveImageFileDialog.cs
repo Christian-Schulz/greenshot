@@ -21,6 +21,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Greenshot.Base.Core;
 using Greenshot.Base.Core.Enums;
@@ -121,7 +122,13 @@ namespace Greenshot.Base.Controls
         private void PrepareFilterOptions()
         {
             // TODO: Change to the FileFormatHandlerRegistry to look for all the supported extensions
-            OutputFormat[] supportedImageFormats = (OutputFormat[]) Enum.GetValues(typeof(OutputFormat));
+            OutputFormat[] allImageFormats = (OutputFormat[]) Enum.GetValues(typeof(OutputFormat));
+
+            // workaround simple way to exclude greenshot format from the list of supported formats. We wan save only gsa format.
+            OutputFormat[] supportedImageFormats = allImageFormats.ToList()
+                .Where(f => f != OutputFormat.greenshot)
+                .ToArray();
+
             _filterOptions = new FilterOption[supportedImageFormats.Length];
             for (int i = 0; i < _filterOptions.Length; i++)
             {

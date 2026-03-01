@@ -424,7 +424,8 @@ namespace Greenshot.Helpers
                     // TODO: Fix that the Greenshot format needs a separate code path
                     try
                     {
-                        if (filename.ToLower().EndsWith("." + OutputFormat.greenshot))
+                        if (filename.ToLower().EndsWith("." + OutputFormat.greenshot)
+                            || filename.ToLower().EndsWith("." + OutputFormat.gsa))
                         {
                             var greenshotFileFormatHandler = SimpleServiceProvider.Current.GetAllInstances<IFileFormatHandler>().OfType<GreenshotFileFormatHandler>().FirstOrDefault();
                             if (greenshotFileFormatHandler is null)
