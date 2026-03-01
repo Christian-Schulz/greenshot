@@ -22,8 +22,11 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Windows;
+using Dapplo.Windows.Common.Extensions;
 using Dapplo.Windows.Common.Structs;
 using Greenshot.Base.Core;
 using Greenshot.Base.Effects;
@@ -44,18 +47,6 @@ namespace Greenshot.Editor.Drawing
 
         private Image _image;
 
-        /// <summary>
-        /// This is the shadow version of the bitmap, rendered once to save performance
-        /// Do not serialize, as the shadow is recreated from the original bitmap if it's not available
-        /// </summary>
-        [NonSerialized] private Image _shadowBitmap;
-
-        /// <summary>
-        /// This is the offset for the shadow version of the bitmap
-        /// Do not serialize, as the offset is recreated
-        /// </summary>
-        [NonSerialized] private NativePoint _shadowOffset = new NativePoint(-1, -1);
-
         public ImageContainer(ISurface parent, string filename) : this(parent)
         {
             Load(filename);
@@ -63,7 +54,6 @@ namespace Greenshot.Editor.Drawing
 
         public ImageContainer(ISurface parent) : base(parent)
         {
-            FieldChanged += BitmapContainer_OnFieldChanged;
             Init();
         }
 
@@ -83,64 +73,16 @@ namespace Greenshot.Editor.Drawing
             AddField(GetType(), FieldType.SHADOW, false);
         }
 
-        protected void BitmapContainer_OnFieldChanged(object sender, FieldChangedEventArgs e)
-        {
-            if (!sender.Equals(this))
-            {
-                return;
-            }
-
-            if (FieldType.SHADOW.Equals(e.Field.FieldType))
-            {
-                ChangeShadowField();
-            }
-        }
-
-        public void ChangeShadowField()
-        {
-            bool shadow = GetFieldValueAsBool(FieldType.SHADOW);
-            if (shadow)
-            {
-                CheckShadow(true);
-                Width = _shadowBitmap.Width;
-                Height = _shadowBitmap.Height;
-                Left -= _shadowOffset.X;
-                Top -= _shadowOffset.Y;
-            }
-            else
-            {
-                Width = _image.Width;
-                Height = _image.Height;
-                if (_shadowBitmap != null)
-                {
-                    Left += _shadowOffset.X;
-                    Top += _shadowOffset.Y;
-                }
-            }
-        }
-
         public Image Image
         {
             set
             {
-                // Remove all current bitmaps
+                // Remove current bitmaps
                 DisposeImage();
-                DisposeShadow();
                 _image = ImageHelper.Clone(value);
-                bool shadow = GetFieldValueAsBool(FieldType.SHADOW);
-                CheckShadow(shadow);
-                if (!shadow)
-                {
-                    Width = _image.Width;
-                    Height = _image.Height;
-                }
-                else
-                {
-                    Width = _shadowBitmap.Width;
-                    Height = _shadowBitmap.Height;
-                    Left -= _shadowOffset.X;
-                    Top -= _shadowOffset.Y;
-                }
+
+                Width = _image.Width;
+                Height = _image.Height;
             }
             get { return _image; }
         }
@@ -156,7 +98,6 @@ namespace Greenshot.Editor.Drawing
             if (disposing)
             {
                 DisposeImage();
-                DisposeShadow();
             }
 
             base.Dispose(disposing);
@@ -167,13 +108,6 @@ namespace Greenshot.Editor.Drawing
             _image?.Dispose();
             _image = null;
         }
-
-        private void DisposeShadow()
-        {
-            _shadowBitmap?.Dispose();
-            _shadowBitmap = null;
-        }
-
 
         /// <summary>
         /// Make sure the content is also transformed.
@@ -192,7 +126,6 @@ namespace Greenshot.Editor.Drawing
             if (rotateAngle != 0)
             {
                 Log.DebugFormat("Rotating element with {0} degrees.", rotateAngle);
-                DisposeShadow();
                 using var tmpMatrix = new Matrix();
                 using (_image)
                 {
@@ -226,21 +159,6 @@ namespace Greenshot.Editor.Drawing
         }
 
         /// <summary>
-        /// This checks if a shadow is already generated
-        /// </summary>
-        /// <param name="shadow"></param>
-        private void CheckShadow(bool shadow)
-        {
-            if (!shadow || _shadowBitmap != null)
-            {
-                return;
-            }
-
-            using var matrix = new Matrix();
-            _shadowBitmap = ImageHelper.ApplyEffect(_image, new DropShadowEffect(), matrix);
-        }
-
-        /// <summary>
         /// Draw the actual container to the graphics object
         /// </summary>
         /// <param name="graphics"></param>
@@ -251,26 +169,68 @@ namespace Greenshot.Editor.Drawing
             {
                 return;
             }
-
-            bool shadow = GetFieldValueAsBool(FieldType.SHADOW);
             graphics.SmoothingMode = SmoothingMode.HighQuality;
             graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
             graphics.CompositingQuality = CompositingQuality.HighQuality;
             graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
+            bool shadow = GetFieldValueAsBool(FieldType.SHADOW);
             if (shadow)
             {
-                CheckShadow(true);
-                graphics.DrawImage(_shadowBitmap, Bounds);
-            }
-            else
-            {
+                var shadowOffset = 2; 
+                var defaultShadowLinethickness = 1; // ImageContainer have no line thickness field, so we use define a default value here.
+
+                using var matrix = new Matrix();
+                var _shadowBitmap = ImageHelper.ApplyEffect(_image, new MonochromeEffect(255), matrix);
+
+                DrawShadow(defaultShadowLinethickness, (alpha, currentStep, shadowPen, nil) =>
+                    {                      
+                        var rect = new NativeRect(Left + currentStep + shadowOffset,
+                            Top + currentStep + shadowOffset, 
+                            Width, 
+                            Height
+                            ).Normalize();
+
+                        DrawImageWithAlpha(graphics, _shadowBitmap, rect, shadowPen.Color.A);
+
+                    });
                 graphics.DrawImage(_image, Bounds);
-            }
+                _shadowBitmap.Dispose();
+            } else
+            {             
+                graphics.DrawImage(_image, Bounds);
+            }   
         }
 
         public override bool HasDefaultSize => true;
 
         public override NativeSize DefaultSize => _image?.Size ?? new NativeSize(32, 32);
+
+        public void DrawImageWithAlpha(Graphics graphics, Image image, Rectangle bounds, byte alpha)
+        {
+            // Normalisierung des Alpha-Werts (0-255) auf (0.0 - 1.0)
+            float normalizedAlpha = alpha / 255f;
+
+            var matrix = new ColorMatrix
+            {
+                Matrix33 = normalizedAlpha
+            };
+
+            using (var attributes = new ImageAttributes())
+            {
+                attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+                graphics.DrawImage(
+                    image,
+                    bounds,
+                    0,
+                    0,
+                    image.Width,
+                    image.Height,
+                    GraphicsUnit.Pixel,
+                    attributes
+                );
+            }
+        }
+
     }
 }
