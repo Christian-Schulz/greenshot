@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Greenshot.Base.IniFile;
 using Greenshot.Base.Interfaces;
@@ -72,96 +73,101 @@ namespace Greenshot.Plugin.Pdf
         {
             try
             {
-                // 1. use JPEG because pdf supports it natively
-                using var ms = new MemoryStream();
-                bitmap.Save(ms, ImageFormat.Jpeg);
-                byte[] jpegData = ms.ToArray();
+                // 1. Extract DPI from bitmap
+                double bitmapDpiX = bitmap.HorizontalResolution;
+                double bitmapDpiY = bitmap.VerticalResolution;
 
-                // 2. calculate page and image dimensions
-                double pageWidthMm = _settings.PageWidth;
-                double pageHeightMm = _settings.PageHeight;
+                // Fallback to 96 DPI if not set
+                if (bitmapDpiX <= 0) bitmapDpiX = 96.0;
+                if (bitmapDpiY <= 0) bitmapDpiY = 96.0;
 
-                // Calculate available space for image (page minus margins)
-                double availableWidthMm = pageWidthMm - _settings.MarginLeft - _settings.MarginRight;
-                double availableHeightMm = pageHeightMm - _settings.MarginTop - _settings.MarginBottom;
+                LOG.Debug($"Bitmap DPI: {bitmapDpiX:F2}x{bitmapDpiY:F2}");
 
-                // Get image aspect ratio
-                double imageAspectRatio = (double)bitmap.Height / bitmap.Width;
+                const double pdfPointsPerInch = 72.0;
+                const double mmToInch = 1.0 / 25.4;
 
-                // Determine image dimensions based on FitToPage setting
-                double imageWidthMm;
-                double imageHeightMm;
+                // DPI factor: convert from bitmap DPI to PDF points (72 DPI)
+                double pointsPerPixelX = pdfPointsPerInch / bitmapDpiX;
+                double pointsPerPixelY = pdfPointsPerInch / bitmapDpiY;
 
-                if (_settings.FitToPage)
+                // 2. image in points
+                double imageWidthPt = bitmap.Width * pointsPerPixelX;
+                double imageHeightPt = bitmap.Height * pointsPerPixelY;
+
+                double mmToPt = pdfPointsPerInch * mmToInch;
+                double documentWidthPt;
+                double documentHeightPt;
+
+                if (_settings.UseFixedDocument)
                 {
-                    // FitToPage ON: Scale image to fit maximum available space
-                    imageWidthMm = availableWidthMm;
-                    imageHeightMm = availableWidthMm * imageAspectRatio;
+                    documentWidthPt = _settings.DocumentWidth * mmToPt;
+                    documentHeightPt = _settings.DocumentHeight * mmToPt;
 
-                    // If height exceeds available space, scale by height instead
-                    if (imageHeightMm > availableHeightMm)
+                    double marginLPt = _settings.MarginLeft * mmToPt;
+                    double marginRPt = _settings.MarginRight * mmToPt;
+                    double marginTPt = _settings.MarginTop * mmToPt;
+                    double marginBPt = _settings.MarginBottom * mmToPt;
+
+                    double availWPt = documentWidthPt - marginLPt - marginRPt;
+                    double availHPt = documentHeightPt - marginTPt - marginBPt;
+
+                    if (imageWidthPt > availWPt || imageHeightPt > availHPt)
                     {
-                        imageHeightMm = availableHeightMm;
-                        imageWidthMm = availableHeightMm / imageAspectRatio;
+                        double scale = Math.Min(availWPt / imageWidthPt, availHPt / imageHeightPt);
+                        imageWidthPt *= scale;
+                        imageHeightPt *= scale;
                     }
                 }
                 else
                 {
-                    // FitToPage OFF: Image at 100% size (assume 96 DPI)
-                    const double dpi = 96.0;
-                    const double mmPerPixel = 25.4 / dpi;
-                    
-                    imageWidthMm = bitmap.Width * mmPerPixel;
-                    imageHeightMm = bitmap.Height * mmPerPixel;
+                    // Image defines document size
+                    documentWidthPt = imageWidthPt + (_settings.MarginLeft + _settings.MarginRight) * mmToPt;
+                    documentHeightPt = imageHeightPt + (_settings.MarginTop + _settings.MarginBottom) * mmToPt;
                 }
 
-                // Apply RetainRatio: Trim extra space by adjusting page height to content
-                if (_settings.RetainRatio)
-                {
-                    double calculatedHeightMm = imageHeightMm + _settings.MarginTop + _settings.MarginBottom;
-                    pageHeightMm = calculatedHeightMm;
-                    availableHeightMm = pageHeightMm - _settings.MarginTop - _settings.MarginBottom;
-                }
+                // 3. center
+                double totalMarginWPt = (_settings.MarginLeft + _settings.MarginRight) * mmToPt;
+                double totalMarginHPt = (_settings.MarginTop + _settings.MarginBottom) * mmToPt;
 
-                // Calculate centering offsets
-                double centerOffsetXMm = (availableWidthMm - imageWidthMm) / 2.0;
-                double centerOffsetYMm = (availableHeightMm - imageHeightMm) / 2.0;
-                
-                // Ensure offsets are not negative (image at minimum position)
-                double contentLeftMm = _settings.MarginLeft + (centerOffsetXMm > 0 ? centerOffsetXMm : 0);
-                double contentTopMm = _settings.MarginTop + (centerOffsetYMm > 0 ? centerOffsetYMm : 0);
+                double centerOffsetX = Math.Max(0, (documentWidthPt - totalMarginWPt - imageWidthPt) / 2.0);
+                double centerOffsetY = Math.Max(0, (documentHeightPt - totalMarginHPt - imageHeightPt) / 2.0);
 
-                // Convert mm to points (72 points = 1 inch = 25.4 mm)
-                double mmToPt = 72.0 / 25.4;
-                double pageWidthPt = pageWidthMm * mmToPt;
-                double pageHeightPt = pageHeightMm * mmToPt;
-                double contentLeftPt = contentLeftMm * mmToPt;
-                double contentTopPt = (pageHeightMm - contentTopMm - imageHeightMm) * mmToPt;
-                double imageWidthPt = imageWidthMm * mmToPt;
-                double imageHeightPt = imageHeightMm * mmToPt;
+                double contentLeftPt = (_settings.MarginLeft * mmToPt) + centerOffsetX;
+                double contentTopPt = (_settings.MarginTop * mmToPt) + centerOffsetY;
 
-                // 3. PDF structure
+                // 
+                double contentBottomPt = documentHeightPt - contentTopPt - imageHeightPt;
+
+                LOG.Debug($"Image size: {imageWidthPt:F2}x{imageHeightPt:F2}pt, Document size: {documentWidthPt:F2}x{documentHeightPt:F2}pt");
+
+                // 4. extract JPEG data
+                using var ms = new MemoryStream();
+                bitmap.Save(ms, ImageFormat.Jpeg);
+                byte[] jpegData = ms.ToArray();
+
+                // 5. PDF 
                 using var writer = new StreamWriter(destination, Encoding.ASCII, 1024, leaveOpen: true);
                 string F(double value) => value.ToString("F2", CultureInfo.InvariantCulture);
 
-                // Header
                 writer.Write("%PDF-1.4\n");
                 writer.Flush();
 
-                // Objects
+                // Obj 1: Catalog
                 long obj1Offset = destination.Position;
                 writer.Write("1 0 obj\n<</Type/Catalog/Pages 2 0 R>>\nendobj\n");
                 writer.Flush();
 
+                // Obj 2: Pages tree
                 long obj2Offset = destination.Position;
                 writer.Write("2 0 obj\n<</Type/Pages/Kids[3 0 R]/Count 1>>\nendobj\n");
                 writer.Flush();
 
+                // Obj 3: Page
                 long obj3Offset = destination.Position;
-                writer.Write($"3 0 obj\n<</Type/Page/Parent 2 0 R/MediaBox[0 0 {F(pageWidthPt)} {F(pageHeightPt)}]/Resources<</XObject<</Img1 4 0 R>>>>/Contents 5 0 R>>\n");
-                writer.Write("endobj\n");
+                writer.Write($"3 0 obj\n<</Type/Page/Parent 2 0 R/MediaBox[0 0 {F(documentWidthPt)} {F(documentHeightPt)}]/Resources<</XObject<</Img1 4 0 R>>>>/Contents 5 0 R>>\nendobj\n");
                 writer.Flush();
 
+                // Obj 4: Image
                 long obj4Offset = destination.Position;
                 writer.Write($"4 0 obj\n<</Type/XObject/Subtype/Image/Width {bitmap.Width}/Height {bitmap.Height}/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length {jpegData.Length}>>\nstream\n");
                 writer.Flush();
@@ -169,8 +175,9 @@ namespace Greenshot.Plugin.Pdf
                 writer.Write("\nendstream\nendobj\n");
                 writer.Flush();
 
+                // Obj 5: Content Stream
                 long obj5Offset = destination.Position;
-                string content = $"q {F(imageWidthPt)} 0 0 {F(imageHeightPt)} {F(contentLeftPt)} {F(contentTopPt)} cm /Img1 Do Q";
+                string content = $"q {F(imageWidthPt)} 0 0 {F(imageHeightPt)} {F(contentLeftPt)} {F(contentBottomPt)} cm /Img1 Do Q";
                 writer.Write($"5 0 obj\n<</Length {content.Length}>>\nstream\n{content}\nendstream\nendobj\n");
                 writer.Flush();
 

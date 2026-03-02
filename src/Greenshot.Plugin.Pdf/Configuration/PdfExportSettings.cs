@@ -24,58 +24,52 @@ using Greenshot.Base.IniFile;
 namespace Greenshot.Plugin.Pdf.Configuration
 {
     /// <summary>
-    /// PDF export settings for page layout and image scaling
+    /// PDF export settings for document layout and image placement
     /// </summary>
     [IniSection("Pdf", Description = "Greenshot PDF Plugin configuration")]
     internal class PdfExportSettings : IniSection
     {
         /// <summary>
-        /// Page width in millimeters
+        /// Document width in millimeters
         /// </summary>
-        [IniProperty("PageWidth", Description = "Page width in millimeters", DefaultValue = "210.0")]
-        public double PageWidth { get; set; } = 210.0;
+        [IniProperty("DocumentWidth", Description = "Document width in millimeters", DefaultValue = "210.0")]
+        public double DocumentWidth { get; set; } = 210.0;
 
         /// <summary>
-        /// Page height in millimeters
+        /// Document height in millimeters
         /// </summary>
-        [IniProperty("PageHeight", Description = "Page height in millimeters", DefaultValue = "297.0")]
-        public double PageHeight { get; set; } = 297.0;
+        [IniProperty("DocumentHeight", Description = "Document height in millimeters", DefaultValue = "297.0")]
+        public double DocumentHeight { get; set; } = 297.0;
 
         /// <summary>
         /// Top margin in millimeters
         /// </summary>
-        [IniProperty("MarginTop", Description = "Top margin in millimeters", DefaultValue = "10.0")]
-        public double MarginTop { get; set; } = 10.0;
+        [IniProperty("MarginTop", Description = "Top margin in millimeters", DefaultValue = "0.0")]
+        public double MarginTop { get; set; } = 0.0;
 
         /// <summary>
         /// Bottom margin in millimeters
         /// </summary>
-        [IniProperty("MarginBottom", Description = "Bottom margin in millimeters", DefaultValue = "10.0")]
-        public double MarginBottom { get; set; } = 10.0;
+        [IniProperty("MarginBottom", Description = "Bottom margin in millimeters", DefaultValue = "0.0")]
+        public double MarginBottom { get; set; } = 0.0;
 
         /// <summary>
         /// Left margin in millimeters
         /// </summary>
-        [IniProperty("MarginLeft", Description = "Left margin in millimeters", DefaultValue = "10.0")]
-        public double MarginLeft { get; set; } = 10.0;
+        [IniProperty("MarginLeft", Description = "Left margin in millimeters", DefaultValue = "0.0")]
+        public double MarginLeft { get; set; } = 0.0;
 
         /// <summary>
         /// Right margin in millimeters
         /// </summary>
-        [IniProperty("MarginRight", Description = "Right margin in millimeters", DefaultValue = "10.0")]
-        public double MarginRight { get; set; } = 10.0;
+        [IniProperty("MarginRight", Description = "Right margin in millimeters", DefaultValue = "0.0")]
+        public double MarginRight { get; set; } = 0.0;
 
         /// <summary>
-        /// Scale image to fit within page margins
+        /// Use fixed document size (if true, image scales to fit; if false, document auto-sizes to content)
         /// </summary>
-        [IniProperty("FitToPage", Description = "Scale image to fit within page margins", DefaultValue = "true")]
-        public bool FitToPage { get; set; } = true;
-
-        /// <summary>
-        /// Auto-calculate PageHeight based on screenshot aspect ratio
-        /// </summary>
-        [IniProperty("RetainRatio", Description = "Auto-calculate PageHeight based on screenshot aspect ratio", DefaultValue = "true")]
-        public bool RetainRatio { get; set; } = true;
+        [IniProperty("UseFixedDocument", Description = "Use fixed document size - image scales to fit within margins", DefaultValue = "false")]
+        public bool UseFixedDocument { get; set; } = false;
 
         /// <summary>
         /// Creates a copy of the current settings
@@ -84,14 +78,13 @@ namespace Greenshot.Plugin.Pdf.Configuration
         {
             return new PdfExportSettings
             {
-                PageWidth = PageWidth,
-                PageHeight = PageHeight,
+                DocumentWidth = DocumentWidth,
+                DocumentHeight = DocumentHeight,
                 MarginTop = MarginTop,
                 MarginBottom = MarginBottom,
                 MarginLeft = MarginLeft,
                 MarginRight = MarginRight,
-                FitToPage = FitToPage,
-                RetainRatio = RetainRatio
+                UseFixedDocument = UseFixedDocument
             };
         }
     }

@@ -39,11 +39,12 @@ namespace Greenshot.Plugin.Pdf.Forms
 
         private void InitializeComponent()
         {
-            this.labelPageWidth = new System.Windows.Forms.Label();
-            this.numericPageWidth = new System.Windows.Forms.NumericUpDown();
-            this.labelPageHeight = new System.Windows.Forms.Label();
-            this.numericPageHeight = new System.Windows.Forms.NumericUpDown();
-            this.groupBoxPageSize = new System.Windows.Forms.GroupBox();
+            this.labelDocumentWidth = new System.Windows.Forms.Label();
+            this.numericDocumentWidth = new System.Windows.Forms.NumericUpDown();
+            this.labelDocumentHeight = new System.Windows.Forms.Label();
+            this.numericDocumentHeight = new System.Windows.Forms.NumericUpDown();
+            this.groupBoxDocument = new System.Windows.Forms.GroupBox();
+            this.checkBoxUseFixedDocument = new GreenshotCheckBox();
             this.groupBoxMargins = new System.Windows.Forms.GroupBox();
             this.labelMarginTop = new System.Windows.Forms.Label();
             this.numericMarginTop = new System.Windows.Forms.NumericUpDown();
@@ -53,66 +54,75 @@ namespace Greenshot.Plugin.Pdf.Forms
             this.numericMarginLeft = new System.Windows.Forms.NumericUpDown();
             this.labelMarginRight = new System.Windows.Forms.Label();
             this.numericMarginRight = new System.Windows.Forms.NumericUpDown();
-            this.groupBoxOptions = new System.Windows.Forms.GroupBox();
-            this.checkBoxRetainRatio = new GreenshotCheckBox();
-            this.checkBoxFitToPage = new GreenshotCheckBox();
             this.buttonOK = new GreenshotButton();
             this.buttonCancel = new GreenshotButton();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPageWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPageHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDocumentWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDocumentHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarginTop)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarginBottom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarginLeft)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarginRight)).BeginInit();
             this.SuspendLayout();
 
-            // labelPageWidth
-            this.labelPageWidth.AutoSize = true;
-            this.labelPageWidth.Location = new System.Drawing.Point(12, 22);
-            this.labelPageWidth.Name = "labelPageWidth";
-            this.labelPageWidth.Size = new System.Drawing.Size(93, 13);
-            this.labelPageWidth.TabIndex = 0;
-            this.labelPageWidth.Text = "Page Width (mm):";
+            // labelDocumentWidth
+            this.labelDocumentWidth.AutoSize = true;
+            this.labelDocumentWidth.Location = new System.Drawing.Point(12, 22);
+            this.labelDocumentWidth.Name = "labelDocumentWidth";
+            this.labelDocumentWidth.Size = new System.Drawing.Size(112, 13);
+            this.labelDocumentWidth.TabIndex = 0;
+            this.labelDocumentWidth.Text = "Document Width (mm):";
 
-            // numericPageWidth
-            this.numericPageWidth.DecimalPlaces = 2;
-            this.numericPageWidth.Location = new System.Drawing.Point(120, 19);
-            this.numericPageWidth.Maximum = new decimal(new int[] { 500, 0, 0, 0 });
-            this.numericPageWidth.Minimum = new decimal(new int[] { 50, 0, 0, 0 });
-            this.numericPageWidth.Name = "numericPageWidth";
-            this.numericPageWidth.Size = new System.Drawing.Size(80, 20);
-            this.numericPageWidth.TabIndex = 1;
-            this.numericPageWidth.Value = new decimal(new int[] { 210, 0, 0, 0 });
+            // numericDocumentWidth
+            this.numericDocumentWidth.DecimalPlaces = 0;
+            this.numericDocumentWidth.Location = new System.Drawing.Point(140, 19);
+            this.numericDocumentWidth.Maximum = new decimal(new int[] { 500, 0, 0, 0 });
+            this.numericDocumentWidth.Minimum = new decimal(new int[] { 50, 0, 0, 0 });
+            this.numericDocumentWidth.Name = "numericDocumentWidth";
+            this.numericDocumentWidth.Size = new System.Drawing.Size(80, 20);
+            this.numericDocumentWidth.TabIndex = 1;
+            this.numericDocumentWidth.Value = new decimal(new int[] { 210, 0, 0, 0 });
 
-            // labelPageHeight
-            this.labelPageHeight.AutoSize = true;
-            this.labelPageHeight.Location = new System.Drawing.Point(12, 48);
-            this.labelPageHeight.Name = "labelPageHeight";
-            this.labelPageHeight.Size = new System.Drawing.Size(99, 13);
-            this.labelPageHeight.TabIndex = 2;
-            this.labelPageHeight.Text = "Page Height (mm):";
+            // labelDocumentHeight
+            this.labelDocumentHeight.AutoSize = true;
+            this.labelDocumentHeight.Location = new System.Drawing.Point(12, 48);
+            this.labelDocumentHeight.Name = "labelDocumentHeight";
+            this.labelDocumentHeight.Size = new System.Drawing.Size(118, 13);
+            this.labelDocumentHeight.TabIndex = 2;
+            this.labelDocumentHeight.Text = "Document Height (mm):";
 
-            // numericPageHeight
-            this.numericPageHeight.DecimalPlaces = 2;
-            this.numericPageHeight.Location = new System.Drawing.Point(120, 45);
-            this.numericPageHeight.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
-            this.numericPageHeight.Minimum = new decimal(new int[] { 50, 0, 0, 0 });
-            this.numericPageHeight.Name = "numericPageHeight";
-            this.numericPageHeight.Size = new System.Drawing.Size(80, 20);
-            this.numericPageHeight.TabIndex = 3;
-            this.numericPageHeight.Value = new decimal(new int[] { 297, 0, 0, 0 });
+            // numericDocumentHeight
+            this.numericDocumentHeight.DecimalPlaces = 0;
+            this.numericDocumentHeight.Location = new System.Drawing.Point(140, 45);
+            this.numericDocumentHeight.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            this.numericDocumentHeight.Minimum = new decimal(new int[] { 50, 0, 0, 0 });
+            this.numericDocumentHeight.Name = "numericDocumentHeight";
+            this.numericDocumentHeight.Size = new System.Drawing.Size(80, 20);
+            this.numericDocumentHeight.TabIndex = 3;
+            this.numericDocumentHeight.Value = new decimal(new int[] { 297, 0, 0, 0 });
 
-            // groupBoxPageSize
-            this.groupBoxPageSize.Controls.Add(this.labelPageWidth);
-            this.groupBoxPageSize.Controls.Add(this.numericPageWidth);
-            this.groupBoxPageSize.Controls.Add(this.labelPageHeight);
-            this.groupBoxPageSize.Controls.Add(this.numericPageHeight);
-            this.groupBoxPageSize.Location = new System.Drawing.Point(12, 12);
-            this.groupBoxPageSize.Name = "groupBoxPageSize";
-            this.groupBoxPageSize.Size = new System.Drawing.Size(220, 80);
-            this.groupBoxPageSize.TabIndex = 0;
-            this.groupBoxPageSize.TabStop = false;
-            this.groupBoxPageSize.Text = "Page Size";
+            // checkBoxUseFixedDocument
+            this.checkBoxUseFixedDocument.AutoSize = true;
+            this.checkBoxUseFixedDocument.Location = new System.Drawing.Point(12, 74);
+            this.checkBoxUseFixedDocument.Name = "checkBoxUseFixedDocument";
+            this.checkBoxUseFixedDocument.PropertyName = nameof(PdfExportSettings.UseFixedDocument);
+            this.checkBoxUseFixedDocument.SectionName = "Pdf";
+            this.checkBoxUseFixedDocument.Size = new System.Drawing.Size(215, 17);
+            this.checkBoxUseFixedDocument.TabIndex = 4;
+            this.checkBoxUseFixedDocument.Text = "Use Fixed Document";
+            this.checkBoxUseFixedDocument.UseVisualStyleBackColor = true;
+
+            // groupBoxDocument
+            this.groupBoxDocument.Controls.Add(this.labelDocumentWidth);
+            this.groupBoxDocument.Controls.Add(this.numericDocumentWidth);
+            this.groupBoxDocument.Controls.Add(this.labelDocumentHeight);
+            this.groupBoxDocument.Controls.Add(this.numericDocumentHeight);
+            this.groupBoxDocument.Controls.Add(this.checkBoxUseFixedDocument);
+            this.groupBoxDocument.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxDocument.Name = "groupBoxDocument";
+            this.groupBoxDocument.Size = new System.Drawing.Size(240, 110);
+            this.groupBoxDocument.TabIndex = 0;
+            this.groupBoxDocument.TabStop = false;
+            this.groupBoxDocument.Text = "Document";
 
             // labelMarginTop
             this.labelMarginTop.AutoSize = true;
@@ -123,8 +133,8 @@ namespace Greenshot.Plugin.Pdf.Forms
             this.labelMarginTop.Text = "Top Margin (mm):";
 
             // numericMarginTop
-            this.numericMarginTop.DecimalPlaces = 2;
-            this.numericMarginTop.Location = new System.Drawing.Point(120, 19);
+            this.numericMarginTop.DecimalPlaces = 0;
+            this.numericMarginTop.Location = new System.Drawing.Point(140, 19);
             this.numericMarginTop.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
             this.numericMarginTop.Name = "numericMarginTop";
             this.numericMarginTop.Size = new System.Drawing.Size(80, 20);
@@ -140,8 +150,8 @@ namespace Greenshot.Plugin.Pdf.Forms
             this.labelMarginBottom.Text = "Bottom Margin (mm):";
 
             // numericMarginBottom
-            this.numericMarginBottom.DecimalPlaces = 2;
-            this.numericMarginBottom.Location = new System.Drawing.Point(120, 45);
+            this.numericMarginBottom.DecimalPlaces = 0;
+            this.numericMarginBottom.Location = new System.Drawing.Point(140, 45);
             this.numericMarginBottom.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
             this.numericMarginBottom.Name = "numericMarginBottom";
             this.numericMarginBottom.Size = new System.Drawing.Size(80, 20);
@@ -157,8 +167,8 @@ namespace Greenshot.Plugin.Pdf.Forms
             this.labelMarginLeft.Text = "Left Margin (mm):";
 
             // numericMarginLeft
-            this.numericMarginLeft.DecimalPlaces = 2;
-            this.numericMarginLeft.Location = new System.Drawing.Point(120, 71);
+            this.numericMarginLeft.DecimalPlaces = 0;
+            this.numericMarginLeft.Location = new System.Drawing.Point(140, 71);
             this.numericMarginLeft.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
             this.numericMarginLeft.Name = "numericMarginLeft";
             this.numericMarginLeft.Size = new System.Drawing.Size(80, 20);
@@ -174,8 +184,8 @@ namespace Greenshot.Plugin.Pdf.Forms
             this.labelMarginRight.Text = "Right Margin (mm):";
 
             // numericMarginRight
-            this.numericMarginRight.DecimalPlaces = 2;
-            this.numericMarginRight.Location = new System.Drawing.Point(120, 97);
+            this.numericMarginRight.DecimalPlaces = 0;
+            this.numericMarginRight.Location = new System.Drawing.Point(140, 97);
             this.numericMarginRight.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
             this.numericMarginRight.Name = "numericMarginRight";
             this.numericMarginRight.Size = new System.Drawing.Size(80, 20);
@@ -191,60 +201,28 @@ namespace Greenshot.Plugin.Pdf.Forms
             this.groupBoxMargins.Controls.Add(this.numericMarginLeft);
             this.groupBoxMargins.Controls.Add(this.labelMarginRight);
             this.groupBoxMargins.Controls.Add(this.numericMarginRight);
-            this.groupBoxMargins.Location = new System.Drawing.Point(12, 98);
+            this.groupBoxMargins.Location = new System.Drawing.Point(12, 128);
             this.groupBoxMargins.Name = "groupBoxMargins";
-            this.groupBoxMargins.Size = new System.Drawing.Size(220, 135);
+            this.groupBoxMargins.Size = new System.Drawing.Size(240, 135);
             this.groupBoxMargins.TabIndex = 1;
             this.groupBoxMargins.TabStop = false;
             this.groupBoxMargins.Text = "Margins";
 
-            // checkBoxFitToPage
-            this.checkBoxFitToPage.AutoSize = true;
-            this.checkBoxFitToPage.Location = new System.Drawing.Point(12, 22);
-            this.checkBoxFitToPage.Name = "checkBoxFitToPage";
-            this.checkBoxFitToPage.PropertyName = nameof(PdfExportSettings.FitToPage);
-            this.checkBoxFitToPage.SectionName = "Pdf";
-            this.checkBoxFitToPage.Size = new System.Drawing.Size(153, 17);
-            this.checkBoxFitToPage.TabIndex = 0;
-            this.checkBoxFitToPage.Text = "Fit Image to Page Margins";
-            this.checkBoxFitToPage.UseVisualStyleBackColor = true;
-
-            // checkBoxRetainRatio
-            this.checkBoxRetainRatio.AutoSize = true;
-            this.checkBoxRetainRatio.Location = new System.Drawing.Point(12, 45);
-            this.checkBoxRetainRatio.Name = "checkBoxRetainRatio";
-            this.checkBoxRetainRatio.PropertyName = nameof(PdfExportSettings.RetainRatio);
-            this.checkBoxRetainRatio.SectionName = "Pdf";
-            this.checkBoxRetainRatio.Size = new System.Drawing.Size(185, 17);
-            this.checkBoxRetainRatio.TabIndex = 1;
-            this.checkBoxRetainRatio.Text = "Retain Image Ratio (Auto Height)";
-            this.checkBoxRetainRatio.UseVisualStyleBackColor = true;
-
-            // groupBoxOptions
-            this.groupBoxOptions.Controls.Add(this.checkBoxFitToPage);
-            this.groupBoxOptions.Controls.Add(this.checkBoxRetainRatio);
-            this.groupBoxOptions.Location = new System.Drawing.Point(12, 239);
-            this.groupBoxOptions.Name = "groupBoxOptions";
-            this.groupBoxOptions.Size = new System.Drawing.Size(220, 75);
-            this.groupBoxOptions.TabIndex = 2;
-            this.groupBoxOptions.TabStop = false;
-            this.groupBoxOptions.Text = "Options";
-
             // buttonOK
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(12, 320);
+            this.buttonOK.Location = new System.Drawing.Point(12, 269);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(55, 23);
-            this.buttonOK.TabIndex = 3;
+            this.buttonOK.TabIndex = 2;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
 
             // buttonCancel
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(73, 320);
+            this.buttonCancel.Location = new System.Drawing.Point(73, 269);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(55, 23);
-            this.buttonCancel.TabIndex = 4;
+            this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
 
@@ -253,10 +231,9 @@ namespace Greenshot.Plugin.Pdf.Forms
             this.CancelButton = this.buttonCancel;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(244, 352);
-            this.Controls.Add(this.groupBoxPageSize);
+            this.ClientSize = new System.Drawing.Size(264, 304);
+            this.Controls.Add(this.groupBoxDocument);
             this.Controls.Add(this.groupBoxMargins);
-            this.Controls.Add(this.groupBoxOptions);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -266,8 +243,8 @@ namespace Greenshot.Plugin.Pdf.Forms
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "PDF Export Settings";
-            ((System.ComponentModel.ISupportInitialize)(this.numericPageWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPageHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDocumentWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDocumentHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarginTop)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarginBottom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarginLeft)).EndInit();
@@ -276,11 +253,11 @@ namespace Greenshot.Plugin.Pdf.Forms
             this.PerformLayout();
         }
 
-        private System.Windows.Forms.Label labelPageWidth;
-        private System.Windows.Forms.NumericUpDown numericPageWidth;
-        private System.Windows.Forms.Label labelPageHeight;
-        private System.Windows.Forms.NumericUpDown numericPageHeight;
-        private System.Windows.Forms.GroupBox groupBoxPageSize;
+        private System.Windows.Forms.Label labelDocumentWidth;
+        private System.Windows.Forms.NumericUpDown numericDocumentWidth;
+        private System.Windows.Forms.Label labelDocumentHeight;
+        private System.Windows.Forms.NumericUpDown numericDocumentHeight;
+        private System.Windows.Forms.GroupBox groupBoxDocument;
         private System.Windows.Forms.GroupBox groupBoxMargins;
         private System.Windows.Forms.Label labelMarginTop;
         private System.Windows.Forms.NumericUpDown numericMarginTop;
@@ -290,9 +267,7 @@ namespace Greenshot.Plugin.Pdf.Forms
         private System.Windows.Forms.NumericUpDown numericMarginLeft;
         private System.Windows.Forms.Label labelMarginRight;
         private System.Windows.Forms.NumericUpDown numericMarginRight;
-        private System.Windows.Forms.GroupBox groupBoxOptions;
-        private GreenshotCheckBox checkBoxRetainRatio;
-        private GreenshotCheckBox checkBoxFitToPage;
+        private GreenshotCheckBox checkBoxUseFixedDocument;
         private GreenshotButton buttonOK;
         private GreenshotButton buttonCancel;
     }
