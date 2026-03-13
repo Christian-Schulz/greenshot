@@ -26,6 +26,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using Greenshot.Base.Core;
 
 namespace Greenshot.Editor.FileFormat.V1.Legacy;
 
@@ -310,7 +311,7 @@ internal class LegacyMetafileContainer : LegacyDrawableContainer
         pngStream?.Dispose();
 
         // Save bitmap as PNG into new MemoryStream
-        pngStream = new MemoryStream();
+        pngStream = RecyclableMemoryStreamFactory.GetStream("LegacyMetafileContainer.ConvertWmfToPng");
         bitmap.Save(pngStream, ImageFormat.Png);
         pngStream.Position = 0;
 

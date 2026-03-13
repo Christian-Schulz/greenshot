@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using Greenshot.Base.Core;
 using Greenshot.Base.Interfaces.Drawing;
 using Greenshot.Editor.Drawing;
 using Greenshot.Editor.FileFormat.Dto.Container;
@@ -302,14 +303,14 @@ internal static class ConvertLegacyToDto
     private static byte[] ImageToByteArray(Image image)
     {
         if (image == null) return null;
-        using var ms = new MemoryStream();
+        using var ms = RecyclableMemoryStreamFactory.GetStream("ConvertLegacyToDto.ImageToByteArray");
         image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
         return ms.ToArray();
     }
     private static byte[] IconToByteArray(Icon icon)
     {
         if (icon == null) return null;
-        using var ms = new MemoryStream();
+        using var ms = RecyclableMemoryStreamFactory.GetStream("ConvertLegacyToDto.IconToByteArray");
         icon.Save(ms);
         return ms.ToArray();
     }

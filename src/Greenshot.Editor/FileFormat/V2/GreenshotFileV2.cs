@@ -142,7 +142,7 @@ public static class GreenshotFileV2
     /// <returns></returns>
     public static byte[] GetFileAsByte(GreenshotFile greenshotFile)
     {
-        using var memoryStream = new MemoryStream();
+        using var memoryStream = RecyclableMemoryStreamFactory.GetStream("GreenshotFileV2.GetFileAsByte");
         SaveToStream(greenshotFile, memoryStream);
         return memoryStream.ToArray();
     }
@@ -272,7 +272,9 @@ public static class GreenshotFileV2
     /// <returns></returns>
     public static GreenshotFile DeserializeFromZipFile(byte[] fileContent)
     {
-        using var memoryStream = new MemoryStream(fileContent);
+        using var memoryStream = RecyclableMemoryStreamFactory.GetStream("GreenshotFileV2.DeserializeFromZipFile");
+        memoryStream.Write(fileContent, 0, fileContent.Length);
+        memoryStream.Position = 0;
         var greenshotFile = LoadFromStream(memoryStream);
         return greenshotFile;
     }

@@ -27,6 +27,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Greenshot.Base.Core;
 using Greenshot.Editor.Drawing;
 using Greenshot.Editor.FileFormat.Dto;
 using Greenshot.Editor.FileFormat.Dto.Container;
@@ -334,7 +335,7 @@ public static class V2Helper
         }
 
         using var entryStream = entry.Open();
-        using var ms = new MemoryStream();
+        using var ms = RecyclableMemoryStreamFactory.GetStream("V2Helper.ReadEntryBytes");
         entryStream.CopyTo(ms);
         return ms.ToArray();
     }
