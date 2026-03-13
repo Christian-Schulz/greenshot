@@ -329,8 +329,12 @@ namespace Greenshot.Forms
 
         public MainForm(CopyDataTransport dataTransport)
         {
+            SimpleServiceProvider.Current.AddService(SynchronizationContext.Current);
             var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
             SimpleServiceProvider.Current.AddService(uiContext);
+
+            // Register the RecyclableMemoryStreamManager to minimise Large Object Heap usage.
+            SimpleServiceProvider.Current.AddService(RecyclableMemoryStreamFactory.Manager);
  
             // The most important form is this
             SimpleServiceProvider.Current.AddService<Form>(this);
