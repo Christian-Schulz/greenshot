@@ -10,12 +10,12 @@ This document tracks the execution of the Greenshot screenshot tool upgrade from
 
 ## Tasks
 
-### [ ] TASK-001: Verify prerequisites
+### [▶] TASK-001: Verify prerequisites
 **References**: Plan §Phase 0, Plan §Build Requirements & Environment
 
-- [ ] (1) Verify .NET 10.0 SDK installed on system
-- [ ] (2) .NET 10.0 SDK available (Verify)
-- [ ] (3) Check global.json compatibility with .NET 10.0 (if file exists at repository root or src/)
+- [✓] (1) Verify .NET 10.0 SDK installed on system
+- [✓] (2) .NET 10.0 SDK available (Verify)
+- [▶] (3) Check global.json compatibility with .NET 10.0 (if file exists at repository root or src/)
 - [ ] (4) global.json compatible or updated (Verify)
 - [ ] (5) Verify MSBuild 17.0+ available (from Visual Studio 2022 or MSBuild Tools)
 - [ ] (6) MSBuild version meets requirements (Verify)
@@ -51,3 +51,4 @@ This document tracks the execution of the Greenshot screenshot tool upgrade from
 - [ ] (5) Commit test fixes with message: "TASK-003: Complete .NET 10.0 upgrade testing and validation"
 
 ---
+
