@@ -42,14 +42,18 @@ public class LegacySerializationBinderTests
     [Fact]
     public void Deserialize_UnmappedType_ThrowsSecurityException()
     {
+        // TODO: Replace BinaryFormatter with modern serialization for testing in future release
+        // Using compatibility package for legacy format testing
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
         // Arrange
         var unmappedObject = new UnmappedTestClass { Value = "Test Value" };
         var binaryFormatter = new BinaryFormatter();
-        
+
         // Serialize the object without a custom binder
         using var memoryStream = new MemoryStream();
         binaryFormatter.Serialize(memoryStream, unmappedObject);
         memoryStream.Position = 0;
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
 
         // Act & Assert
         // This should throw a SecurityException when LegacyFileHelper tries to deserialize

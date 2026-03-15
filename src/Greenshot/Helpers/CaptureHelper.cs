@@ -33,6 +33,7 @@ using System.Windows.Forms;
 using Dapplo.Windows.Common.Extensions;
 using Dapplo.Windows.Common.Structs;
 using Dapplo.Windows.DesktopWindowsManager;
+using ScreenCaptureMode = Greenshot.Base.Interfaces.ScreenCaptureMode;
 using Dapplo.Windows.Kernel32;
 using Dapplo.Windows.User32;
 using Greenshot.Base;
@@ -134,7 +135,7 @@ namespace Greenshot.Helpers
             captureHelper.MakeCapture(region);
         }
 
-        public static void CaptureFullscreen(bool captureMouse, ScreenCaptureMode screenCaptureMode)
+        public static void CaptureFullscreen(bool captureMouse, Greenshot.Base.Interfaces.ScreenCaptureMode screenCaptureMode)
         {
             using CaptureHelper captureHelper = new CaptureHelper(CaptureMode.FullScreen, captureMouse)
             {
@@ -208,7 +209,7 @@ namespace Greenshot.Helpers
             _captureMouseCursor = captureMouseCursor;
         }
 
-        public CaptureHelper(CaptureMode captureMode, bool captureMouseCursor, ScreenCaptureMode screenCaptureMode) : this(captureMode)
+        public CaptureHelper(CaptureMode captureMode, bool captureMouseCursor, Greenshot.Base.Interfaces.ScreenCaptureMode screenCaptureMode) : this(captureMode)
         {
             _captureMouseCursor = captureMouseCursor;
             _screenCaptureMode = screenCaptureMode;
@@ -344,7 +345,7 @@ namespace Greenshot.Helpers
                     bool captureTaken = false;
                     switch (_screenCaptureMode)
                     {
-                        case ScreenCaptureMode.Auto:
+                        case Greenshot.Base.Interfaces.ScreenCaptureMode.Auto:
                             NativePoint mouseLocation = User32Api.GetCursorLocation();
                             foreach (Screen screen in Screen.AllScreens)
                             {
@@ -360,7 +361,7 @@ namespace Greenshot.Helpers
                             }
 
                             break;
-                        case ScreenCaptureMode.Fixed:
+                        case Greenshot.Base.Interfaces.ScreenCaptureMode.Fixed:
                             if (CoreConfig.ScreenToCapture > 0 && CoreConfig.ScreenToCapture <= Screen.AllScreens.Length)
                             {
                                 _capture = WindowCapture.CaptureRectangle(_capture, Screen.AllScreens[CoreConfig.ScreenToCapture].Bounds);
@@ -368,7 +369,7 @@ namespace Greenshot.Helpers
                             }
 
                             break;
-                        case ScreenCaptureMode.FullScreen:
+                        case Greenshot.Base.Interfaces.ScreenCaptureMode.FullScreen:
                             // Do nothing, we take the fullscreen capture automatically
                             break;
                     }

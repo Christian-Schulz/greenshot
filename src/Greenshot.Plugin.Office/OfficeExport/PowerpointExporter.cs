@@ -1,4 +1,4 @@
-﻿// Greenshot - a free and open source screenshot tool
+// Greenshot - a free and open source screenshot tool
 // Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
 //
 // For more information see: https://getgreenshot.org/
@@ -23,7 +23,6 @@ using System.Drawing;
 using Greenshot.Base.IniFile;
 using Greenshot.Plugin.Office.Com;
 using Greenshot.Plugin.Office.OfficeInterop;
-using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
@@ -112,18 +111,18 @@ namespace Greenshot.Plugin.Office.OfficeExport
 
                     using (var shapes = DisposableCom.Create(slide.ComObject.Shapes))
                     {
-                        using var shape = DisposableCom.Create(shapes.ComObject.AddPicture(tmpFile, MsoTriState.msoFalse, MsoTriState.msoTrue, 0, 0, width, height));
+                        using var shape = DisposableCom.Create(((dynamic)shapes.ComObject).AddPicture(tmpFile, (object)0 /* msoFalse */, (object)(-1) /* msoTrue */, 0, 0, width, height));
                         if (_officeConfiguration.PowerpointLockAspectRatio)
                         {
-                            shape.ComObject.LockAspectRatio = MsoTriState.msoTrue;
+                            ((dynamic)shape.ComObject).LockAspectRatio = (object)(-1) /* msoTrue */;
                         }
                         else
                         {
-                            shape.ComObject.LockAspectRatio = MsoTriState.msoFalse;
+                            ((dynamic)shape.ComObject).LockAspectRatio = (object)0 /* msoFalse */;
                         }
 
-                        shape.ComObject.ScaleHeight(1, MsoTriState.msoTrue, MsoScaleFrom.msoScaleFromMiddle);
-                        shape.ComObject.ScaleWidth(1, MsoTriState.msoTrue, MsoScaleFrom.msoScaleFromMiddle);
+                        ((dynamic)shape.ComObject).ScaleHeight(1, (object)(-1) /* msoTrue */, (object)1 /* msoScaleFromMiddle */);
+                        ((dynamic)shape.ComObject).ScaleWidth(1, (object)(-1) /* msoTrue */, (object)1 /* msoScaleFromMiddle */);
                         if (hasScaledWidth)
                         {
                             shape.ComObject.Width = width;
@@ -287,7 +286,7 @@ namespace Greenshot.Plugin.Office.OfficeExport
                     continue;
                 }
 
-                if (presentation.ComObject.ReadOnly == MsoTriState.msoTrue)
+                if (((dynamic)presentation.ComObject).ReadOnly == (object)(-1) /* msoTrue */)
                 {
                     continue;
                 }
@@ -345,9 +344,9 @@ namespace Greenshot.Plugin.Office.OfficeExport
                 if (powerpointApplication != null)
                 {
                     powerpointApplication.ComObject.Activate();
-                    powerpointApplication.ComObject.Visible = MsoTriState.msoTrue;
+                    ((dynamic)powerpointApplication.ComObject).Visible = (object)(-1) /* msoTrue */;
                     using var presentations = DisposableCom.Create(powerpointApplication.ComObject.Presentations);
-                    using var presentation = DisposableCom.Create(presentations.ComObject.Add());
+                    using var presentation = DisposableCom.Create(((dynamic)presentations.ComObject).Add());
                     try
                     {
                         AddPictureToPresentation(presentation, tmpFile, imageSize, title);
@@ -369,3 +368,8 @@ namespace Greenshot.Plugin.Office.OfficeExport
         }
     }
 }
+
+
+
+
+

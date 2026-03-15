@@ -35,8 +35,10 @@ namespace Greenshot.Editor.Controls
         public event PropertyChangedEventHandler PropertyChanged;
 
         [Category("Greenshot"), DefaultValue(null), Description("Specifies key of the language file to use when displaying the text.")]
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string LanguageKey { get; set; }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public object SelectedTag
         {
             get

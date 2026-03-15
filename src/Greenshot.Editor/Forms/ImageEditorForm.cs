@@ -606,6 +606,8 @@ namespace Greenshot.Editor.Forms
             AlignCanvasPositionAfterResize();
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+
         public ISurface Surface
         {
             get { return _surface; }

@@ -28,6 +28,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Greenshot.Base.Core;
 using Greenshot.Base.IniFile;
+using MethodInvoker = System.Windows.Forms.MethodInvoker;
 using Greenshot.Base.Interfaces;
 using Greenshot.Base.Interfaces.Plugin;
 using log4net;

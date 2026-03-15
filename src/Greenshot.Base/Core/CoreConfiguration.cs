@@ -84,7 +84,7 @@ namespace Greenshot.Base.Core
         public int CaptureDelay { get; set; }
 
         [IniProperty("ScreenCaptureMode", Description = "The capture mode used to capture a screen. (Auto, FullScreen, Fixed)", DefaultValue = "Auto")]
-        public ScreenCaptureMode ScreenCaptureMode { get; set; }
+        public Greenshot.Base.Interfaces.ScreenCaptureMode ScreenCaptureMode { get; set; }
 
         [IniProperty("ScreenToCapture", Description = "The screen number to capture when using ScreenCaptureMode Fixed.", DefaultValue = "1")]
         public int ScreenToCapture { get; set; }

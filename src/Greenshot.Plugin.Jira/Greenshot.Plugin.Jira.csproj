@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
@@ -13,5 +13,6 @@
     <PackageReference Include="Dapplo.Jira" version="2.0.7" />
     <PackageReference Include="Dapplo.Jira.SvgWinForms" Version="2.0.7" />
     <PackageReference Include="Dapplo.HttpExtensions.WinForms" Version="2.0.11" />
+    <PackageReference Include="System.Runtime.Caching" Version="10.0.0" />
   </ItemGroup>
 </Project>

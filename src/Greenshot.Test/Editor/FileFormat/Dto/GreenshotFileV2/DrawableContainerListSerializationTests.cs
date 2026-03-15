@@ -21,7 +21,6 @@
 using System;
 using System.Drawing;
 using System.IO;
-using System.Web.UI.WebControls;
 using Dapplo.Windows.Common.Structs;
 using Dapplo.Windows.Icons;
 using Greenshot.Base.Core;

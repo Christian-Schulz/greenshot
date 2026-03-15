@@ -1,4 +1,4 @@
-﻿//  Greenshot - a free and open source screenshot tool
+//  Greenshot - a free and open source screenshot tool
 //  Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
 // 
 //  For more information see: https://getgreenshot.org/
@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using Greenshot.Base.IniFile;
 using Greenshot.Plugin.Office.Com;
 using Greenshot.Plugin.Office.OfficeInterop;
-using Microsoft.Office.Core;
 using Microsoft.Office.Interop.Word;
 using Version = System.Version;
 
@@ -51,7 +50,7 @@ namespace Greenshot.Plugin.Office.OfficeExport
             // Lock aspect ratio
             if (_officeConfiguration.WordLockAspectRatio)
             {
-                shape.ComObject.LockAspectRatio = MsoTriState.msoTrue;
+                ((dynamic)shape.ComObject).LockAspectRatio = (object)(-1) /* msoTrue */;
             }
 
             selection.ComObject.InsertAfter("\r\n");
@@ -400,3 +399,6 @@ namespace Greenshot.Plugin.Office.OfficeExport
         }
     }
 }
+
+
+

@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 using Dapplo.Windows.Common.Structs;
 using Greenshot.Base.Core;
@@ -149,7 +150,7 @@ namespace Greenshot.Editor.Forms
                 .DistinctUntilChanged()
                 .Where(text => text.Length == 0 || text.Length >= 3) // Minimum 3 characters
                 .Throttle(TimeSpan.FromMilliseconds(300)) // Debounce 300ms
-                .ObserveOn(this);
+                .ObserveOn(SynchronizationContext.Current); // Use synchronization context for UI thread
 
             _searchSubscription = textChanged.Subscribe(_ => UpdatePreview());
 

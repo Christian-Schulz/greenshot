@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security;
-using System.ServiceModel.Security;
 using Greenshot.Base.Interfaces.Drawing;
 using Greenshot.Editor.Drawing;
 using log4net;

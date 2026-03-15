@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Greenshot - a free and open source screenshot tool
  * Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
  * 
@@ -37,11 +37,15 @@ namespace Greenshot.Editor.Controls
 
         public NumericUpDown NumericUpDown => Control as NumericUpDown;
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+
         public decimal Value
         {
             get { return NumericUpDown.Value; }
             set { NumericUpDown.Value = value; }
         }
+
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 
         public decimal Minimum
         {
@@ -49,17 +53,23 @@ namespace Greenshot.Editor.Controls
             set { NumericUpDown.Minimum = value; }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+
         public decimal Maximum
         {
             get { return NumericUpDown.Maximum; }
             set { NumericUpDown.Maximum = value; }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+
         public decimal Increment
         {
             get { return NumericUpDown.Increment; }
             set { NumericUpDown.Increment = value; }
         }
+
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 
         public int DecimalPlaces
         {

@@ -67,6 +67,7 @@ namespace Greenshot.Base.Controls
 #if DEBUG
         [Category("Greenshot"), DefaultValue(null), Description("Specifies key of the language file to use when displaying the text.")]
 #endif
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string LanguageKey { get; set; }
 
 #if DEBUG

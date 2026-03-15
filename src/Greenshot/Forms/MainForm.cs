@@ -38,6 +38,8 @@ using Dapplo.Windows.Dpi;
 using Dapplo.Windows.Kernel32;
 using Dapplo.Windows.User32;
 using Greenshot.Base;
+using MethodInvoker = System.Windows.Forms.MethodInvoker;
+using ScreenCaptureMode = Greenshot.Base.Interfaces.ScreenCaptureMode;
 using Greenshot.Base.Controls;
 using Greenshot.Base.Core;
 using Greenshot.Base.Core.Enums;

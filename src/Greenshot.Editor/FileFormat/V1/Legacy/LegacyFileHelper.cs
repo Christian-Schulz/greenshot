@@ -39,12 +39,16 @@ public static class LegacyFileHelper
     /// <exception cref="ArgumentException">Thrown if the stream does not contain a valid legacy Greenshot file.</exception>
     public static DrawableContainerList GetContainerListFromLegacyContainerListStream(Stream stream)
     {
+        // TODO: Replace BinaryFormatter with System.Text.Json or modern serialization in future release
+        // BinaryFormatter is obsolete but needed for legacy .greenshot file format compatibility
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
         // load file in legacy container classes
         BinaryFormatter binaryRead = new BinaryFormatter
         {
             Binder = new LegacySerializationBinder()
         };
         var loadedElements = binaryRead.Deserialize(stream);
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
 
         if (loadedElements is not LegacyDrawableContainerList legacyDrawableContainerList)
         {

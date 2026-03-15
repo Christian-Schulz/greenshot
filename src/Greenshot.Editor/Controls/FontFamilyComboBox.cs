@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Greenshot - a free and open source screenshot tool
  * Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
  * 
@@ -34,6 +34,8 @@ namespace Greenshot.Editor.Controls
     public class FontFamilyComboBox : ToolStripComboBox, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 
         public FontFamily FontFamily
         {

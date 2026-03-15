@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dapplo.Jira.Entities;
@@ -66,7 +67,7 @@ public partial class JiraForm : Form
         _jiraKeySubscription = Observable
             .FromEventPattern(jiraKey, nameof(jiraKey.TextChanged))
             .Throttle(TimeSpan.FromMilliseconds(300))
-            .ObserveOn(this)
+            .ObserveOn(SynchronizationContext.Current)
             .Subscribe(async _ => await JiraKeyTextChanged());
     }
 

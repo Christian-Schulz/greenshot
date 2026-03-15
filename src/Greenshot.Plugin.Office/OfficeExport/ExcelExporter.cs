@@ -1,4 +1,4 @@
-﻿// Greenshot - a free and open source screenshot tool
+// Greenshot - a free and open source screenshot tool
 // Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
 // 
 // For more information see: https://getgreenshot.org/
@@ -23,7 +23,6 @@ using System.Drawing;
 using Dapplo.Windows.User32;
 using Greenshot.Plugin.Office.Com;
 using Greenshot.Plugin.Office.OfficeInterop;
-using Microsoft.Office.Core;
 using Microsoft.Office.Interop.Excel;
 using Version = System.Version;
 
@@ -172,7 +171,7 @@ namespace Greenshot.Plugin.Office.OfficeExport
                 return;
             }
 
-            using var shape = DisposableCom.Create(shapes.ComObject.AddPicture(tmpFile, MsoTriState.msoFalse, MsoTriState.msoTrue, 0, 0, imageSize.Width, imageSize.Height));
+            using var shape = DisposableCom.Create(((dynamic)shapes.ComObject).AddPicture(tmpFile, (object)0 /* msoFalse */, (object)(-1) /* msoTrue */, 0, 0, imageSize.Width, imageSize.Height));
             if (shape == null)
             {
                 return;
@@ -180,9 +179,9 @@ namespace Greenshot.Plugin.Office.OfficeExport
 
             shape.ComObject.Top = 40;
             shape.ComObject.Left = 40;
-            shape.ComObject.LockAspectRatio = MsoTriState.msoTrue;
-            shape.ComObject.ScaleHeight(1, MsoTriState.msoTrue, MsoScaleFrom.msoScaleFromTopLeft);
-            shape.ComObject.ScaleWidth(1, MsoTriState.msoTrue, MsoScaleFrom.msoScaleFromTopLeft);
+            ((dynamic)shape.ComObject).LockAspectRatio = (object)(-1) /* msoTrue */;
+            ((dynamic)shape.ComObject).ScaleHeight(1, (object)(-1) /* msoTrue */, (object)0 /* msoScaleFromTopLeft */);
+            ((dynamic)shape.ComObject).ScaleWidth(1, (object)(-1) /* msoTrue */, (object)0 /* msoScaleFromTopLeft */);
             workbook.ComObject.Activate();
             using var application = DisposableCom.Create(workbook.ComObject.Application);
             User32Api.SetForegroundWindow((IntPtr) application.ComObject.Hwnd);
@@ -208,3 +207,7 @@ namespace Greenshot.Plugin.Office.OfficeExport
         }
     }
 }
+
+
+
+

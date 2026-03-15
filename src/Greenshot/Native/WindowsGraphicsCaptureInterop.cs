@@ -80,8 +80,8 @@ namespace Greenshot.Native
         /// <returns>A GraphicsCaptureItem that corresponds to the specified window, allowing its content to be captured.</returns>
         public static GraphicsCaptureItem CreateCaptureItemForWindow(IntPtr window)
         {
-            var factory = WindowsRuntimeMarshal.GetActivationFactory(typeof(GraphicsCaptureItem));
-            var interop = (IGraphicsCaptureItemInterop)factory;
+            // In .NET 10, GetActivationFactory is replaced with WinRT projections
+            var interop = GraphicsCaptureItem.As<IGraphicsCaptureItemInterop>();
             var itemPointer = interop.CreateForWindow(window, GraphicsCaptureItemGuid);
             var item = Marshal.GetObjectForIUnknown(itemPointer) as GraphicsCaptureItem;
             Marshal.Release(itemPointer);
@@ -98,8 +98,8 @@ namespace Greenshot.Native
         /// <returns>A GraphicsCaptureItem that represents the specified monitor. Returns null if the creation fails.</returns>
         public static GraphicsCaptureItem CreateCaptureItemForMonitor(IntPtr hMonitor)
         {
-            var factory = WindowsRuntimeMarshal.GetActivationFactory(typeof(GraphicsCaptureItem));
-            var interop = (IGraphicsCaptureItemInterop)factory;
+            // In .NET 10, GetActivationFactory is replaced with WinRT projections
+            var interop = GraphicsCaptureItem.As<IGraphicsCaptureItemInterop>();
             var itemPointer = interop.CreateForMonitor(hMonitor, GraphicsCaptureItemGuid);
             var item = Marshal.GetObjectForIUnknown(itemPointer) as GraphicsCaptureItem;
             Marshal.Release(itemPointer);

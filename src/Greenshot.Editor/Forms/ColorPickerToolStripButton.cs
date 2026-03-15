@@ -44,6 +44,8 @@ namespace Greenshot.Editor.Forms
             Click += ToolStripButton1Click;
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+
         public Color Color
         {
             set

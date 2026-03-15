@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Greenshot - a free and open source screenshot tool
  * Copyright (C) 2007-2026 Thomas Braun, Jens Klingen, Robin Krom
  *
@@ -69,6 +69,7 @@ namespace Greenshot.Editor.Drawing
         /// <summary>
         /// The GUID of the surface
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public Guid ID
         {
             get => _uniqueId;
@@ -155,6 +156,7 @@ namespace Greenshot.Editor.Drawing
         /// <summary>
         /// The most recent DPI value that was used
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public int CurrentDpi
         {
             get => _currentDpi;
@@ -263,6 +265,7 @@ namespace Greenshot.Editor.Drawing
         /// <summary>
         ///     The start value of the counter objects
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public int CounterStart
         {
             get => _counterStart;
@@ -331,6 +334,8 @@ namespace Greenshot.Editor.Drawing
         /// </summary>
         private Image _image;
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+
         public Image Image
         {
             get => _image;
@@ -344,6 +349,8 @@ namespace Greenshot.Editor.Drawing
         [NonSerialized] private Matrix _zoomMatrix = new Matrix(1, 0, 0, 1, 0, 0);
         [NonSerialized] private Matrix _inverseZoomMatrix = new Matrix(1, 0, 0, 1, 0, 0);
         [NonSerialized] private Fraction _zoomFactor = Fraction.Identity;
+
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
 
         public Fraction ZoomFactor
         {
@@ -377,6 +384,7 @@ namespace Greenshot.Editor.Drawing
         /// The field aggregator is that which is used to have access to all the fields inside the currently selected elements.
         /// e.g. used to decided if and which line thickness is shown when multiple elements are selected.
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public IFieldAggregator FieldAggregator
         {
             get => _fieldAggregator;
@@ -405,6 +413,7 @@ namespace Greenshot.Editor.Drawing
         /// <summary>
         /// The brush which is used to draw the transparent background
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public Brush TransparencyBackgroundBrush
         {
             get => _transparencyBackgroundBrush;
@@ -414,6 +423,7 @@ namespace Greenshot.Editor.Drawing
         /// <summary>
         /// Are the keys on this surface locked?
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool KeysLocked
         {
             get => _keysLocked;
@@ -423,6 +433,7 @@ namespace Greenshot.Editor.Drawing
         /// <summary>
         /// Is this surface modified? This is only true if the surface has not been exported.
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool Modified
         {
             get => _modified;
@@ -432,6 +443,7 @@ namespace Greenshot.Editor.Drawing
         /// <summary>
         /// The DrawingMode property specifies the mode for drawing, more or less the element type.
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public DrawingModes DrawingMode
         {
             get => _drawingMode;
@@ -455,6 +467,7 @@ namespace Greenshot.Editor.Drawing
         /// <summary>
         /// Property for accessing the last save "full" path
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string LastSaveFullPath
         {
             get => _lastSaveFullPath;
@@ -464,11 +477,13 @@ namespace Greenshot.Editor.Drawing
         /// <summary>
         /// Property for accessing the URL to which the surface was recently uploaded
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string UploadUrl { get; set; }
 
         /// <summary>
         /// Property for accessing the capture details
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public ICaptureDetails CaptureDetails { get; set; }
 
         /// <summary>
@@ -2774,3 +2789,7 @@ namespace Greenshot.Editor.Drawing
         }
     }
 }
+
+
+
+

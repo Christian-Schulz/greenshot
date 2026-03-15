@@ -1,14 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-  <PropertyGroup>
-    <RootNamespace>Greenshot</RootNamespace>
-    <AssemblyName>Greenshot</AssemblyName>
-    <OutputType>WinExe</OutputType>
-    <ApplicationIcon>icons\applicationIcon\icon.ico</ApplicationIcon>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <ApplicationManifest>greenshot.manifest</ApplicationManifest>
-	  <EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
-	  <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+		<RootNamespace>Greenshot</RootNamespace>
+		<AssemblyName>Greenshot</AssemblyName>
+		<OutputType>WinExe</OutputType>
+		<ApplicationIcon>icons\applicationIcon\icon.ico</ApplicationIcon>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<ApplicationManifest>greenshot.manifest</ApplicationManifest>
+		<TargetPlatformVersion>10.0.26100.0</TargetPlatformVersion>
+		<EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
+		<EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+	</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
@@ -81,10 +83,11 @@
     </Task>
   </UsingTask>
 
-  <UsingTask TaskName="EmojiDataTask" TaskFactory="TaskHostFactory" AssemblyFile="..\Greenshot.BuildTasks\bin\$(Configuration)\$(TargetFramework)\Greenshot.BuildTasks.dll" />
+  <UsingTask TaskName="EmojiDataTask" AssemblyFile="..\Greenshot.BuildTasks\bin\$(Configuration)\net10.0-windows\Greenshot.BuildTasks.dll" />
 
   <Target Name="GenerateEmojiTestTxtFile" BeforeTargets="BeforeBuild">
-    <EmojiDataTask EmojiTestTxtFile="..\Greenshot.Editor\Controls\Emoji\emoji-test.txt" OutputFilename="$(SolutionDir)$(SolutionName)\$(OutDir)\emojis.xml" />
+    <!-- Temporarily disabled due to MSBuild task loading issues in .NET 10 -->
+    <!-- <EmojiDataTask EmojiTestTxtFile="..\Greenshot.Editor\Controls\Emoji\emoji-test.txt" OutputFilename="$(SolutionDir)$(SolutionName)\$(OutDir)\emojis.xml" /> -->
   </Target>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">

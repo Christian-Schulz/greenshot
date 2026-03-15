@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
@@ -56,26 +56,6 @@
       </ReferencePath>
     </ItemGroup>
   </Target>
-  <Target Name="EmbeddingMsHtml" AfterTargets="ResolveReferences" BeforeTargets="FindReferenceAssembliesForReferences">
-    <PropertyGroup>
-      <_InteropAssemblyFileName>Unofficial.Microsoft.mshtml</_InteropAssemblyFileName>
-    </PropertyGroup>
-    <ItemGroup>
-      <ReferencePath Condition=" '%(FileName)' == '$(_InteropAssemblyFileName)' AND '%(ReferencePath.NuGetPackageId)' == '$(_InteropAssemblyFileName)' ">
-        <EmbedInteropTypes>true</EmbedInteropTypes>
-      </ReferencePath>
-    </ItemGroup>
-  </Target>
-  <Target Name="EmbeddingMicrosoftOfficeCore" AfterTargets="ResolveReferences" BeforeTargets="FindReferenceAssembliesForReferences">
-    <PropertyGroup>
-      <_InteropAssemblyFileName>MicrosoftOfficeCore</_InteropAssemblyFileName>
-    </PropertyGroup>
-    <ItemGroup>
-      <ReferencePath Condition=" '%(FileName)' == '$(_InteropAssemblyFileName)' AND '%(ReferencePath.NuGetPackageId)' == '$(_InteropAssemblyFileName)' ">
-        <EmbedInteropTypes>true</EmbedInteropTypes>
-      </ReferencePath>
-    </ItemGroup>
-  </Target>
   <ItemGroup>
     <PackageReference Include="Interop.Microsoft.Office.Interop.OneNote" Version="1.1.0.2">
       <EmbedInteropTypes>true</EmbedInteropTypes>
@@ -95,14 +75,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1004">
       <EmbedInteropTypes>true</EmbedInteropTypes>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-    <PackageReference Include="MicrosoftOfficeCore" Version="15.0.0">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-    <PackageReference Include="Unofficial.Microsoft.mshtml" Version="7.0.3300">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>

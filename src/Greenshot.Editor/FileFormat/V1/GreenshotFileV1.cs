@@ -22,7 +22,6 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Security;
-using System.ServiceModel.Security;
 using System.Text;
 using Greenshot.Base.Core;
 using Greenshot.Editor.FileFormat.V1.Legacy;

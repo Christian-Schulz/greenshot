@@ -59,6 +59,8 @@ namespace Greenshot.Editor.Forms
         private readonly ToolTip _toolTip = new ToolTip();
         private bool _updateInProgress;
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+
         public Color Color
         {
             get { return colorPanel.BackColor; }

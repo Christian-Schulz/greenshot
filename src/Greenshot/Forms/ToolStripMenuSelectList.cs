@@ -186,6 +186,7 @@ namespace Greenshot.Forms
     /// </summary>
     public class ToolStripMenuSelectListItem : ToolStripMenuItem
     {
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public object Data { get; set; }
     }
 }

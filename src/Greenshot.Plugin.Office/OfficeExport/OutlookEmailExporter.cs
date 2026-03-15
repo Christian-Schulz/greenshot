@@ -27,7 +27,9 @@ using Greenshot.Plugin.Office.OfficeInterop;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Office.Interop.Word;
 using Microsoft.Win32;
-using mshtml;
+// TODO: mshtml (IHTMLDocument2) is not available in .NET Core/.NET 10
+// HTML inline editing in Outlook is temporarily disabled
+// using mshtml;
 using Application = Microsoft.Office.Interop.Outlook.Application;
 using Exception = System.Exception;
 using Version = System.Version;
@@ -289,6 +291,10 @@ namespace Greenshot.Plugin.Office.OfficeExport
                 bool inlinePossible = false;
                 if ((mailItem != null) && (inspector != null) && OlBodyFormat.olFormatHTML.Equals(mailItem.BodyFormat))
                 {
+                    // TODO: HTML inline editing is temporarily disabled in .NET 10
+                    // mshtml (IHTMLDocument2) is not available in .NET Core/.NET 10
+                    // This feature needs to be reimplemented using a different approach
+                    /*
                     // if html we can try to inline it
                     // The following might cause a security popup... can't ignore it.
                     try
@@ -325,6 +331,8 @@ namespace Greenshot.Plugin.Office.OfficeExport
                         // Continue with non inline image
                         LOG.Warn("Error pasting HTML, most likely due to an ACCESS_DENIED as the user clicked no.", e);
                     }
+                    */
+                    LOG.Info("HTML inline editing is disabled in .NET 10 (mshtml not available). Image will be attached instead.");
                 }
 
                 // Create the attachment (if inlined the attachment isn't visible as attachment!)
