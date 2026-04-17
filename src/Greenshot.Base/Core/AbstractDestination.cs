@@ -27,7 +27,7 @@ using Dapplo.Windows.Common.Extensions;
 using Dapplo.Windows.Common.Structs;
 using Dapplo.Windows.Dpi;
 using Dapplo.Windows.User32;
-using Greenshot.Base.IniFile;
+using Dapplo.Ini;
 using Greenshot.Base.Interfaces;
 using log4net;
 
@@ -39,7 +39,7 @@ namespace Greenshot.Base.Core
     public abstract class AbstractDestination : IDestination
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AbstractDestination));
-        private static readonly CoreConfiguration CoreConfig = IniConfig.GetIniSection<CoreConfiguration>();
+        private static readonly ICoreConfiguration CoreConfig = IniConfigRegistry.GetSection<ICoreConfiguration>();
 
         public virtual int CompareTo(object obj)
         {
