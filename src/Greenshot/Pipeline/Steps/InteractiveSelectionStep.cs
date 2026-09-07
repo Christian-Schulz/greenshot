@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,6 +32,8 @@ using Dapplo.Windows.Common.Structs;
 using Greenshot.Base.Core;
 using Greenshot.Base.Core.Enums;
 using Greenshot.Base.Interfaces;
+using Greenshot.Base.Interfaces.Ocr;
+using Greenshot.Base.Interfaces.Plugin;
 using Greenshot.Base.Pipeline;
 using Greenshot.Base.Recipes;
 using Greenshot.Configuration;
@@ -129,35 +132,98 @@ namespace Greenshot.Pipeline.Steps
                 CoreConfig.LastCapturedRegion = screenOffsetRect;
             }
 
-            if (selection.FinalMode == CaptureMode.Text && payload.RawCapture.CaptureDetails.OcrInformation != null)
+            if (selection.FinalMode == CaptureMode.Text)
             {
-                ExtractOcrText(context, selection.SelectedRegion);
+                ExtractOcrText(context);
             }
         }
 
-        private static void ExtractOcrText(CaptureFlowContext context, NativeRect selectionRect)
+        private static void ExtractOcrText(CaptureFlowContext context)
         {
-            var ocrInfo = context.Payload?.RawCapture?.CaptureDetails?.OcrInformation;
-            if (ocrInfo == null) return;
+            var rawCapture = context.Payload?.RawCapture;
+            var captureDetails = rawCapture?.CaptureDetails;
+            if (captureDetails == null) return;
 
-            var textResult = new StringBuilder();
-            var bounds = selectionRect.IsEmpty ? new NativeRect(NativePoint.Empty, context.Payload.RawCapture.Image.Size) : selectionRect;
-
-            foreach (var line in ocrInfo.Lines)
+            if (captureDetails.ProcessingTask != null)
             {
-                if (line.CalculatedBounds.IsEmpty || !line.CalculatedBounds.IntersectsWith(bounds)) continue;
-
-                for (var i = 0; i < line.Words.Length; i++)
+                try
                 {
-                    var word = line.Words[i];
-                    if (!word.Bounds.IntersectsWith(bounds)) continue;
-                    textResult.Append(word.Text);
-                    if (i + 1 < line.Words.Length && word.Text.Length > 1) textResult.Append(' ');
+                    captureDetails.ProcessingTask.Wait();
                 }
-                textResult.AppendLine();
+                catch (Exception ex)
+                {
+                    Log.Warn("Error waiting for background OCR processing in InteractiveSelectionStep", ex);
+                }
             }
 
-            string extracted = textResult.ToString();
+            List<IOcrLineFeature> ocrLines;
+            lock (captureDetails.Features)
+            {
+                ocrLines = captureDetails.Features.OfType<IOcrLineFeature>().ToList();
+            }
+
+            if (!ocrLines.Any())
+            {
+                var ocrProvider = SimpleServiceProvider.Current.GetInstance<IOcrProvider>();
+                if (ocrProvider != null && rawCapture.Image != null)
+                {
+                    try
+                    {
+                        var lines = Task.Run(async () => await ocrProvider.DoOcrAsync(rawCapture.Image).ConfigureAwait(false)).Result;
+                        if (lines != null && lines.Any())
+                        {
+                            lock (captureDetails.Features)
+                            {
+                                captureDetails.Features.AddRange(lines);
+                            }
+                            ocrLines = lines;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warn("Failed to run OCR in InteractiveSelectionStep", ex);
+                    }
+                }
+            }
+
+            if (ocrLines == null || !ocrLines.Any()) return;
+
+            var bounds = rawCapture.Image != null
+                ? new NativeRect(0, 0, rawCapture.Image.Width, rawCapture.Image.Height)
+                : NativeRect.Empty;
+
+            var textResult = new StringBuilder();
+
+            foreach (var line in ocrLines)
+            {
+                if (!bounds.IsEmpty && (line.Bounds.IsEmpty || !line.Bounds.IntersectsWith(bounds))) continue;
+
+                if (line.Words != null && line.Words.Count > 0)
+                {
+                    bool lineHasWords = false;
+                    for (var i = 0; i < line.Words.Count; i++)
+                    {
+                        var word = line.Words[i];
+                        if (!bounds.IsEmpty && !word.Bounds.IntersectsWith(bounds)) continue;
+                        if (lineHasWords && word.Text.Length > 0)
+                        {
+                            textResult.Append(' ');
+                        }
+                        textResult.Append(word.Text);
+                        lineHasWords = true;
+                    }
+                    if (lineHasWords)
+                    {
+                        textResult.AppendLine();
+                    }
+                }
+                else if (!string.IsNullOrEmpty(line.Text))
+                {
+                    textResult.AppendLine(line.Text);
+                }
+            }
+
+            string extracted = textResult.ToString().TrimEnd();
             context.Payload.ExtractedText = extracted;
             if (!string.IsNullOrEmpty(extracted))
             {

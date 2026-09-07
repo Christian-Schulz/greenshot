@@ -72,7 +72,7 @@ namespace Greenshot.Plugin.Win10
                 // We only want the background
                 var outputSettings = new SurfaceOutputSettings(OutputFormat.png, 0, true)
                 {
-                    ReduceColors = true,
+                    ReduceColors = false,
                     SaveBackgroundOnly = true
                 };
                 // Force Grayscale output
@@ -104,7 +104,7 @@ namespace Greenshot.Plugin.Win10
                 imageStream.Position = 0;
                 var randomAccessStream = imageStream.AsRandomAccessStream();
 
-                result = await DoOcrAsync(randomAccessStream);
+                result = await DoOcrAsync(randomAccessStream).ConfigureAwait(false);
             }
 
             return result;
@@ -124,7 +124,7 @@ namespace Greenshot.Plugin.Win10
                 imageStream.Position = 0;
                 var randomAccessStream = imageStream.AsRandomAccessStream();
 
-                result = await DoOcrAsync(randomAccessStream);
+                result = await DoOcrAsync(randomAccessStream).ConfigureAwait(false);
             }
 
             return result;
@@ -143,10 +143,10 @@ namespace Greenshot.Plugin.Win10
                 return null;
             }
 
-            var decoder = await BitmapDecoder.CreateAsync(randomAccessStream);
-            var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+            var decoder = await BitmapDecoder.CreateAsync(randomAccessStream).AsTask().ConfigureAwait(false);
+            var softwareBitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied).AsTask().ConfigureAwait(false);
 
-            var ocrResult = await ocrEngine.RecognizeAsync(softwareBitmap);
+            var ocrResult = await ocrEngine.RecognizeAsync(softwareBitmap).AsTask().ConfigureAwait(false);
 
             return CreateOcrLines(ocrResult);
         }

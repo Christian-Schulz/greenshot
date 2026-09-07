@@ -162,6 +162,29 @@ namespace Greenshot.Forms
         }
 
         /// <summary>
+        /// This creates the capture form with pre-enumerated windows
+        /// </summary>
+        /// <param name="capture"></param>
+        /// <param name="windows"></param>
+        public CaptureForm(ICapture capture, List<WindowDetails> windows) : this(capture)
+        {
+            if (windows != null && capture?.CaptureDetails?.Features != null)
+            {
+                lock (capture.CaptureDetails.Features)
+                {
+                    if (!capture.CaptureDetails.Features.OfType<WindowFeature>().Any())
+                    {
+                        for (int i = 0; i < windows.Count; i++)
+                        {
+                            capture.CaptureDetails.Features.Add(new WindowFeature(windows[i], i));
+                        }
+                    }
+                }
+                RebuildFeatureHotspots();
+            }
+        }
+
+        /// <summary>
         /// This creates the capture form
         /// </summary>
         /// <param name="capture"></param>

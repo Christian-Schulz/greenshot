@@ -30,6 +30,7 @@ using Dapplo.Windows.Common.Structs;
 using Greenshot.Base.Core;
 using Greenshot.Base.Interfaces;
 using Greenshot.Base.Interfaces.Ocr;
+using Greenshot.Base.Interfaces.Plugin;
 using Greenshot.Base.Pipeline;
 using Greenshot.Base.Recipes;
 using Greenshot.Editor.Drawing;
@@ -103,19 +104,50 @@ namespace Greenshot.Pipeline.Steps
             context.LogStep($"Running OCR text detection for {compiledRegexes.Count} pattern(s)...");
             Log.InfoFormat("Running OCR for TextEffectStep with {0} regex pattern(s)", compiledRegexes.Count);
 
-            OcrInformation ocrInfo;
-            try
+            var captureDetails = surface.CaptureDetails ?? payload.RawCapture?.CaptureDetails;
+            if (captureDetails?.ProcessingTask != null)
             {
-                ocrInfo = await ocrProvider.DoOcrAsync(surface).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                Log.Error("OCR processing failed during TextEffectStep", ex);
-                context.LogStep($"Warning: OCR processing failed: {ex.Message}");
-                return;
+                try
+                {
+                    await captureDetails.ProcessingTask.ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn("Error waiting for background OCR processing in TextEffectStep", ex);
+                }
             }
 
-            if (ocrInfo == null || !ocrInfo.HasContent)
+            List<IOcrLineFeature> ocrLines = null;
+            if (captureDetails?.Features != null)
+            {
+                lock (captureDetails.Features)
+                {
+                    ocrLines = captureDetails.Features.OfType<IOcrLineFeature>().ToList();
+                }
+            }
+
+            if (ocrLines == null || !ocrLines.Any())
+            {
+                try
+                {
+                    ocrLines = await ocrProvider.DoOcrAsync(surface).ConfigureAwait(false);
+                    if (ocrLines != null && ocrLines.Any() && captureDetails?.Features != null)
+                    {
+                        lock (captureDetails.Features)
+                        {
+                            captureDetails.Features.AddRange(ocrLines);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("OCR processing failed during TextEffectStep", ex);
+                    context.LogStep($"Warning: OCR processing failed: {ex.Message}");
+                    return;
+                }
+            }
+
+            if (ocrLines == null || !ocrLines.Any())
             {
                 context.LogStep("OCR detected no text content on surface.");
                 Log.Info("TextEffectStep: OCR detected no text content on surface. Continuing pipeline.");
@@ -129,8 +161,8 @@ namespace Greenshot.Pipeline.Steps
             int offH = Config.GetParameter("OffsetHorizontal", 0);
             int offV = Config.GetParameter("OffsetVertical", 0);
 
-            Log.InfoFormat("TextEffectStep: OCR recognized {0} line(s) of text. Searching matches across scope '{1}'...", ocrInfo.Lines?.Count ?? 0, scope);
-            var matchedBounds = FindMatchedBounds(ocrInfo, compiledRegexes, scope, padH, padV, offH, offV);
+            Log.InfoFormat("TextEffectStep: OCR recognized {0} line(s) of text. Searching matches across scope '{1}'...", ocrLines.Count, scope);
+            var matchedBounds = FindMatchedBounds(ocrLines, compiledRegexes, scope, padH, padV, offH, offV);
             if (matchedBounds.Count == 0)
             {
                 context.LogStep("TextEffectStep found 0 pattern matches.");
@@ -195,7 +227,7 @@ namespace Greenshot.Pipeline.Steps
         }
 
         private static List<NativeRect> FindMatchedBounds(
-            OcrInformation ocrInfo,
+            IEnumerable<IOcrLineFeature> ocrLines,
             List<Regex> regexes,
             string scope,
             int padH,
@@ -207,12 +239,12 @@ namespace Greenshot.Pipeline.Steps
 
             if (string.Equals(scope, "Line", StringComparison.OrdinalIgnoreCase))
             {
-                foreach (var line in ocrInfo.Lines)
+                foreach (var line in ocrLines)
                 {
                     if (string.IsNullOrEmpty(line?.Text)) continue;
                     if (regexes.Any(r => r.IsMatch(line.Text)))
                     {
-                        results.Add(ApplyPadding(line.CalculatedBounds, padH, padV, offH, offV));
+                        results.Add(ApplyPadding(line.Bounds, padH, padV, offH, offV));
                     }
                 }
                 return results;
@@ -220,7 +252,7 @@ namespace Greenshot.Pipeline.Steps
 
             if (string.Equals(scope, "Word", StringComparison.OrdinalIgnoreCase))
             {
-                foreach (var line in ocrInfo.Lines)
+                foreach (var line in ocrLines)
                 {
                     if (line?.Words == null) continue;
                     foreach (var word in line.Words)
@@ -237,9 +269,9 @@ namespace Greenshot.Pipeline.Steps
 
             // Default: Auto / Smart Scope
             // Searches lines for regex matches, mapping matched text to exact word bounding boxes.
-            foreach (var line in ocrInfo.Lines)
+            foreach (var line in ocrLines)
             {
-                if (string.IsNullOrEmpty(line?.Text) || line.Words == null || line.Words.Length == 0) continue;
+                if (string.IsNullOrEmpty(line?.Text) || line.Words == null || line.Words.Count == 0) continue;
 
                 // Index words in line text
                 int searchIdx = 0;
@@ -284,7 +316,7 @@ namespace Greenshot.Pipeline.Steps
                         }
                         else
                         {
-                            results.Add(ApplyPadding(line.CalculatedBounds, padH, padV, offH, offV));
+                            results.Add(ApplyPadding(line.Bounds, padH, padV, offH, offV));
                         }
                     }
                 }

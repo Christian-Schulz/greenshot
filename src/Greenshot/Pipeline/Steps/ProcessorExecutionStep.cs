@@ -76,7 +76,7 @@ namespace Greenshot.Pipeline.Steps
 
                 context.LogStep($"Running processor: {processor.Description}");
                 Log.InfoFormat("Calling processor {0}", processor.Description);
-                processor.ProcessCapture(surface, payload.RawCapture.CaptureDetails);
+                processor.ProcessCapture(payload.RawCapture);
             }
 
             return Task.CompletedTask;
