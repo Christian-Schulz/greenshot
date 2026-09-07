@@ -1,6 +1,6 @@
 /*
  * Greenshot - a free and open source screenshot tool
- * Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
+ * Copyright (C) 2007-2026 Thomas Braun, Jens Klingen, Robin Krom
  *
  * For more information see: https://getgreenshot.org/
  * The Greenshot project is hosted on GitHub https://github.com/greenshot/greenshot
@@ -27,7 +27,6 @@ using Dapplo.Windows.Common.Extensions;
 using Dapplo.Windows.Common.Structs;
 using Dapplo.Windows.User32;
 using Greenshot.Base.Core;
-using Greenshot.Base.Core.Enums;
 using Greenshot.Base.Interfaces;
 
 namespace Greenshot.Base.Pipeline.Sources
@@ -38,14 +37,20 @@ namespace Greenshot.Base.Pipeline.Sources
     public class ScreenCaptureSource : ICaptureSource
     {
         private static readonly ICoreConfiguration CoreConfig = IniConfigRegistry.GetSection<ICoreConfiguration>();
+        private readonly ScreenCaptureMode? _configuredMode;
 
         public string Name => "ScreenCaptureSource";
+
+        public ScreenCaptureSource(ScreenCaptureMode? mode = null)
+        {
+            _configuredMode = mode;
+        }
 
         public Task<ICapturePayload> AcquireAsync(CaptureFlowContext context, CancellationToken cancellationToken = default)
         {
             ScreenCaptureMode mode = context.Properties.TryGetValue("ScreenCaptureMode", out var scmObj) && scmObj is ScreenCaptureMode scm
                 ? scm
-                : CoreConfig.ScreenCaptureMode;
+                : (_configuredMode ?? CoreConfig.ScreenCaptureMode);
             ICapture capture = new Capture();
             bool captureTaken = false;
 

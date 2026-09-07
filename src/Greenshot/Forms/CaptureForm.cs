@@ -1,6 +1,6 @@
 /*
  * Greenshot - a free and open source screenshot tool
- * Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
+ * Copyright (C) 2007-2026 Thomas Braun, Jens Klingen, Robin Krom
  *
  * For more information see: https://getgreenshot.org/
  * The Greenshot project is hosted on GitHub https://github.com/greenshot/greenshot
@@ -287,11 +287,13 @@ namespace Greenshot.Forms
 
         private void OnFeaturesChanged(object sender, EventArgs e)
         {
+            if (IsDisposed || Disposing) return;
             if (InvokeRequired)
             {
                 BeginInvoke(new Action(() => OnFeaturesChanged(sender, e)));
                 return;
             }
+            if (IsDisposed || Disposing) return;
             RebuildFeatureHotspots();
             Invalidate();
         }
@@ -1122,6 +1124,10 @@ namespace Greenshot.Forms
         {
             Graphics graphics = e.Graphics;
             NativeRect clipRectangle = e.ClipRectangle;
+
+            // Guard: form may be closing (displaced by a second capture) while a paint event is in-flight
+            if (_capture?.Image == null) return;
+
             //graphics.BitBlt((Bitmap)buffer, Point.Empty);
             graphics.DrawImageUnscaled(_capture.Image, Point.Empty);
 

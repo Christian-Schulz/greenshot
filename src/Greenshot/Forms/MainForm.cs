@@ -1,6 +1,6 @@
 /*
  * Greenshot - a free and open source screenshot tool
- * Copyright (C) 2004-2026  Thomas Braun, Jens Klingen, Robin Krom
+ * Copyright (C) 2007-2026  Thomas Braun, Jens Klingen, Robin Krom
  *
  * For more information see: https://getgreenshot.org/
  * The Greenshot project is hosted on GitHub https://github.com/greenshot/greenshot
@@ -372,7 +372,8 @@ namespace Greenshot.Forms
             // Disable access to the settings, for feature #3521446
             contextmenu_settings.Visible = !_conf.DisableSettings;
 
-            HotkeyHelper.RegisterHotkeys();
+            // No longer needed when the recipes are loaded from the configuration, but keep it for now to be sure
+            //HotkeyHelper.RegisterHotkeys();
 
             new ToolTip();
 

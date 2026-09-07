@@ -1,6 +1,6 @@
 /*
  * Greenshot - a free and open source screenshot tool
- * Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
+ * Copyright (C) 2007-2026 Thomas Braun, Jens Klingen, Robin Krom
  *
  * For more information see: https://getgreenshot.org/
  * The Greenshot project is hosted on GitHub https://github.com/greenshot/greenshot
@@ -24,11 +24,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Dapplo.Ini;
-using Greenshot.Base;
 using Greenshot.Base.Core;
 using Greenshot.Base.Interfaces;
 using Greenshot.Base.Recipes;
-using Greenshot.Configuration;
 using log4net;
 
 namespace Greenshot.Recipes
@@ -84,14 +82,19 @@ namespace Greenshot.Recipes
         private void InitializeDefaultRecipes()
         {
             // 1. Interactive Region Capture
+            // Pre-selection Processors runs processors whose PreferredTiming == PreSelection
+            // (e.g. ZXing QR scan, Win10 OCR) while the CaptureForm is open so their results
+            // appear as interactive hotspots. Post-selection runs PostSelection processors after
+            // the user confirms the crop.
             var regionRecipe = new CaptureRecipe(
                 RecipeIdRegion,
                 Language.GetString("contextmenu_capturearea") ?? "Capture region",
                 "Interactively select a region on the screen")
                 .AddStep(RecipeStepConfig.CreateSource(CaptureSourceType.Region))
+                .AddStep(RecipeStepConfig.CreateProcessors(timing: ProcessorTiming.PreSelection).WithName("Scan Before Selection"))
                 .AddStep(RecipeStepConfig.CreateSelection(CaptureMode.Region))
                 .AddStep(RecipeStepConfig.CreateFeedback())
-                .AddStep(RecipeStepConfig.CreateProcessors())
+                .AddStep(RecipeStepConfig.CreateProcessors(timing: ProcessorTiming.PostSelection).WithName("Process After Selection"))
                 .AddStep(RecipeStepConfig.CreateDestinations())
                 .AddStep(RecipeStepConfig.CreateNotification());
             RegisterBuiltIn(regionRecipe);
@@ -102,9 +105,10 @@ namespace Greenshot.Recipes
                 Language.GetString("contextmenu_capturewindow") ?? "Capture window",
                 "Interactively select a window on the screen")
                 .AddStep(RecipeStepConfig.CreateSource(CaptureSourceType.Window))
+                .AddStep(RecipeStepConfig.CreateProcessors(timing: ProcessorTiming.PreSelection).WithName("Scan Before Selection"))
                 .AddStep(RecipeStepConfig.CreateSelection(CaptureMode.Window))
                 .AddStep(RecipeStepConfig.CreateFeedback())
-                .AddStep(RecipeStepConfig.CreateProcessors())
+                .AddStep(RecipeStepConfig.CreateProcessors(timing: ProcessorTiming.PostSelection).WithName("Process After Selection"))
                 .AddStep(RecipeStepConfig.CreateDestinations())
                 .AddStep(RecipeStepConfig.CreateNotification());
             RegisterBuiltIn(windowRecipe);

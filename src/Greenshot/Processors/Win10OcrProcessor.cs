@@ -1,6 +1,6 @@
 /*
  * Greenshot - a free and open source screenshot tool
- * Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
+ * Copyright (C) 2007-2026 Thomas Braun, Jens Klingen, Robin Krom
  *
  * For more information see: https://getgreenshot.org/
  * The Greenshot project is hosted on GitHub https://github.com/greenshot/greenshot
@@ -20,7 +20,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,7 +27,6 @@ using Greenshot.Base.Core;
 using Dapplo.Ini;
 using Greenshot.Base.Interfaces;
 using Greenshot.Base.Interfaces.Ocr;
-using Greenshot.Base.Interfaces.Plugin;
 using Greenshot.Configuration;
 
 namespace Greenshot.Processors
@@ -44,6 +42,14 @@ namespace Greenshot.Processors
         public override string Designation => "Windows10OcrProcessor";
 
         public override string Description => "Windows OCR";
+
+        public override bool isActive => Win10Configuration.AlwaysRunOCROnCapture;
+
+        /// <summary>
+        /// Runs before interactive selection so detected OCR text lines are visible
+        /// as hotspots in the CaptureForm while the user selects a region.
+        /// </summary>
+        public override ProcessorTiming PreferredTiming => ProcessorTiming.PreSelection;
 
         public override bool ProcessCapture(ICapture capture)
         {

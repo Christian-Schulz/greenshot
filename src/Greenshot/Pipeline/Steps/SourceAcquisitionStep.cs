@@ -1,6 +1,6 @@
 /*
  * Greenshot - a free and open source screenshot tool
- * Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
+ * Copyright (C) 2007-2026 Thomas Braun, Jens Klingen, Robin Krom
  *
  * For more information see: https://getgreenshot.org/
  * The Greenshot project is hosted on GitHub https://github.com/greenshot/greenshot
@@ -28,11 +28,10 @@ using Dapplo.Ini;
 using Dapplo.Windows.Common.Structs;
 using Dapplo.Windows.User32;
 using Greenshot.Base.Core;
-using Greenshot.Base.Core.Enums;
+using Greenshot.Base.Interfaces;
 using Greenshot.Base.Pipeline;
 using Greenshot.Base.Pipeline.Sources;
 using Greenshot.Base.Recipes;
-using Greenshot.Configuration;
 using log4net;
 
 namespace Greenshot.Pipeline.Steps
@@ -103,10 +102,10 @@ namespace Greenshot.Pipeline.Steps
                         : new ActiveWindowCaptureSource(Config),
 
                 CaptureSourceType.Region or CaptureSourceType.Window or CaptureSourceType.TextOcr =>
-                    CreateScreenWithCursorSource(captureMouse, "InteractiveBaseSource"),
+                    CreateScreenWithCursorSource(captureMouse, "InteractiveBaseSource", ScreenCaptureMode.FullScreen),
 
                 CaptureSourceType.FullScreen =>
-                    CreateScreenWithCursorSource(captureMouse, "FullScreenSource"),
+                    CreateScreenWithCursorSource(captureMouse, "FullScreenSource", ResolveScreenCaptureMode(context)),
 
                 CaptureSourceType.ActiveWindow =>
                     captureMouse
@@ -180,17 +179,36 @@ namespace Greenshot.Pipeline.Steps
             }
         }
 
-        private static ICaptureSource CreateScreenWithCursorSource(bool captureMouse, string name)
+        private static ICaptureSource CreateScreenWithCursorSource(bool captureMouse, string name, ScreenCaptureMode mode = ScreenCaptureMode.FullScreen)
         {
             if (captureMouse)
             {
                 return new CompositeCaptureSource(name, new ICaptureSource[]
                 {
-                    new ScreenCaptureSource(),
+                    new ScreenCaptureSource(mode),
                     new CursorCaptureSource()
                 });
             }
-            return new ScreenCaptureSource();
+            return new ScreenCaptureSource(mode);
+        }
+
+        private ScreenCaptureMode ResolveScreenCaptureMode(CaptureFlowContext context)
+        {
+            // Priority 1: Runtime context property (e.g. from context menu dropdown "All" or caller)
+            if (context.Properties.TryGetValue("ScreenCaptureMode", out var scmObj) && scmObj is ScreenCaptureMode scm)
+            {
+                return scm;
+            }
+
+            // Priority 2: Recipe step configuration parameter
+            var stepMode = Config.GetParameter<string>("ScreenCaptureMode");
+            if (!string.IsNullOrEmpty(stepMode) && Enum.TryParse<ScreenCaptureMode>(stepMode, ignoreCase: true, out var parsedMode))
+            {
+                return parsedMode;
+            }
+
+            // Priority 3: User configuration
+            return CoreConfig.ScreenCaptureMode;
         }
 
         private bool ResolveCaptureMouse(CaptureFlowContext context)

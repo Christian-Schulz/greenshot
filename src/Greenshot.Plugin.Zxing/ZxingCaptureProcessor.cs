@@ -1,6 +1,6 @@
 /*
  * Greenshot - a free and open source screenshot tool
- * Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
+ * Copyright (C) 2007-2026 Thomas Braun, Jens Klingen, Robin Krom
  * 
  * For more information see: https://getgreenshot.org/
  * The Greenshot project is hosted on GitHub https://github.com/greenshot/greenshot
@@ -22,7 +22,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Threading.Tasks;
 using Dapplo.Windows.Common.Structs;
 using Greenshot.Base.Core;
@@ -40,6 +39,12 @@ public class ZxingCaptureProcessor : AbstractProcessor
     public override string Designation => "ZxingCaptureProcessor";
     public override string Description => "ZXing Barcode Scanner";
     public override bool isActive => _config.ScanOnCapture;
+
+    /// <summary>
+    /// Runs before interactive selection so detected QR/barcode hotspots are visible
+    /// in the CaptureForm while the user selects a region.
+    /// </summary>
+    public override ProcessorTiming PreferredTiming => ProcessorTiming.PreSelection;
 
     public ZxingCaptureProcessor(IZxingConfiguration config)
     {

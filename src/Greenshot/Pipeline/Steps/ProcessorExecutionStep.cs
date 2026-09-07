@@ -1,6 +1,6 @@
 /*
  * Greenshot - a free and open source screenshot tool
- * Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
+ * Copyright (C) 2007-2026 Thomas Braun, Jens Klingen, Robin Krom
  *
  * For more information see: https://getgreenshot.org/
  * The Greenshot project is hosted on GitHub https://github.com/greenshot/greenshot
@@ -55,10 +55,23 @@ namespace Greenshot.Pipeline.Steps
 
             context.State = CaptureFlowState.Processing;
 
-            var surface = payload.EnsureSurface();
             var processors = SimpleServiceProvider.Current.GetAllInstances<IProcessor>()
                 .Where(p => p.isActive)
                 .ToList();
+
+            // Optional explicit timing filter: when set, only run processors that declare
+            // the matching PreferredTiming. When absent, run all active processors (default,
+            // backward-compatible behaviour for recipes that have a single Processors step).
+            var timingParam = Config.GetParameter<string>("Timing");
+            if (!string.IsNullOrEmpty(timingParam) &&
+                Enum.TryParse<ProcessorTiming>(timingParam, ignoreCase: true, out var requestedTiming))
+            {
+                processors = processors
+                    .OfType<AbstractProcessor>()
+                    .Where(p => p.PreferredTiming == requestedTiming)
+                    .Cast<IProcessor>()
+                    .ToList();
+            }
 
             var processorIds = Config.GetParameter<List<string>>("ProcessorIds");
             if (processorIds != null && processorIds.Count > 0)

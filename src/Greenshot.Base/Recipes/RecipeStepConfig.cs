@@ -1,6 +1,6 @@
 /*
  * Greenshot - a free and open source screenshot tool
- * Copyright (C) 2004-2026 Thomas Braun, Jens Klingen, Robin Krom
+ * Copyright (C) 2007-2026 Thomas Braun, Jens Klingen, Robin Krom
  *
  * For more information see: https://getgreenshot.org/
  * The Greenshot project is hosted on GitHub https://github.com/greenshot/greenshot
@@ -113,6 +113,16 @@ namespace Greenshot.Base.Recipes
             return this;
         }
 
+        /// <summary>
+        /// Fluent helper to override the display name of this step. Useful when the same step type
+        /// appears multiple times in a recipe (e.g. two "Processors" steps at different pipeline positions).
+        /// </summary>
+        public RecipeStepConfig WithName(string name)
+        {
+            Name = name;
+            return this;
+        }
+
         public RecipeStepConfig Clone()
         {
             var clone = new RecipeStepConfig
@@ -198,12 +208,16 @@ namespace Greenshot.Base.Recipes
             return step;
         }
 
-        public static RecipeStepConfig CreateProcessors(IEnumerable<string> processorIds = null)
+        public static RecipeStepConfig CreateProcessors(IEnumerable<string> processorIds = null, ProcessorTiming? timing = null)
         {
             var step = new RecipeStepConfig(WellKnownStepTypes.Processors, "Run Processors");
             if (processorIds != null)
             {
                 step.Set("ProcessorIds", new List<string>(processorIds));
+            }
+            if (timing.HasValue)
+            {
+                step.Set("Timing", timing.Value.ToString());
             }
             return step;
         }
