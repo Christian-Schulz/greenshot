@@ -24,9 +24,9 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
+using Dapplo.Ini;
 using Dapplo.Windows.Common.Structs;
 using Greenshot.Base.Core;
-using Greenshot.Base.IniFile;
 using Greenshot.Base.Interfaces;
 using Greenshot.Editor.Controls;
 using Greenshot.Editor.Drawing;
@@ -44,7 +44,7 @@ namespace Greenshot.Editor.Forms
     public partial class NewModelEditorForm : Form
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(NewModelEditorForm));
-        private static readonly CoreConfiguration CoreConfig = IniConfig.GetIniSection<CoreConfiguration>();
+        private static readonly ICoreConfiguration CoreConfig = IniConfigRegistry.GetSection<ICoreConfiguration>();
 
         private ShapeCanvas _canvas;
         private CanvasRenderer _renderer;
