@@ -158,7 +158,7 @@ namespace Greenshot.Base.Controls
             if (!DesignMode)
             {
 #endif
-                InitializeLanguage();
+               //InitializeLanguage();
                 FillFields();
                 base.OnLoad(e);
 #if DEBUG

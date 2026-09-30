@@ -22,6 +22,7 @@
 using System.Windows.Forms;
 using Greenshot.Editor.Controls;
 using Greenshot.Editor.Drawing;
+using Greenshot.Editor.Drawing.Emoji;
 
 namespace Greenshot.Editor.Forms
 {
@@ -447,7 +448,8 @@ namespace Greenshot.Editor.Forms
 			// 
 			this.btnEmoji.CheckOnClick = true;
 			this.btnEmoji.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.btnEmoji.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnEmoji.Image = EmojiRenderer.GetBitmap("\uD83D\uDE0A", 32);
+            this.btnEmoji.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnEmoji.Name = "btnEmoji";
 			this.btnEmoji.Click += new System.EventHandler(this.BtnEmojiClick);
 			// 
